@@ -26,6 +26,8 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
+    // 🔁 MENU SWITCH BASED ON LOGIN STATE
     this.route.events.subscribe(() => {
       if (localStorage.getItem('sellerLoggedIn')) {
         this.menuType = 'seller';
@@ -36,17 +38,26 @@ export class HeaderComponent implements OnInit {
       }
     });
 
+    // 🛒 LOCAL CART (GUEST USER)
     const localCart = localStorage.getItem('localCart');
     if (localCart) {
       this.cartItems = JSON.parse(localCart).length;
     }
 
+    // 🔥 LISTEN TO CART UPDATES (HEADER COUNT FIX)
     this.cartService.cartData.subscribe(items => {
       this.cartItems = items.length;
     });
+
+    // 🔥 SYNC CART ON REFRESH (LOGGED-IN USER)
+    const user = localStorage.getItem('userLoggedIn');
+    if (user) {
+      const userId = JSON.parse(user).id;
+      this.cartService.getCartItems(userId);
+    }
   }
 
-  // 🔍 SEARCH
+  // ---------------- SEARCH ----------------
   onSearchInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     if (value) {
@@ -66,24 +77,26 @@ export class HeaderComponent implements OnInit {
     this.route.navigate([`search/${value}`]);
   }
 
-  // 🍔 MENU
+  // ---------------- MENU ----------------
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  // 🔗 NAVIGATION
+  // ---------------- NAVIGATION ----------------
   redirectToDetails(id: string) {
     this.route.navigate([`product/details/${id}`]);
   }
 
-  // 🚪 LOGOUTS
+  // ---------------- LOGOUT ----------------
   sellerLogout() {
     localStorage.clear();
+    this.cartItems = 0;
     this.route.navigate(['/']);
   }
 
   userLogout() {
     localStorage.clear();
+    this.cartItems = 0;
     this.route.navigate(['/']);
   }
 }
