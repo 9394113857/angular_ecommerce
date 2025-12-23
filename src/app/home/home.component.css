@@ -1,0 +1,82 @@
+.home_main_container_slider {
+  width: 100%;
+  margin: auto;
+  margin-bottom: 10px;
+  overflow: hidden;
+  position: relative;
+  border-radius: 5px;
+}
+
+.home_slider_container {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+
+}
+
+.home_slider_container img {
+  width: 100%;
+  height: auto;
+}
+
+.carousel_controls {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.carousel_controls button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  font-size: 20px;
+  color: #000;
+  background-color: cadetblue;
+  font-family: Arial, sans-serif;
+  padding: 40px 10px;
+  transition: background-color 0.3s ease-in-out;
+
+}
+
+.carousel_controls button:first-child {
+  border-radius: 4px 0px 0px 4px;
+}
+
+.carousel_controls button:last-child {
+  border-radius: 0px 4px 4px 0px;
+}
+
+.carousel_controls button:hover {
+  color: #333;
+  background-color: steelblue;
+}
+
+.carousel_controls .prev_btn {
+  transform: rotate(180deg);
+}
+
+.carousel_controls .next_btn {
+  transform: rotate(-180deg);
+}
+
+
+/* product card */
+.show-trends-product {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+
+.trendyHead {
+  font-size: 26px;
+  margin-bottom: 20px;
+  margin-left: 90px;
+  font-family: sans-serif;
+}

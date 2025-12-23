@@ -1,0 +1,35 @@
+/* unauthorized.component.css */
+
+.unauthorized-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #c5a3a3;
+    margin-top: -30px;
+
+}
+
+.unauthorized_access {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    padding: 16px;
+    margin: 16px;
+    text-align: center;
+}
+
+.unauthorized_access>button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.unauthorized_access>button:hover {
+    background-color: #0069d9;
+}

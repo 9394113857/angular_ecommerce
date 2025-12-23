@@ -1,0 +1,11 @@
+{
+  "registeredUsers": [
+    {
+      "name": "goo",
+      "email": "go@gmail.com",
+      "password": "12345",
+      "role_type": "user",
+      "id": 1
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+============================================================
+FILE NAME : angular-16-clean-setup.txt
+PURPOSE   : Clean → Reset → Align → Install → Run (Angular 16)
+============================================================
+
+🧠 SIMPLE RULE (REMEMBER THIS):
+❌ App broken? → Delete node_modules → Delete package-lock.json → npm install → ng serve
+Fixes ~90% Angular / npm issues.
+
+------------------------------------------------------------
+
+🔵 1️⃣ CHECK NODE.JS VERSION (Angular 16 needs Node 18.x or 20.x)
+node -v
+# If not installed or wrong version → install Node.js LTS from https://nodejs.org/
+
+🔵 2️⃣ CHECK NPM (comes with Node.js)
+npm -v
+# If npm not found → reinstall Node.js
+
+🔵 3️⃣ CHECK / INSTALL ANGULAR CLI (GLOBAL)
+ng version
+# If not installed, run:
+npm install -g @angular/cli@16
+# CLI major version must match Angular major version
+
+🔵 4️⃣ GO TO ANGULAR PROJECT DIRECTORY
+cd E:\Cloned\angular_ecom
+# Use your actual cloned project path
+
+🔵 5️⃣ CLEAN OLD DEPENDENCIES (SAFE RESET)
+Remove-Item -Recurse -Force node_modules -ErrorAction SilentlyContinue
+# Deletes all installed npm packages
+
+Remove-Item -Force package-lock.json -ErrorAction SilentlyContinue
+# Deletes locked dependency versions so npm can re-resolve cleanly
+
+🔵 6️⃣ DELETE OLD GIT HISTORY (OPTIONAL – FOR FORKED / CLONED REPOS)
+Remove-Item -Recurse -Force .git
+# Removes old origin, commits, fork history (code stays safe)
+
+🔵 7️⃣ INITIALIZE YOUR OWN GIT REPOSITORY
+git init
+# Creates fresh Git history for your project
+
+🔵 8️⃣ ALIGN ALL ANGULAR PACKAGES TO 16.0.2 (CRITICAL STEP)
+npm install `
+@angular/core@16.0.2 `
+@angular/common@16.0.2 `
+@angular/compiler@16.0.2 `
+@angular/compiler-cli@16.0.2 `
+@angular/platform-browser@16.0.2 `
+@angular/platform-browser-dynamic@16.0.2 `
+@angular/router@16.0.2 `
+@angular/animations@16.0.2 `
+@angular/forms@16.0.2 `
+@angular/localize@16.0.2 `
+@angular-devkit/build-angular@16.0.2 `
+--save
+
+📌 Why add animations & forms?
+
+Most Angular projects implicitly depend on them
+
+Missing even one causes ERESOLVE
+
+# Prevents version mismatch & build errors
+
+🔵 9️⃣ INSTALL REMAINING PROJECT DEPENDENCIES
+npm install
+# Installs all other dependencies from package.json
+
+🔵 1️⃣0️⃣ VERIFY ANGULAR CORE INSTALLATION
+npm list @angular/core
+# Expected version: @angular/core@16.0.2
+
+🔵 1️⃣1️⃣ RUN THE ANGULAR APPLICATION
+ng serve
+# Starts Angular development server
+
+🔵 1️⃣2️⃣ OPEN APPLICATION IN BROWSER
+http://localhost:4200
+# Expected message: ✔ Compiled successfully
+
+🔵 1️⃣3️⃣ DISABLE ANGULAR ANALYTICS (OPTIONAL)
+ng analytics disable
+# Turns off anonymous usage tracking
+
+------------------------------------------------------------
+
+✅ FINAL RESULT:
+✔ Clean dependency tree
+✔ Correct Angular version alignment
+✔ No legacy Git issues
+✔ Stable Angular dev server
+✔ Production-safe & interview-ready setup
+
+============================================================

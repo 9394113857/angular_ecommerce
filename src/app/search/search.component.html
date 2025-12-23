@@ -1,0 +1,19 @@
+<app-loading [isLoading]="isLoading" [loadingText]="loadingText"></app-loading>
+
+
+<div class="search-result-heading" *ngIf="!noDataFoundMessage && !isLoading">
+    <p>Search term: <span><strong>{{ paramsQue }}</strong></span></p>
+  </div>
+  
+
+<div *ngIf="noDataFoundMessage" class="search-result-not-found">
+    <p> {{noDataFoundMessage}} : <span>{{paramsQue}}</span></p>
+</div>
+
+
+<div class="search-result-data" *ngIf="productData && productData.length > 0">
+    <ng-container *ngFor="let product of productData">
+        <!-- Add *ngIf to ensure ProductCardComponent is rendered only when productData is available -->
+        <app-product-card *ngIf="product" [productData]="product"></app-product-card>
+    </ng-container>
+</div>

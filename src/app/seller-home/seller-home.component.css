@@ -1,0 +1,68 @@
+.product-list {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead th {
+    background-color: #f5f5f5;
+    padding: 10px;
+    text-align: center;
+}
+
+tbody td {
+    padding: 10px;
+    text-align: center;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+img {
+    max-width: 40px;
+    height: 45px;
+}
+
+.delete-icon {
+    margin-right: 25px;
+    color: red;
+}
+
+.edit-icon {
+  
+    color: blue;
+}
+
+
+
+@media (max-width: 768px) {
+    table thead {
+        display: none;
+    }
+
+    td {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+}

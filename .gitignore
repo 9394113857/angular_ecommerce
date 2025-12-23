@@ -1,0 +1,84 @@
+# ============================================================
+# FILE: .gitignore
+# PURPOSE: Angular + Node.js + Netlify (Production Safe)
+# ============================================================
+
+# -----------------------------
+# Compiled / Build Output
+# -----------------------------
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# -----------------------------
+# Angular Cache
+# -----------------------------
+/.angular/
+.angular/cache
+
+# -----------------------------
+# Node / Package Managers
+# -----------------------------
+/node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+*.log
+
+# -----------------------------
+# Environment Files
+# -----------------------------
+.env
+.env.*
+
+# -----------------------------
+# IDEs & Editors
+# -----------------------------
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# -----------------------------
+# Visual Studio Code
+# -----------------------------
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# -----------------------------
+# Testing / Coverage
+# -----------------------------
+/coverage
+/test-results
+
+# -----------------------------
+# Miscellaneous
+# -----------------------------
+.sass-cache/
+.connect.lock
+/libpeerconnection.log
+testem.log
+/typings
+
+# -----------------------------
+# System Files
+# -----------------------------
+.DS_Store
+Thumbs.db
+
+# -----------------------------
+# Netlify (Local Only)
+# -----------------------------
+.netlify
+
+# ============================================================
+# END OF FILE
+# ============================================================

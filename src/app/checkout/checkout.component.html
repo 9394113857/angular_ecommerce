@@ -1,0 +1,25 @@
+<div class="checkout">
+    <div>
+        <h3>Checkout</h3>
+        Total price: {{ isLoading ? 'Calculating price...' : totalPrice }}
+      
+    </div>
+
+    <div class="checkout_form">
+        <form (ngSubmit)="submitForm()" #checkoutForm="ngForm">
+            <div>
+                <label for="contact">Enter contact no:</label>
+                <input type="number" name="contact" [(ngModel)]="contact" ngModel required placeholder="Enter contact no">
+               
+            </div>
+            <div>
+                <label for="address">Address:</label>
+                <input type="text" name="address" [(ngModel)]="deliveryAddress" ngModel required   placeholder="Enter delivery address">
+               
+            </div>
+            <button type="submit" [class.disabled]="checkoutForm.form.invalid || isLoading" [disabled]="checkoutForm.form.invalid || isLoading">Order Now</button>
+        </form>
+
+
+    </div>
+</div>

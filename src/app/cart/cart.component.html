@@ -1,0 +1,68 @@
+<app-loading [isLoading]="loading" [loadingText]="loadingText"></app-loading>
+<!-- not found cart item -->
+<div *ngIf="(!cartData || cartData.length === 0) && !isLoggedIn && !loading" class="no_cart_found">
+  <h1>Cart Item Not Found</h1>
+  <a routerLink="/">Go Home</a>
+</div>
+
+
+<div *ngIf="isLoggedIn && !loading" class="go_login_page">
+  <h1>Please login to see cart items</h1>
+  <a routerLink="/login">Login</a>
+</div>
+
+
+<!-- show this when cartData contain data -->
+<div *ngIf="cartData && cartData.length > 0 && !loading">
+  <div class="cart-page">
+    <h1>Cart Items</h1>
+    <div class="cart_container">
+
+      <!-- cart items -->
+      <div class="cart_details">
+        <table>
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="cartData">
+              <tr *ngFor="let cart of cartData">
+                <td>
+                  <img src="{{ cart.image }}" alt="" style="width: 50px; height: 50px;">
+                </td>
+                <td>{{ cart.name }}</td>
+                <td>Price: {{ cart.price }}</td>
+                <td>Quantity: {{cart.quantity}}</td>
+                <td>
+                  <button class="form-button" *ngIf="cart.id !== undefined" (click)="removeFromCart(cart.id)">
+                    Remove From Cart
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- cart summary -->
+      <div class="cart_summary">
+        <h3>Summary</h3>
+        <ul>
+          <li> <span>Amount:</span><span>{{priceSummary.price}}</span></li>
+          <li> <span>Tax:</span><span>{{priceSummary.tax}}</span></li>
+          <li> <span>Delivery:</span><span>{{priceSummary.delivery}}</span></li>
+          <li> <span>Discount:</span><span>{{priceSummary.discount}} % </span></li>
+          <li> <span><h4>Total</h4></span> <span><h4>{{priceSummary.total}}</h4></span></li>
+          <button (click)="checkout()" class="checkout_btn">Checkout</button>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>

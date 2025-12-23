@@ -1,0 +1,21 @@
+<div class="registerForm" >
+    <div class="text">
+        <h1>Login </h1>
+    </div>
+    <div class="signupform">
+        <form #loginForm="ngForm" (ngSubmit)="loginFormhandle(loginForm)">
+
+            <label for="email">Email:</label>
+            <input type="email" name="email" placeholder="Enter email" autocomplete="off" ngModel required email>
+            <!-- <p class="validMessage" [hidden]="loginForm.controls['email'].valid">Note : Enter valid email</p> -->
+            <label for="password">Password:</label>
+            <input type="password" name="password" placeholder="Min length 5" autocomplete="off" ngModel required
+                minlength="5">
+            <!-- <p class="validMessage" [hidden]="loginForm.controls['password'].valid">Note: Min length should 5 </p> -->
+            <p class="login-failed" >{{loginFailed}}</p>
+            <button type="submit" [disabled]="loginForm.invalid">{{isLoading?"Fetching...":"Login"}}</button>
+            <a class="auth-toggle-link" (click)="redirectToSignup()">Haven't yet sign up? <span>Click for sign up</span></a>
+        </form>
+    </div>
+
+</div>

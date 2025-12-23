@@ -1,0 +1,38 @@
+<app-loading [isLoading]="isLoading || isProductUpdated" [loadingText]="loadingText"></app-loading>
+
+
+<div class="container" *ngIf="!isLoading && !isProductUpdated">
+    <h2>Update product </h2>
+    <p class="showMessage-p">{{showUpdatSuccesMessage}}</p>
+    
+    <form #productForm="ngForm" (ngSubmit)="updateProductHandle(productForm.value)" >
+      <div class="form-group">
+        <label for="name">Product Name:</label>
+        <input type="text" name="name" ngModel="{{productData?.name}}">
+      </div>
+      <div class="form-group">
+        <label for="price">Price:</label>
+        <input type="text" name="price"  ngModel="{{productData?.price}}">
+      </div>
+      <div class="form-group">
+        <label for="color">Color:</label>
+        <input type="text" name="color" ngModel="{{productData?.color}}">
+      </div>
+      <div class="form-group">
+        <label for="category">Product Category: </label>
+        <input type="text" name="category"  ngModel="{{productData?.category}}">
+      </div>
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea name="description"  ngModel="{{productData?.description}}"></textarea>
+      </div>
+  
+      <div class="form-group">
+        <label for="image">Product Image:</label>
+        <input type="text" name="image"  ngModel="{{productData?.image}}">
+      </div>
+      <div class="form-group">
+        <button type="submit">Update Product</button>
+      </div>
+    </form>
+  </div>

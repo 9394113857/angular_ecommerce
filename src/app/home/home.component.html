@@ -1,0 +1,27 @@
+<div class="home_main_container_slider">
+    <div class="home_slider_container" [ngStyle]="{'transform': 'translateX(' + slidePosition + '%)'}">
+        <img *ngFor="let item of popularProduct; let i = index" [src]="item" alt="Image slider">
+    </div>
+    <div class="carousel_controls">
+        <button class="prev_btn" (click)="previousSlide()">
+            <fa-icon [icon]="prevFonticon" [style.cursor]="'pointer'"></fa-icon>
+        </button>
+        <button class="next_btn" (click)="nextSlide()">
+            <fa-icon [icon]="nextFontIcon" [style.cursor]="'pointer'"></fa-icon>
+        </button>
+
+    </div>
+</div>
+
+<app-loading [isLoading]="isLoading" [loadingText]="loadingText"></app-loading>
+
+
+<!-- show trends product -->
+
+<!-- show trends product -->
+<h1 class="trendyHead" *ngIf="!isLoading">Trendy Products</h1>
+<div class="show-trends-product" *ngIf="!isLoading">
+    <ng-container *ngFor="let product of productData">
+        <app-product-card [productData]="product"></app-product-card>
+    </ng-container>
+</div>

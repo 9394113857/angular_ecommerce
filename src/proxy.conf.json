@@ -1,0 +1,8 @@
+{
+    "/api": {
+      "target": "https://calm-blue-hippo-veil.cyclic.app/registeredUsers",
+      "secure": false,
+      "changeOrigin": true
+    }
+  }
+  
