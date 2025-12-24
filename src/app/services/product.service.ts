@@ -10,7 +10,10 @@ export class ProductService {
   constructor(private http: HttpClient) {}
 
   // ✅ PRODUCT BACKEND (LOCAL)
-  baseUrl = 'http://127.0.0.1:5002/api/angularProduct';
+  // baseUrl = 'http://127.0.0.1:5002/api/angularProduct';
+
+  // ✅ PRODUCT BACKEND (DEPLOYED)
+  baseUrl = 'https://backend-product-service.onrender.com';
 
   // -------------------------------
   // ADD PRODUCT (SELLER)

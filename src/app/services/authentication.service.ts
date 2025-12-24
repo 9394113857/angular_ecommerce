@@ -17,8 +17,12 @@ export class AuthenticationService {
     private router: Router
   ) {}
 
-  // ✅ AUTH BACKEND (LOCAL)
-  baseUrl = 'http://127.0.0.1:5001/api/v1/auth/angularUser';
+  // // ✅ AUTH BACKEND (LOCAL)
+  // baseUrl = 'http://127.0.0.1:5001/api/v1/auth/angularUser';
+
+  // ✅ AUTH BACKEND (DEPLOYED)
+  baseUrl = 'https://backend-auth-service-dkn7.onrender.com';
+
 
   // -------------------------------
   // USER / SELLER REGISTER
