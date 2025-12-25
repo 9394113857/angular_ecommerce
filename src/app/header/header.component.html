@@ -20,13 +20,16 @@
       <ul
         *ngIf="searchResult"
         [ngClass]="{
-          'small-search': searchResult && searchResult.length <= 5,
-          'large-search': searchResult && searchResult.length > 5,
-          'no-search': !searchResult || searchResult.length === 0
+          'small-search': searchResult.length <= 5,
+          'large-search': searchResult.length > 5,
+          'no-search': searchResult.length === 0
         }"
       >
         <li *ngFor="let item of searchResult">
-          <a (mousedown)="redirectToDetails(item._id)">
+          <a
+            *ngIf="item._id"
+            (mousedown)="redirectToDetails(item._id)"
+          >
             {{ item.name }}
           </a>
         </li>

@@ -1,39 +1,51 @@
-
-
 <div class="product-list">
-    <h1>Product List</h1>
-    <p class="showMessage-p">{{showDeleteSuccessMessage}}</p>
-    <table>
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Category</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody *ngIf="!isLoading">
+  <h1>Product List</h1>
+  <p class="showMessage-p">{{ showDeleteSuccessMessage }}</p>
 
-            <tr *ngFor="let item of productList">
-                <td>
-                    <img src={{item.image}} alt={{item.name}}>
-                </td>
-                <td> {{item.name}} </td>
-                <td>₹ {{item.price}}.00</td>
-                <td>{{item.category}}</td>
-                <td>
-                    <fa-icon [icon]="deleteFonticon" (click)="deleteProductFn(item._id)"
-                      [style.cursor]="'pointer'" class="delete-icon"></fa-icon>
-                      <fa-icon [icon]="EditFonticon" [style.cursor]="'pointer'" class="edit-icon" (click)="editFn(item._id)" ></fa-icon>
+  <table>
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Category</th>
+        <th>Action</th>
+      </tr>
+    </thead>
 
-                  </td>
-                  
+    <tbody *ngIf="!isLoading">
+      <tr *ngFor="let item of productList">
+        <td>
+          <img *ngIf="item.image" [src]="item.image" [alt]="item.name">
+        </td>
 
+        <td>{{ item.name }}</td>
+        <td>₹ {{ item.price }}.00</td>
+        <td>{{ item.category }}</td>
 
-            </tr>
+        <td>
+          <fa-icon
+            *ngIf="item._id"
+            [icon]="deleteFonticon"
+            class="delete-icon"
+            [style.cursor]="'pointer'"
+            (click)="deleteProductFn(item._id)">
+          </fa-icon>
 
-        </tbody>
-    </table>
-    <app-loading [isLoading]="isLoading" [loadingText]="loadingText"></app-loading>
+          <fa-icon
+            *ngIf="item._id"
+            [icon]="EditFonticon"
+            class="edit-icon"
+            [style.cursor]="'pointer'"
+            (click)="editFn(item._id)">
+          </fa-icon>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <app-loading
+    [isLoading]="isLoading"
+    [loadingText]="loadingText">
+  </app-loading>
 </div>

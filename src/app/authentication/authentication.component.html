@@ -1,46 +1,96 @@
+<!-- SIGN UP -->
 <div class="registerForm" *ngIf="!showLogin">
-    <div class="text">
-        <h1>Sign Up</h1>
-    </div>
-    <div class="signupform">
-        <form #registerForm="ngForm" (ngSubmit)="registerFormhandle(registerForm)">
-            <label for="name">Name:</label>
-            <input type="text" name="name" placeholder="Enter your name" autocomplete="off" ngModel required>
+  <div class="text">
+    <h1>Sign Up</h1>
+  </div>
 
-            <label for="email">Email:</label>
-            <input type="email" name="email" placeholder="Enter email" autocomplete="off" ngModel required email>
-            <!-- <p class="validMessage" [hidden]="registerForm.controls['email'].valid">Note : Enter valid email</p> -->
+  <div class="signupform">
+    <form #registerForm="ngForm" (ngSubmit)="registerFormhandle(registerForm)">
 
-            <label for="password">Password:</label>
-            <input type="password" name="password" placeholder="Min length 5" autocomplete="off" ngModel required
-                minlength="5">
-            <!-- <p class="validMessage" [hidden]="registerForm.controls['password'].valid">Note: Min length should 5 </p> -->
+      <label>Name:</label>
+      <input
+        type="text"
+        name="name"
+        ngModel
+        required
+        placeholder="Enter your name"
+      />
 
-            <button type="submit" [disabled]="registerForm.invalid">{{isLoading?"Loading...":"Sign up"}}</button>
-            <a class="auth-toggle-link" (click)="openLogin()">Already have account? <span>Click for login</span></a>
-        </form>
-    </div>
+      <label>Email:</label>
+      <input
+        type="email"
+        name="email"
+        ngModel
+        required
+        placeholder="Enter email"
+      />
 
+      <label>Password:</label>
+      <input
+        type="password"
+        name="password"
+        ngModel
+        required
+        minlength="5"
+        placeholder="Min length 5"
+      />
+
+      <!-- ROLE -->
+      <label>Account Type:</label>
+      <select name="role_type" ngModel required>
+        <option value="user">Customer</option>
+        <option value="seller">Seller</option>
+      </select>
+
+      <button type="submit" [disabled]="registerForm.invalid">
+        {{ isLoading ? 'Loading...' : 'Sign Up' }}
+      </button>
+
+      <a class="auth-toggle-link" (click)="openLogin()">
+        Already have an account? <span>Login</span>
+      </a>
+
+    </form>
+  </div>
 </div>
 
+<!-- LOGIN -->
 <div class="registerForm" *ngIf="showLogin">
-    <div class="text">
-        <h1>Login </h1>
-    </div>
-    <div class="signupform">
-        <form #loginForm="ngForm" (ngSubmit)="loginFormhandle(loginForm)">
+  <div class="text">
+    <h1>Login</h1>
+  </div>
 
-            <label for="email">Email:</label>
-            <input type="email" name="email" placeholder="Enter email" autocomplete="off" ngModel required email>
-            <!-- <p class="validMessage" [hidden]="loginForm.controls['email'].valid">Note : Enter valid email</p> -->
-            <label for="password">Password:</label>
-            <input type="password" name="password" placeholder="Min length 5" autocomplete="off" ngModel required
-                minlength="5">
-            <!-- <p class="validMessage" [hidden]="loginForm.controls['password'].valid">Note: Min length should 5 </p> -->
-            <p class="login-failed">{{loginFailed}}</p>
-            <button type="submit" [disabled]="loginForm.invalid"> {{isLoading?"Fetching...":"Login"}} </button>
-            <a class="auth-toggle-link" (click)="openSignUp()">Haven't yet sign up? <span>Click for sign up</span></a>
-        </form>
-    </div>
+  <div class="signupform">
+    <form #loginForm="ngForm" (ngSubmit)="loginFormhandle(loginForm)">
 
+      <label>Email:</label>
+      <input
+        type="email"
+        name="email"
+        ngModel
+        required
+        placeholder="Enter email"
+      />
+
+      <label>Password:</label>
+      <input
+        type="password"
+        name="password"
+        ngModel
+        required
+        placeholder="Password"
+      />
+
+      <p class="login-failed">{{ loginFailed }}</p>
+
+      <button type="submit" [disabled]="loginForm.invalid">
+        {{ isLoading ? 'Fetching...' : 'Login' }}
+      </button>
+
+      <a class="auth-toggle-link" (click)="openSignUp()">
+        New user? <span>Sign Up</span>
+      </a>
+
+    </form>
+  </div>
 </div>

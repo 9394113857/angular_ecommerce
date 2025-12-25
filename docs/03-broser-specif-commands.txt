@@ -1,0 +1,1 @@
+ng serve; Start-Process "C:\Program Files\AVAST Software\Browser\Application\AvastBrowser.exe" "http://localhost:4200"

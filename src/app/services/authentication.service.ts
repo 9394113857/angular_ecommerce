@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { login, signUp } from 'src/data.type';
 
@@ -9,48 +8,42 @@ import { login, signUp } from 'src/data.type';
 })
 export class AuthenticationService {
 
-  // Track seller login state
-  isSellerLoggedIn = new BehaviorSubject<boolean>(false);
+  // =====================================================
+  // LOCAL DEVELOPMENT AUTH SERVICE (COMMENTED)
+  // =====================================================
+  // baseUrl = 'http://127.0.0.1:5001/api/v1/auth/angularUser';
+
+  // =====================================================
+  // PRODUCTION AUTH SERVICE (RENDER) ✅ ACTIVE
+  // =====================================================
+  baseUrl = 'https://backend-auth-service-dkn7.onrender.com/api/v1/auth/angularUser';
 
   constructor(
     private http: HttpClient,
     private router: Router
   ) {}
 
-  // // ✅ AUTH BACKEND (LOCAL)
-  // baseUrl = 'http://127.0.0.1:5001/api/v1/auth/angularUser';
-
-  // ✅ AUTH BACKEND (DEPLOYED)
-  baseUrl = 'https://backend-auth-service-dkn7.onrender.com';
-
-
-  // -------------------------------
-  // USER / SELLER REGISTER
-  // -------------------------------
+  // -----------------------------------------------------
+  // USER SIGNUP
+  // -----------------------------------------------------
   userSignup(data: signUp) {
-    return this.http.post<any>(`${this.baseUrl}/register`, data);
+    return this.http.post(`${this.baseUrl}/register`, {
+      email: data.email,
+      password: data.password,
+      role: data.role_type
+    });
   }
 
-  // -------------------------------
-  // USER / SELLER LOGIN
-  // -------------------------------
+  // -----------------------------------------------------
+  // USER LOGIN
+  // -----------------------------------------------------
   loginUser(data: login) {
-    return this.http.post<any>(`${this.baseUrl}/login`, data);
+    return this.http.post(`${this.baseUrl}/login`, data);
   }
 
-  // -------------------------------
-  // RELOAD SELLER SESSION
-  // -------------------------------
-  reloadSeller() {
-    if (localStorage.getItem('sellerLoggedIn')) {
-      this.isSellerLoggedIn.next(true);
-      this.router.navigate(['seller-home']);
-    }
-  }
-
-  // -------------------------------
-  // PREVENT AUTH PAGE ACCESS
-  // -------------------------------
+  // -----------------------------------------------------
+  // BLOCK AUTH PAGES IF LOGGED IN
+  // -----------------------------------------------------
   notAllowedAuth() {
     if (
       localStorage.getItem('sellerLoggedIn') ||
@@ -60,14 +53,11 @@ export class AuthenticationService {
     }
   }
 
-  // -------------------------------
-  // LOGOUT (Frontend only)
-  // -------------------------------
+  // -----------------------------------------------------
+  // LOGOUT
+  // -----------------------------------------------------
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('sellerLoggedIn');
-    localStorage.removeItem('userLoggedIn');
-    this.isSellerLoggedIn.next(false);
+    localStorage.clear();
     this.router.navigate(['/login']);
   }
 }

@@ -1,20 +1,18 @@
 <div class="product-details" *ngIf="!isLoading; else loadingBlock">
-
   <div class="product-container">
 
-    <!-- PRODUCT IMAGE (OPTIONAL / STATIC) -->
+    <!-- IMAGE -->
     <div class="product-image">
       <img src="https://via.placeholder.com/400x400" alt="Product Image">
     </div>
 
-    <!-- PRODUCT INFO -->
+    <!-- INFO -->
     <div class="product-info">
-
       <h1>{{ productData.name }}</h1>
       <p class="price">₹ {{ productData.price }}</p>
       <p class="description">{{ productData.description }}</p>
 
-      <!-- QUANTITY CONTROLS (ONLY FOR USER) -->
+      <!-- QUANTITY (USER) -->
       <div class="quantity-controls" *ngIf="!isSellerLoggedIn">
         <button (click)="handleQuantity('min')">-</button>
         <span>{{ productQuantity }}</span>
@@ -32,13 +30,13 @@
 
         <button
           class="form-button marginLeftbtn"
-          *ngIf="isProductInCart"
+          *ngIf="isProductInCart && productData._id"
           (click)="removeFromCart(productData._id)">
           Remove from Cart
         </button>
       </div>
 
-      <!-- SELLER EDIT BUTTON -->
+      <!-- SELLER EDIT -->
       <div *ngIf="isSellerLoggedIn">
         <button
           class="form-button Editbtn"
@@ -51,9 +49,8 @@
   </div>
 </div>
 
-<!-- LOADING BLOCK -->
 <ng-template #loadingBlock>
   <div class="loading">
     <p>{{ loadingText }}</p>
   </div>
-</ng-template> 
+</ng-template>
