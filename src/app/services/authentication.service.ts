@@ -11,12 +11,12 @@ export class AuthenticationService {
   // =====================================================
   // LOCAL DEVELOPMENT AUTH SERVICE (COMMENTED)
   // =====================================================
-  baseUrl = 'http://127.0.0.1:5001/api/v1/auth/angularUser';
+  // baseUrl = 'http://127.0.0.1:5001/api/v1/auth/angularUser';
 
   // =====================================================
   // PRODUCTION AUTH SERVICE (RENDER) ✅ ACTIVE
   // =====================================================
-  // baseUrl = 'https://backend-auth-service-dkn7.onrender.com/api/v1/auth/angularUser';
+  baseUrl = 'https://backend-auth-service-dkn7.onrender.com/api/v1/auth/angularUser';
 
   constructor(
     private http: HttpClient,
