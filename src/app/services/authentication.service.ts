@@ -16,7 +16,7 @@ export class AuthenticationService {
   // =====================================================
   // PRODUCTION AUTH SERVICE (RENDER) ✅ ACTIVE
   // =====================================================
-  baseUrl = 'https://backend-auth-service-dkn7.onrender.com/api/v1/auth/angularUser';
+  baseUrl = 'https://backend-auth-service-6zwi.onrender.com/api/v1/auth/angularUser';
 
   constructor(
     private http: HttpClient,
