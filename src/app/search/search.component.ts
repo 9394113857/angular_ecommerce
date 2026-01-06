@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { products } from 'src/data.type';
 import { ProductService } from '../services/product.service';
+import { EventTrackingService } from '../services/event-tracking.service';
 
 @Component({
   selector: 'app-search',
@@ -10,38 +11,45 @@ import { ProductService } from '../services/product.service';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
-  paramsQue: string = '';
-  productData: products[] | undefined;
-  noDataFoundMessage: string = '';
-  isLoading: boolean = false; 
-  loadingText: string = 'Loading search results...';
+
+  paramsQue = '';
+  productData: products[] = [];
+  noDataFoundMessage = '';
+  isLoading = false;
+  loadingText = 'Loading search results...';
+
   constructor(
     private activeRoute: ActivatedRoute,
     private productService: ProductService,
-    private titleService: Title
+    private titleService: Title,
+    private eventTracker: EventTrackingService
   ) {}
 
   ngOnInit(): void {
-    this.titleService.setTitle('E-Comm | Search-Results');
+    this.titleService.setTitle('E-Comm | Search');
+
     this.activeRoute.params.subscribe(params => {
-      const paramsQuery = params['query'];
+      const query = params['query'];
+      if (!query) return;
 
-      if (paramsQuery !== null && paramsQuery !== undefined) {
-        this.paramsQue = paramsQuery;
-        this.isLoading = true; 
+      this.paramsQue = query;
+      this.isLoading = true;
 
-        this.productService.searchProducts(paramsQuery).subscribe((data: null | products[]) => {
-          if (data && data.length > 0) {
-            this.productData = data;
-            this.noDataFoundMessage = '';
-          } else {
-            this.noDataFoundMessage = 'Data not found with search term';
-            this.productData = [];
+      this.productService.searchProducts(query).subscribe(data => {
+        this.productData = data || [];
+        this.noDataFoundMessage = this.productData.length ? '' : 'No results found';
+
+        // 📊 SEARCH EVENT
+        this.eventTracker.trackEvent({
+          event_type: 'search',
+          metadata: {
+            query,
+            results_count: this.productData.length
           }
-
-          this.isLoading = false; 
         });
-      }
+
+        this.isLoading = false;
+      });
     });
   }
 }

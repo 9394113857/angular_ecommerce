@@ -4,6 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { cartType } from 'src/data.type';
 import { CartServiceService } from '../services/cart-service.service';
 import { Router } from '@angular/router';
+import { EventTrackingService } from '../services/event-tracking.service';
 
 @Component({
   selector: 'app-checkout',
@@ -16,16 +17,15 @@ export class CheckoutComponent implements OnInit {
 
   contact?: number;
   deliveryAddress?: string;
-
-  isLoading: boolean = false;
-  totalPrice: number = 0;
-
+  totalPrice = 0;
   cartData: cartType[] = [];
+  isLoading = false;
 
   constructor(
     private cartService: CartServiceService,
-    private route: Router,
-    private titleService: Title
+    private router: Router,
+    private titleService: Title,
+    private eventTracker: EventTrackingService
   ) {}
 
   ngOnInit(): void {
@@ -33,66 +33,42 @@ export class CheckoutComponent implements OnInit {
     this.loadCartItems();
   }
 
-  // ---------------------------
-  // LOAD CART ITEMS
-  // ---------------------------
   loadCartItems() {
-    const userData = localStorage.getItem('userLoggedIn');
-
-    if (!userData) {
-      alert('Please login to access checkout');
-      this.route.navigate(['/login']);
+    const user = localStorage.getItem('userLoggedIn');
+    if (!user) {
+      this.router.navigate(['/login']);
       return;
     }
 
-    const userId = JSON.parse(userData).id;
-    this.isLoading = true;
-
-    this.cartService.getCartData(userId).subscribe({
-      next: (data) => {
-        this.cartData = data;
-        this.calculateTotalPrice();
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error loading cart:', err);
-        this.isLoading = false;
-      }
+    const userId = JSON.parse(user).id;
+    this.cartService.getCartData(userId).subscribe(data => {
+      this.cartData = data;
+      this.totalPrice = data.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
     });
   }
 
-  // ---------------------------
-  // PRICE CALCULATION
-  // ---------------------------
-  calculateTotalPrice() {
-    let price = 0;
-    this.cartData.forEach(item => {
-      price += item.price * item.quantity;
-    });
-    this.totalPrice = price;
-  }
-
-  // ---------------------------
-  // SUBMIT ORDER (UI ONLY)
-  // ---------------------------
   submitForm() {
-    if (this.checkoutForm.invalid) {
-      return;
-    }
+    if (this.checkoutForm.invalid) return;
 
-    this.isLoading = true;
-
-    // Remove all cart items (simulate order success)
-    this.cartData.forEach(item => {
-      if (item.id) {
-        this.cartService.RemoveAllCartItems(item.id);
+    // 📊 CHECKOUT EVENT
+    this.eventTracker.trackEvent({
+      event_type: 'checkout',
+      metadata: {
+        total_price: this.totalPrice,
+        items_count: this.cartData.length
       }
+    });
+
+    this.cartData.forEach(item => {
+      if (item.id) this.cartService.RemoveAllCartItems(item.id);
     });
 
     setTimeout(() => {
-      alert('Order has been placed successfully');
-      this.isLoading = false;
-      this.route.navigate(['/']);
+      alert('Order placed successfully');
+      this.router.navigate(['/']);
     }, 500);
   }
 }
