@@ -1,0 +1,64 @@
+# =========================================================
+# STEP 0: CONFIRM CURRENT BRANCH
+# (Make sure you are on the old branch before renaming)
+# =========================================================
+git branch
+# Expected: * feature/ml-event-tracking
+
+
+# =========================================================
+# STEP 1: RENAME LOCAL BRANCH
+# Old name  → New long descriptive name
+# (Commits remain SAFE – only branch label changes)
+# =========================================================
+git branch -m feature/ml-event-tracking feature/ml-events-cart-checkout-services-too
+
+
+# =========================================================
+# STEP 2: VERIFY LOCAL BRANCH RENAME
+# =========================================================
+git branch
+# Expected: * feature/ml-events-cart-checkout-services-too
+
+
+# =========================================================
+# STEP 3: PUSH NEWLY RENAMED BRANCH TO REMOTE
+# (Now GitHub will have this new branch)
+# =========================================================
+git push origin feature/ml-events-cart-checkout-services-too
+
+
+# =========================================================
+# STEP 4: DELETE OLD REMOTE BRANCH
+# (Cleanup – prevents confusion, commits already safe)
+# =========================================================
+git push origin --delete feature/ml-event-tracking
+
+
+# =========================================================
+# STEP 5: SET UPSTREAM FOR NEW BRANCH (VERY IMPORTANT)
+# Enables normal git push / git pull without extra args
+# =========================================================
+git push --set-upstream origin feature/ml-events-cart-checkout-services-too
+
+
+# =========================================================
+# STEP 6: CHECK STATUS & TRACKING INFO
+# =========================================================
+git status
+git branch -vv
+# Should show:
+# feature/ml-events-cart-checkout-services-too [origin/feature/ml-events-cart-checkout-services-too]
+
+
+# =========================================================
+# STEP 7: CLEAN UP STALE REMOTE REFERENCES (OPTIONAL BUT GOOD)
+# =========================================================
+git fetch --prune
+
+
+# =========================================================
+# STEP 8: (OPTIONAL) CHECKOUT THE BRANCH AGAIN
+# Useful if you switched branches earlier
+# =========================================================
+git checkout feature/ml-events-cart-checkout-services-too
