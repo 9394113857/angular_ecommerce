@@ -1,0 +1,63 @@
+# =========================================================
+# STEP 0: GO TO ANGULAR PROJECT ROOT
+# =========================================================
+cd E:\ecommerce-platform\angular_ecommerce
+
+
+# =========================================================
+# STEP 1: CHECK NODE + NPM
+# =========================================================
+node -v
+npm -v
+
+
+# =========================================================
+# STEP 2: CHECK ANGULAR CLI
+# =========================================================
+ng version
+
+
+# =========================================================
+# STEP 3: VERIFY REQUIRED ANGULAR PACKAGES
+# (HttpClientModule depends on @angular/common)
+# =========================================================
+npm list @angular/core @angular/common @angular/router rxjs
+
+
+# =========================================================
+# STEP 4: AUTO-INSTALL MISSING / BROKEN PACKAGES
+# (SAFE EVEN IF ALREADY INSTALLED)
+# =========================================================
+npm install @angular/common @angular/core @angular/router rxjs --save
+
+
+# =========================================================
+# STEP 5: CLEAN CACHE + NODE MODULES (MOST IMPORTANT)
+# =========================================================
+npm cache clean --force
+rmdir /s /q node_modules
+del package-lock.json
+
+
+# =========================================================
+# STEP 6: REINSTALL EVERYTHING CLEAN
+# =========================================================
+npm install
+
+
+# =========================================================
+# STEP 7: CHECK TYPESCRIPT
+# =========================================================
+npm list typescript || npm install typescript --save-dev
+
+
+# =========================================================
+# STEP 8: BUILD WITH VERBOSE LOGS (SEE MODULE ERRORS)
+# =========================================================
+ng build --verbose
+
+
+# =========================================================
+# STEP 9: RUN WITH DEBUG LOGGING
+# =========================================================
+ng serve --open --verbose     
