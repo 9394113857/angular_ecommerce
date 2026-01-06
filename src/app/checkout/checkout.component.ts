@@ -41,6 +41,7 @@ export class CheckoutComponent implements OnInit {
     }
 
     const userId = JSON.parse(user).id;
+
     this.cartService.getCartData(userId).subscribe(data => {
       this.cartData = data;
       this.totalPrice = data.reduce(
@@ -53,7 +54,12 @@ export class CheckoutComponent implements OnInit {
   submitForm() {
     if (this.checkoutForm.invalid) return;
 
-    // 📊 CHECKOUT EVENT
+    const user = localStorage.getItem('userLoggedIn');
+    if (!user) return;
+
+    const userId = JSON.parse(user).id;
+
+    // 📊 TRACK CHECKOUT EVENT
     this.eventTracker.trackEvent({
       event_type: 'checkout',
       metadata: {
@@ -62,13 +68,10 @@ export class CheckoutComponent implements OnInit {
       }
     });
 
-    this.cartData.forEach(item => {
-      if (item.id) this.cartService.RemoveAllCartItems(item.id);
-    });
-
-    setTimeout(() => {
+    // ✅ CORRECT METHOD CALL
+    this.cartService.removeAllCartItems(userId).subscribe(() => {
       alert('Order placed successfully');
       this.router.navigate(['/']);
-    }, 500);
+    });
   }
 }
