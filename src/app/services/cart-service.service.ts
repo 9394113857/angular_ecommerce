@@ -10,7 +10,7 @@ export class CartServiceService {
   /** Emits cart items to header */
   cartData = new EventEmitter<products[] | []>();
 
-  private baseUrl = 'http://127.0.0.1:5003/api/cart';
+  private baseUrl = 'https://backend-cart-order-service.onrender.com/api/cart';
 
   constructor(private http: HttpClient) {}
 
@@ -58,7 +58,7 @@ export class CartServiceService {
   // =====================================================
   checkout(payload: { contact: number; address: string; total_price: number }) {
     return this.http.post(
-      'http://127.0.0.1:5003/api/checkout/',
+      'https://backend-cart-order-service.onrender.com/api/checkout/',
       payload,
       { headers: this.getAuthHeaders() }
     );
