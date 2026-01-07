@@ -8,7 +8,7 @@ export class EventTrackingService {
 
   // 🔁 Local ML Events Service
   // Later replace with Render URL
-  private baseUrl = 'https://backend-ml-events-service.onrender.com/api/events';
+  private baseUrl = 'https://backend-ml-events-service.onrender.com/api/events'; 
 
   constructor(private http: HttpClient) {}
 
