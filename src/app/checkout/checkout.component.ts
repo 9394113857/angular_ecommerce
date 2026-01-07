@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { cartType } from 'src/data.type';
@@ -17,8 +17,9 @@ export class CheckoutComponent implements OnInit {
 
   contact?: number;
   deliveryAddress?: string;
-  totalPrice = 0;
+
   cartData: cartType[] = [];
+  totalPrice = 0;
   isLoading = false;
 
   constructor(
@@ -30,46 +31,28 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle('E-Comm | Checkout');
-    this.loadCartItems();
+    this.loadCart();
   }
 
-  loadCartItems() {
-    const user = localStorage.getItem('userLoggedIn');
-    if (!user) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
-    const userId = JSON.parse(user).id;
-
-    this.cartService.getCartData(userId).subscribe(data => {
+  loadCart() {
+    this.isLoading = true;
+    this.cartService.getCart().subscribe(data => {
       this.cartData = data;
       this.totalPrice = data.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
+        (sum, item) => sum + item.price * item.quantity, 0
       );
+      this.isLoading = false;
     });
   }
 
   submitForm() {
     if (this.checkoutForm.invalid) return;
 
-    const user = localStorage.getItem('userLoggedIn');
-    if (!user) return;
-
-    const userId = JSON.parse(user).id;
-
-    // 📊 TRACK CHECKOUT EVENT
-    this.eventTracker.trackEvent({
-      event_type: 'checkout',
-      metadata: {
-        total_price: this.totalPrice,
-        items_count: this.cartData.length
-      }
-    });
-
-    // ✅ CORRECT METHOD CALL
-    this.cartService.removeAllCartItems(userId).subscribe(() => {
+    this.cartService.checkout({
+      contact: this.contact!,
+      address: this.deliveryAddress!,
+      total_price: this.totalPrice
+    }).subscribe(() => {
       alert('Order placed successfully');
       this.router.navigate(['/']);
     });

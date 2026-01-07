@@ -14,14 +14,16 @@ import { EventTrackingService } from '../services/event-tracking.service';
 export class ProductDetailsComponent implements OnInit {
 
   productData!: products;
+
   isLoading = false;
+
+  /** ✅ FIX: Added because HTML uses it */
   loadingText = 'Loading product details...';
 
   isSellerLoggedIn = false;
   isProductInCart = false;
   productQuantity = 1;
 
-  cartItems: cartType | undefined;
   faEditIcon = faEdit;
 
   constructor(
@@ -45,7 +47,7 @@ export class ProductDetailsComponent implements OnInit {
       this.isLoading = false;
       this.checkProductInCart();
 
-      // 📊 VIEW PRODUCT EVENT
+      // 📊 ML EVENT
       this.eventTracker.trackEvent({
         event_type: 'view_product',
         object_type: 'product',
@@ -69,6 +71,7 @@ export class ProductDetailsComponent implements OnInit {
       this.isProductInCart = true;
     } else {
       const user = JSON.parse(localStorage.getItem('userLoggedIn')!);
+
       const cartData: cartType = {
         ...this.productData,
         productId: this.productData._id,
@@ -76,7 +79,7 @@ export class ProductDetailsComponent implements OnInit {
         quantity: this.productQuantity
       };
 
-      this.cartService.addToCartService(cartData).subscribe(() => {
+      this.cartService.addToCart(cartData).subscribe(() => {
         this.isProductInCart = true;
       });
     }
@@ -94,7 +97,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   removeFromCart(id: string) {
-    this.cartService.removeItemFromCart(id);
+    this.cartService.removeLocalItem(id);
     this.isProductInCart = false;
 
     // 📊 REMOVE FROM CART EVENT
@@ -107,10 +110,12 @@ export class ProductDetailsComponent implements OnInit {
 
   checkProductInCart() {
     const localCart = localStorage.getItem('localCart');
-    if (localCart) {
-      const items: products[] = JSON.parse(localCart);
-      this.isProductInCart = items.some(item => item._id === this.productData._id);
-    }
+    if (!localCart) return;
+
+    const items: products[] = JSON.parse(localCart);
+    this.isProductInCart = items.some(
+      item => item._id === this.productData._id
+    );
   }
 
   EditRedirect(id: number) {

@@ -11,24 +11,24 @@ import { products } from 'src/data.type';
 export class HeaderComponent implements OnInit {
 
   menuType: 'default' | 'seller' | 'user' = 'default';
-  isMenuOpen: boolean = false;
+  isMenuOpen = false;
 
-  cartItems: number = 0;
+  cartItems = 0;
 
-  sellerName: string = 'Seller';
-  userName: string = 'User';
+  sellerName = 'Seller';
+  userName = 'User';
 
-  searchResult: products[] | undefined;
+  searchResult?: products[];
 
   constructor(
-    private route: Router,
+    private router: Router,
     private cartService: CartServiceService
   ) {}
 
   ngOnInit(): void {
 
-    // 🔁 MENU SWITCH BASED ON LOGIN STATE
-    this.route.events.subscribe(() => {
+    // MENU TYPE SWITCH
+    this.router.events.subscribe(() => {
       if (localStorage.getItem('sellerLoggedIn')) {
         this.menuType = 'seller';
       } else if (localStorage.getItem('userLoggedIn')) {
@@ -38,30 +38,23 @@ export class HeaderComponent implements OnInit {
       }
     });
 
-    // 🛒 LOCAL CART (GUEST USER)
+    // LOCAL CART COUNT
     const localCart = localStorage.getItem('localCart');
     if (localCart) {
       this.cartItems = JSON.parse(localCart).length;
     }
 
-    // 🔥 LISTEN TO CART UPDATES (HEADER COUNT FIX)
+    // CART SYNC (HEADER COUNT)
     this.cartService.cartData.subscribe(items => {
       this.cartItems = items.length;
     });
-
-    // 🔥 SYNC CART ON REFRESH (LOGGED-IN USER)
-    const user = localStorage.getItem('userLoggedIn');
-    if (user) {
-      const userId = JSON.parse(user).id;
-      this.cartService.getCartItems(userId);
-    }
   }
 
   // ---------------- SEARCH ----------------
   onSearchInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     if (value) {
-      this.route.navigate([`search/${value}`]);
+      this.router.navigate([`search/${value}`]);
     }
   }
 
@@ -70,11 +63,8 @@ export class HeaderComponent implements OnInit {
   }
 
   searchbtn(value: string) {
-    if (!value) {
-      alert('Search input cannot be empty');
-      return;
-    }
-    this.route.navigate([`search/${value}`]);
+    if (!value) return;
+    this.router.navigate([`search/${value}`]);
   }
 
   // ---------------- MENU ----------------
@@ -84,19 +74,19 @@ export class HeaderComponent implements OnInit {
 
   // ---------------- NAVIGATION ----------------
   redirectToDetails(id: string) {
-    this.route.navigate([`product/details/${id}`]);
+    this.router.navigate([`product/details/${id}`]);
   }
 
   // ---------------- LOGOUT ----------------
   sellerLogout() {
     localStorage.clear();
     this.cartItems = 0;
-    this.route.navigate(['/']);
+    this.router.navigate(['/']);
   }
 
   userLogout() {
     localStorage.clear();
     this.cartItems = 0;
-    this.route.navigate(['/']);
+    this.router.navigate(['/']);
   }
 }

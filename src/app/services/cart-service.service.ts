@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { cartType, products } from 'src/data.type';
 
 @Injectable({
@@ -7,96 +7,89 @@ import { cartType, products } from 'src/data.type';
 })
 export class CartServiceService {
 
-  /**
-   * Emits cart items so Header & other components stay in sync
-   */
+  /** Emits cart items to header */
   cartData = new EventEmitter<products[] | []>();
+
+  private baseUrl = 'http://127.0.0.1:5003/api/cart';
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * CART BACKEND (LOCAL)
-   * Flask Cart Service
-   */
-  baseUrl = 'http://127.0.0.1:5003/cart';
-
   // =====================================================
-  // LOCAL CART (GUEST USER)
+  // 🔐 JWT HEADER HELPER
   // =====================================================
-
-  localAddToCart(data: products) {
-    let cartItems: products[] = [];
-    const existing = localStorage.getItem('localCart');
-
-    if (existing) {
-      cartItems = JSON.parse(existing);
-      cartItems.push(data);
-    } else {
-      cartItems = [data];
-    }
-
-    localStorage.setItem('localCart', JSON.stringify(cartItems));
-    this.cartData.emit(cartItems);
-  }
-
-  removeItemFromCart(productId: string) {
-    const cartData = localStorage.getItem('localCart');
-    if (!cartData) return;
-
-    let items: products[] = JSON.parse(cartData);
-    items = items.filter(item => item._id !== productId);
-
-    localStorage.setItem('localCart', JSON.stringify(items));
-    this.cartData.emit(items);
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
   }
 
   // =====================================================
   // BACKEND CART (LOGGED-IN USER)
   // =====================================================
 
-  /**
-   * ADD ITEM TO CART
-   * POST /api/cart/add
-   */
-  addToCartService(data: cartType) {
-    return this.http.post(`${this.baseUrl}/add`, data);
+  /** ADD ITEM */
+  addToCart(cart: cartType) {
+    return this.http.post(
+      this.baseUrl + '/',
+      cart,
+      { headers: this.getAuthHeaders() }
+    );
   }
 
-  /**
-   * GET CART ITEMS (HEADER COUNT)
-   * GET /api/cart/user/<userId>
-   */
-  getCartItems(userId: number) {
-    this.http
-      .get<cartType[]>(`${this.baseUrl}/user/${userId}`)
-      .subscribe(items => {
-        if (items) {
-          this.cartData.emit(items);
-        }
-      });
+  /** GET ALL CART ITEMS */
+  getCart() {
+    return this.http.get<cartType[]>(
+      this.baseUrl + '/',
+      { headers: this.getAuthHeaders() }
+    );
   }
 
-  /**
-   * GET CART ITEMS (CART PAGE)
-   * GET /api/cart/user/<userId>
-   */
-  getCartData(userId: number) {
-    return this.http.get<cartType[]>(`${this.baseUrl}/user/${userId}`);
+  /** REMOVE SINGLE ITEM */
+  removeCartItem(id: number) {
+    return this.http.delete(
+      `${this.baseUrl}/${id}`,
+      { headers: this.getAuthHeaders() }
+    );
   }
 
-  /**
-   * REMOVE SINGLE CART ITEM
-   * DELETE /api/cart/item/<cartId>
-   */
-  cartItemRemoveFromDb(cartId: number) {
-    return this.http.delete(`${this.baseUrl}/item/${cartId}`);
+  // =====================================================
+  // CHECKOUT
+  // =====================================================
+  checkout(payload: { contact: number; address: string; total_price: number }) {
+    return this.http.post(
+      'http://127.0.0.1:5003/api/checkout/',
+      payload,
+      { headers: this.getAuthHeaders() }
+    );
   }
 
-  /**
-   * CLEAR CART AFTER CHECKOUT
-   * POST /api/cart/checkout
-   */
-  removeAllCartItems(userId: number) {
-    return this.http.post(`${this.baseUrl}/checkout`, { userId });
+  // =====================================================
+  // GUEST CART (LOCAL STORAGE)
+  // =====================================================
+  localAddToCart(product: products) {
+    let items: products[] = [];
+    const local = localStorage.getItem('localCart');
+
+    if (local) {
+      items = JSON.parse(local);
+      items.push(product);
+    } else {
+      items = [product];
+    }
+
+    localStorage.setItem('localCart', JSON.stringify(items));
+    this.cartData.emit(items);
+  }
+
+  removeLocalItem(productId: string) {
+    const local = localStorage.getItem('localCart');
+    if (!local) return;
+
+    let items: products[] = JSON.parse(local);
+    items = items.filter(p => p._id !== productId);
+
+    localStorage.setItem('localCart', JSON.stringify(items));
+    this.cartData.emit(items);
   }
 }

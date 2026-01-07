@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import {Title} from '@angular/platform-browser'
+import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { cartType, priceSummary } from 'src/data.type';
 import { CartServiceService } from '../services/cart-service.service';
 import { Router } from '@angular/router';
@@ -9,94 +9,61 @@ import { Router } from '@angular/router';
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css']
 })
-export class CartComponent {
-  cartData: cartType[] | undefined
-  isLoggedIn: boolean = false
+export class CartComponent implements OnInit {
+
+  cartData: cartType[] = [];
+  isLoggedIn = false;
+
   priceSummary: priceSummary = {
     price: 0,
     tax: 10,
-    delivery: 10,
+    delivery: 100,
     discount: 10,
     total: 0
-  }
+  };
 
-  loading: boolean = true;
-  loadingText: string = 'Loading cart items...';
-
+  loading = true;
+  loadingText = 'Loading cart items...';
 
   constructor(
     private cartService: CartServiceService,
-    private router:Router,
-    private titleService:Title
-
-  ) { }
-
-
-
+    private router: Router,
+    private titleService: Title
+  ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('E-Comm | Cart');
     this.loadCartItems();
-    this.titleService.setTitle("E-Comm | Cart")
-  }
-
-
-
-  removeFromCart(id: number) {
-
-    this.cartData && this.cartService.cartItemRemoveFromDb(id)
-      .subscribe((result) => {
-        if (result) {
-          let user = localStorage.getItem('userLoggedIn');
-          let userId = user && JSON.parse(user).id;
-          this.cartService.getCartItems(userId)
-          alert("Product removed from cart")
-          this.loadCartItems()
-        } else {
-          alert("Something went wrong")
-        }
-      })
   }
 
   loadCartItems() {
-    let userData = localStorage.getItem('userLoggedIn');
-    if (userData) {
-      let parseData = JSON.parse(userData);
-      this.isLoggedIn = false;
-      this.loading = true;
-      this.cartService.getCartData(parseData.id).subscribe(
-        (data) => {
-          // console.log("data", data);
-          this.cartData = data;
-          this.loading = false;
-  
-          let price = 0;
-          data.forEach((item) => {
-            if (item.quantity) {
-              price += +item.price * +item.quantity;
-            }
-          });
-  
-          this.priceSummary.price = price;
-          this.priceSummary.delivery = 100;
-          const discountPercent = 10;
-          const discount = price * (discountPercent / 100);
-          const total = price + 100 - discount;
-          this.priceSummary.total = Number(total.toFixed(2));
-        },
-        (error) => {
-          console.log("Error retrieving cart data:", error);
-         
-        }
-      );
-    } else {
+    if (!localStorage.getItem('userLoggedIn')) {
       this.isLoggedIn = true;
       this.loading = false;
+      return;
     }
-  }
-  
 
+    this.cartService.getCart().subscribe(data => {
+      this.cartData = data;
+      this.calculateSummary(data);
+      this.loading = false;
+    });
+  }
+
+  calculateSummary(data: cartType[]) {
+    const price = data.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const discount = price * (this.priceSummary.discount / 100);
+    this.priceSummary.price = price;
+    this.priceSummary.total = price + this.priceSummary.delivery - discount;
+  }
+
+  removeFromCart(id: number) {
+    this.cartService.removeCartItem(id).subscribe(() => {
+      this.loadCartItems();
+    });
+  }
 
   checkout() {
-   this.router.navigate(['/checkout'])
+    this.router.navigate(['/checkout']);
   }
 }
