@@ -1,0 +1,137 @@
+=====================================================================
+GIT FEATURE → MAIN WORKFLOW (PRODUCTION SAFE)
+Applies to ALL PROJECTS (Angular / Flask / Any Backend)
+=====================================================================
+
+-----------------------------------------------------
+PHASE 0: START POINT (ASSUMPTIONS)
+-----------------------------------------------------
+
+- You already have a stable `main` branch
+- You want to start a new feature (example: orders-flow-v1)
+- You NEVER develop directly on main
+
+-----------------------------------------------------
+PHASE 1: CREATE FEATURE BRANCH (ONCE PER PROJECT)
+-----------------------------------------------------
+
+# Make sure you are on main
+git checkout main
+git status
+
+# Always update main first
+git pull origin main
+
+# Create feature branch from latest main
+git checkout -b feature/orders-flow-v1
+
+# Push branch upstream immediately (even with no commits)
+git push -u origin feature/orders-flow-v1
+
+# ✅ Now start coding safely on this branch
+
+-----------------------------------------------------
+PHASE 2: DAILY DEVELOPMENT (REPEAT AS NEEDED)
+-----------------------------------------------------
+
+# Check changes
+git status
+
+# Stage changes
+git add .
+
+# Commit changes
+git commit -m "orders: add order model and API"
+
+# Push feature branch
+git push
+
+-----------------------------------------------------
+PHASE 3: KEEP FEATURE BRANCH UPDATED WITH MAIN
+(IMPORTANT FOR LONG FEATURES)
+-----------------------------------------------------
+
+# Fetch latest changes from remote
+git fetch origin
+
+# Make sure you are on feature branch
+git checkout feature/orders-flow-v1
+
+# Merge latest main into feature branch
+git merge origin/main
+
+# If editor opens (vi):
+# - Press ESC
+# - Type :wq
+# - Press ENTER
+
+# Resolve conflicts if any:
+# - Fix files
+# - git add .
+# - git commit
+
+-----------------------------------------------------
+PHASE 4: FEATURE COMPLETED → MERGE INTO MAIN
+-----------------------------------------------------
+
+# Switch to main
+git checkout main
+
+# Pull latest main (SAFETY STEP)
+git pull origin main
+
+# Merge feature branch into main
+git merge feature/orders-flow-v1
+
+# If vi editor opens:
+# - Press ESC
+# - Type :wq
+# - Press ENTER
+
+-----------------------------------------------------
+PHASE 5: PUSH MAIN TO PRODUCTION
+-----------------------------------------------------
+
+# Push merged main branch
+git push origin main
+
+# ✅ This triggers:
+# - Netlify deploy (Angular)
+# - Render deploy (Backends)
+# - Production update
+
+-----------------------------------------------------
+PHASE 6: CLEANUP (OPTIONAL BUT RECOMMENDED)
+-----------------------------------------------------
+
+# Delete local feature branch
+git branch -d feature/orders-flow-v1
+
+# Delete remote feature branch
+git push origin --delete feature/orders-flow-v1
+
+-----------------------------------------------------
+PHASE 7: OTHER SYSTEM / TEAMMATE SYNC
+-----------------------------------------------------
+
+# On another machine or teammate system:
+git fetch origin
+git checkout main
+git pull origin main
+
+# ✅ Everything now in sync
+
+=====================================================================
+IMPORTANT RULES (READ ALWAYS)
+=====================================================================
+
+❌ Never commit directly to main  
+❌ Never develop on main  
+❌ Never skip git pull before merge  
+
+✅ Feature branches are for development  
+✅ Main branch is always production-ready  
+
+=====================================================================
+END OF DOCUMENT
+=====================================================================
