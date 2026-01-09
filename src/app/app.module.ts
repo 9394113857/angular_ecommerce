@@ -27,6 +27,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 
 import { SharedService } from './services/shared.service';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { OrdersComponent } from './order-details/order-details.component';
+import { OrderDetailsComponent } from './order-details/order-details.component';  
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     CheckoutComponent,
     UnauthorizedComponent,
     LoadingComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    OrdersComponent,
+    OrderDetailsComponent
   ],
   imports: [
     BrowserModule,

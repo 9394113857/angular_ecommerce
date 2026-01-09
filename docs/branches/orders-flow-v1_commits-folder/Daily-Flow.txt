@@ -1,0 +1,20 @@
+9-1-26:-
+🧘‍♂️ TAKE YOUR TEA BREAK ☕
+
+You’ve already crossed production backend territory —
+Angular now is easy + enjoyable, not stressful.
+
+When you’re back, just say:
+
+“Ready for Angular Orders – files coming”
+
+We’ll build it clean, slow, and perfect 😌🔥
+======================================================
+
+ng g c orders
+
+ng generate component order-details
+
+
+Above are executed and generated fiels too.
+

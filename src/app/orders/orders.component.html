@@ -1,0 +1,33 @@
+<h2>My Orders</h2>
+
+<p *ngIf="isLoading">Loading orders...</p>
+
+<div *ngIf="!isLoading && orders.length === 0">
+  <p>No orders found</p>
+</div>
+
+<table *ngIf="orders.length > 0">
+  <thead>
+    <tr>
+      <th>Order ID</th>
+      <th>Total</th>
+      <th>Status</th>
+      <th>Date</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let order of orders">
+      <td>#{{ order.order_id }}</td>
+      <td>₹ {{ order.total_price }}</td>
+      <td>{{ order.status }}</td>
+      <td>{{ order.created_at | date:'medium' }}</td>
+      <td>
+        <button (click)="viewOrder(order.order_id)">
+          View
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
