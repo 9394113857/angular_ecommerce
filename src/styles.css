@@ -1,16 +1,34 @@
-/* You can add global styles to this file, and also import other style files */
-body {
-    font-family: sans-serif;
+/* =========================================================
+   GLOBAL RESET & LAYOUT FIXES
+   ========================================================= */
+
+html, body {
     margin: 0;
     padding: 0;
+    font-family: sans-serif;
     box-sizing: border-box;
 }
+
+/* VERY IMPORTANT:
+   Push routed pages BELOW sticky header */
+router-outlet + * {
+    display: block;
+    padding-top: 80px; /* header height */
+}
+
+/* =========================================================
+   COMMON UTILITY STYLES
+   ========================================================= */
 
 .showMessage-p {
     text-align: center;
     font-size: 18px;
     color: darkorchid;
 }
+
+/* =========================================================
+   LOADING COMPONENT
+   ========================================================= */
 
 .loading-indicator {
     display: flex;
@@ -27,7 +45,9 @@ body {
     text-align: center;
 }
 
-/* authentication css */
+/* =========================================================
+   AUTHENTICATION (LOGIN / SIGNUP)
+   ========================================================= */
 
 /* Main container */
 .registerForm {
@@ -54,7 +74,6 @@ body {
 /* Form */
 .signupform {
     padding: 15px 40px;
-
 }
 
 .signupform label {
@@ -98,29 +117,48 @@ body {
     font-size: 15px;
     margin-top: -10px;
 }
-.login-failed{
+
+.login-failed {
     color: red;
     font-size: 16px;
     text-align: center;
 }
 
+/* Auth toggle */
 .auth-toggle-link {
     font-size: 14px;
     color: #666;
     display: inline-block;
     margin-top: 10px;
-  }
-  
-  .auth-toggle-link span {
+}
+
+.auth-toggle-link span {
     color: #3498db;
     cursor: pointer;
     text-decoration: underline;
     margin-left: 5px;
-  }
-  
+}
 
+/* =========================================================
+   HOME PAGE (SAFE BASE)
+   ========================================================= */
+
+.home_main_container_slider {
+    width: 100%;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+/* =========================================================
+   RESPONSIVE FIXES
+   ========================================================= */
 
 @media only screen and (max-width: 768px) {
+
+    router-outlet + * {
+        padding-top: 90px;
+    }
+
     .registerForm {
         height: auto;
         padding: 20px;

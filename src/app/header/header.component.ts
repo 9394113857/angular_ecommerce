@@ -14,11 +14,11 @@ export class HeaderComponent implements OnInit {
   isMenuOpen = false;
 
   cartItems = 0;
-
   sellerName = 'Seller';
   userName = 'User';
 
-  searchResult?: products[];
+  // 🔥 FIX: NEVER undefined
+  searchResult: products[] = [];
 
   constructor(
     private router: Router,
@@ -27,7 +27,6 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // MENU TYPE SWITCH
     this.router.events.subscribe(() => {
       if (localStorage.getItem('sellerLoggedIn')) {
         this.menuType = 'seller';
@@ -38,19 +37,16 @@ export class HeaderComponent implements OnInit {
       }
     });
 
-    // LOCAL CART COUNT
     const localCart = localStorage.getItem('localCart');
     if (localCart) {
       this.cartItems = JSON.parse(localCart).length;
     }
 
-    // CART SYNC (HEADER COUNT)
     this.cartService.cartData.subscribe(items => {
       this.cartItems = items.length;
     });
   }
 
-  // ---------------- SEARCH ----------------
   onSearchInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     if (value) {
@@ -59,7 +55,7 @@ export class HeaderComponent implements OnInit {
   }
 
   hideSearch() {
-    this.searchResult = undefined;
+    this.searchResult = [];
   }
 
   searchbtn(value: string) {
@@ -67,17 +63,14 @@ export class HeaderComponent implements OnInit {
     this.router.navigate([`search/${value}`]);
   }
 
-  // ---------------- MENU ----------------
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  // ---------------- NAVIGATION ----------------
   redirectToDetails(id: string) {
     this.router.navigate([`product/details/${id}`]);
   }
 
-  // ---------------- LOGOUT ----------------
   sellerLogout() {
     localStorage.clear();
     this.cartItems = 0;

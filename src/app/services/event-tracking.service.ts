@@ -13,7 +13,6 @@ export class EventTrackingService {
 
   // =====================================================
   // PRODUCTION ML EVENTS SERVICE (RENDER) ✅ ACTIVE
-  // =====================================================
   // baseUrl = 'https://backend-ml-events-service.onrender.com/api/events';
 
   constructor(private http: HttpClient) {}
