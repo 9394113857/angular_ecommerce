@@ -10,12 +10,20 @@ export class CartServiceService {
   /** Emits cart items to header */
   cartData = new EventEmitter<products[] | []>();
 
-  private baseUrl = 'https://backend-cart-order-service.onrender.com/api/cart';
+  // =====================================================
+  // LOCAL DEVELOPMENT CART SERVICE (COMMENTED)
+  // =====================================================
+  baseUrl = 'http://127.0.0.1:5003/api/cart';
+
+  // =====================================================
+  // PRODUCTION CART SERVICE (RENDER) ✅ ACTIVE
+  // =====================================================
+  // baseUrl = 'https://backend-cart-order-service.onrender.com/api/cart';
 
   constructor(private http: HttpClient) {}
 
   // =====================================================
-  // 🔐 JWT HEADER HELPER
+  // 🔐 JWT HEADER
   // =====================================================
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
@@ -25,13 +33,13 @@ export class CartServiceService {
   }
 
   // =====================================================
-  // BACKEND CART (LOGGED-IN USER)
+  // 🛒 CART (LOGGED-IN USER)
   // =====================================================
 
   /** ADD ITEM */
   addToCart(cart: cartType) {
     return this.http.post(
-      this.baseUrl + '/',
+      `${this.baseUrl}/`,
       cart,
       { headers: this.getAuthHeaders() }
     );
@@ -40,7 +48,7 @@ export class CartServiceService {
   /** GET ALL CART ITEMS */
   getCart() {
     return this.http.get<cartType[]>(
-      this.baseUrl + '/',
+      `${this.baseUrl}/`,
       { headers: this.getAuthHeaders() }
     );
   }
@@ -54,9 +62,13 @@ export class CartServiceService {
   }
 
   // =====================================================
-  // CHECKOUT
+  // 💳 CHECKOUT
   // =====================================================
-  checkout(payload: { contact: number; address: string; total_price: number }) {
+  checkout(payload: {
+    contact: number;
+    address: string;
+    total_price: number;
+  }) {
     return this.http.post(
       'https://backend-cart-order-service.onrender.com/api/checkout/',
       payload,
@@ -65,7 +77,7 @@ export class CartServiceService {
   }
 
   // =====================================================
-  // GUEST CART (LOCAL STORAGE)
+  // 👤 GUEST CART (LOCAL STORAGE)
   // =====================================================
   localAddToCart(product: products) {
     let items: products[] = [];

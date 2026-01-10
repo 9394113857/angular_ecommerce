@@ -7,10 +7,21 @@ import { Observable } from 'rxjs';
 })
 export class OrderService {
 
-  private baseUrl = 'https://backend-cart-order-service.onrender.com/api/orders';
+  // =====================================================
+  // LOCAL DEVELOPMENT ORDER SERVICE (COMMENTED)
+  // =====================================================
+  baseUrl = 'http://127.0.0.1:5003/api/orders';
+
+  // =====================================================
+  // PRODUCTION ORDER SERVICE (RENDER) ✅ ACTIVE
+  // =====================================================
+  // baseUrl = 'https://backend-cart-order-service.onrender.com/api/orders';
 
   constructor(private http: HttpClient) {}
 
+  // =====================================================
+  // 🔐 JWT HEADER
+  // =====================================================
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders({
@@ -18,27 +29,29 @@ export class OrderService {
     });
   }
 
-  // -----------------------------
-  // GET ALL ORDERS
-  // -----------------------------
+  // =====================================================
+  // 📦 GET ALL ORDERS (MY ORDERS PAGE)
+  // =====================================================
   getMyOrders(): Observable<any[]> {
-    return this.http.get<any[]>(this.baseUrl, {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.get<any[]>(
+      this.baseUrl,
+      { headers: this.getAuthHeaders() }
+    );
   }
 
-  // -----------------------------
-  // GET SINGLE ORDER
-  // -----------------------------
+  // =====================================================
+  // 📄 GET SINGLE ORDER DETAILS
+  // =====================================================
   getOrderDetails(orderId: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/${orderId}`, {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.get<any>(
+      `${this.baseUrl}/${orderId}`,
+      { headers: this.getAuthHeaders() }
+    );
   }
 
-  // -----------------------------
-  // CANCEL ORDER
-  // -----------------------------
+  // =====================================================
+  // ❌ CANCEL ORDER
+  // =====================================================
   cancelOrder(orderId: number): Observable<any> {
     return this.http.patch(
       `${this.baseUrl}/${orderId}/cancel`,

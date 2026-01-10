@@ -6,12 +6,21 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EventTrackingService {
 
-  // 🔁 Local ML Events Service
-  // Later replace with Render URL
-  private baseUrl = 'https://backend-ml-events-service.onrender.com/api/events'; 
+  // =====================================================
+  // LOCAL DEVELOPMENT ML EVENTS SERVICE (COMMENTED)
+  // =====================================================
+  baseUrl = 'http://127.0.0.1:5004/api/events';
+
+  // =====================================================
+  // PRODUCTION ML EVENTS SERVICE (RENDER) ✅ ACTIVE
+  // =====================================================
+  // baseUrl = 'https://backend-ml-events-service.onrender.com/api/events';
 
   constructor(private http: HttpClient) {}
 
+  // =====================================================
+  // 📊 TRACK EVENT (NON-BLOCKING)
+  // =====================================================
   trackEvent(event: {
     event_type: string;
     object_type?: string;
@@ -24,15 +33,15 @@ export class EventTrackingService {
       user_id: this.getUserId()
     };
 
-    // fire & forget (never block UI)
+    // 🔥 Fire & forget (never block UI)
     this.http.post(this.baseUrl, payload).subscribe({
       error: () => {}
     });
   }
 
-  // ------------------------
-  // HELPERS
-  // ------------------------
+  // =====================================================
+  // 🔧 HELPERS
+  // =====================================================
   private getUserId(): number | null {
     const user = localStorage.getItem('userLoggedIn');
     return user ? JSON.parse(user).id : null;

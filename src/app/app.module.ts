@@ -1,19 +1,22 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { HeaderComponent } from './header/header.component';
-import { HomeComponent } from './home/home.component';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   HttpClientModule,
   HTTP_INTERCEPTORS
 } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+
+/* COMPONENTS */
+import { HeaderComponent } from './header/header.component';
+import { HomeComponent } from './home/home.component';
 import { SellerHomeComponent } from './seller-home/seller-home.component';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { SellerAddProductComponent } from './seller-add-product/seller-add-product.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SellerUpdateProductComponent } from './seller-update-product/seller-update-product.component';
 import { ProductCardComponent } from './product-card/product-card.component';
 import { SearchComponent } from './search/search.component';
@@ -25,10 +28,16 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { LoadingComponent } from './loading/loading.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
+/* ORDERS */
+import { OrdersComponent } from './orders/orders.component';
+import { OrderDetailsComponent } from './order-details/order-details.component';
+
+/* ICONS */
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
+/* SERVICES */
 import { SharedService } from './services/shared.service';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
-import { OrdersComponent } from './order-details/order-details.component';
-import { OrderDetailsComponent } from './order-details/order-details.component';  
 
 @NgModule({
   declarations: [
@@ -53,6 +62,8 @@ import { OrderDetailsComponent } from './order-details/order-details.component';
   ],
   imports: [
     BrowserModule,
+    CommonModule,
+    RouterModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
@@ -68,4 +79,4 @@ import { OrderDetailsComponent } from './order-details/order-details.component';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
