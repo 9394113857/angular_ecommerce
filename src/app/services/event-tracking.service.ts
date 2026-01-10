@@ -9,11 +9,11 @@ export class EventTrackingService {
   // =====================================================
   // LOCAL DEVELOPMENT ML EVENTS SERVICE (COMMENTED)
   // =====================================================
-  baseUrl = 'http://127.0.0.1:5004/api/events';
+  // baseUrl = 'http://127.0.0.1:5004/api/events';
 
   // =====================================================
   // PRODUCTION ML EVENTS SERVICE (RENDER) ✅ ACTIVE
-  // baseUrl = 'https://backend-ml-events-service.onrender.com/api/events';
+  baseUrl = 'https://backend-ml-events-service.onrender.com/api/events';
 
   constructor(private http: HttpClient) {}
 

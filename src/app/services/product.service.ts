@@ -12,11 +12,11 @@ export class ProductService {
   // =====================================================
   // LOCAL DEVELOPMENT PRODUCT SERVICE (COMMENTED)
   // =====================================================
-  baseUrl = 'http://127.0.0.1:5002/api/angularProduct';
+  // baseUrl = 'http://127.0.0.1:5002/api/angularProduct';
 
   // =====================================================
   // PRODUCTION PRODUCT SERVICE (RENDER) ✅ ACTIVE
-  // baseUrl = 'https://backend-product-service-ipnq.onrender.com/api/angularProduct';
+  baseUrl = 'https://backend-product-service-ipnq.onrender.com/api/angularProduct';
 
   // -------------------------------
   // ADD PRODUCT (SELLER)

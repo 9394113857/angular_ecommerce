@@ -13,12 +13,12 @@ export class CartServiceService {
   // =====================================================
   // LOCAL DEVELOPMENT CART SERVICE (COMMENTED)
   // =====================================================
-  baseUrl = 'http://127.0.0.1:5003/api/cart';
+  // baseUrl = 'http://127.0.0.1:5003/api/cart';
 
   // =====================================================
   // PRODUCTION CART SERVICE (RENDER) ✅ ACTIVE
   // =====================================================
-  // baseUrl = 'https://backend-cart-order-service.onrender.com/api/cart';
+  baseUrl = 'https://backend-cart-order-service.onrender.com/api/cart';
 
   constructor(private http: HttpClient) {}
 
