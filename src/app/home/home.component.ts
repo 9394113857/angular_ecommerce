@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import {Title} from '@angular/platform-browser'
+import { Title } from '@angular/platform-browser';
+
 import { ProductService } from '../services/product.service';
+import { RecommendationService } from '../services/recommendation.service';
 import { products } from 'src/data.type';
 
 @Component({
@@ -9,57 +11,88 @@ import { products } from 'src/data.type';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-
 export class HomeComponent implements OnInit {
-  // loading 
-  isLoading: boolean = false;
-  loadingText: string = 'Loading products...';
-  // data
-  productData: undefined | products[]
 
-  // icons
-  nextFontIcon = faChevronLeft
-  prevFonticon = faChevronRight
+  // =========================
+  // UI STATE
+  // =========================
+  isLoading = false;
+  loadingText = 'Loading products...';
 
+  // =========================
+  // DATA
+  // =========================
+  productData?: products[];
+  recommendedProducts: products[] = [];
+  showRecommendations = false;
 
-
-
-  constructor(
-    private product: ProductService,
-    private titleService:Title
-  ) { }
-
+  // =========================
+  // SLIDER
+  // =========================
+  nextFontIcon = faChevronLeft;
+  prevFonticon = faChevronRight;
 
   popularProduct = [
-    "https://my-shoping-frontend.vercel.app/static/media/slider-1.2.87b6e70aa5f62e364f8d.jpg",
-    "https://my-shoping-frontend.vercel.app/static/media/slider-1.1.e60d4fc52cc2a1d111a7.jpg",
-    "https://my-shoping-frontend.vercel.app/static/media/slider-2.1.9aa725195d5160024a1c.jpg"
+    'https://my-shoping-frontend.vercel.app/static/media/slider-1.2.87b6e70aa5f62e364f8d.jpg',
+    'https://my-shoping-frontend.vercel.app/static/media/slider-1.1.e60d4fc52cc2a1d111a7.jpg',
+    'https://my-shoping-frontend.vercel.app/static/media/slider-2.1.9aa725195d5160024a1c.jpg'
   ];
+
   slidePosition = 0;
   autoplayInterval: any;
 
-  ngOnInit() {
+  constructor(
+    private productService: ProductService,
+    private recoService: RecommendationService,
+    private titleService: Title
+  ) {}
+
+  // =========================
+  // INIT
+  // =========================
+  ngOnInit(): void {
+    this.titleService.setTitle('E-Comm | Home');
     this.startAutoplay();
-    this.getProductList();
-    this.titleService.setTitle("E-Comm | Home")
+    this.loadProducts();
+    this.loadRecommendations();
   }
 
-  // fetching or calling fetch functioin which is defined 
-  // in side product services
-  getProductList() {
-    this.isLoading = true
-    this.product.getProductList().subscribe(data => {
-      if (data) {
-        this.productData = data
-        this.isLoading = false
-      }
-    })
+  // =========================
+  // PRODUCTS
+  // =========================
+  loadProducts(): void {
+    this.isLoading = true;
+
+    this.productService.getProductList().subscribe(data => {
+      this.productData = data;
+      this.isLoading = false;
+    });
   }
 
+  // =========================
+  // ML RECOMMENDATIONS
+  // =========================
+  loadRecommendations(): void {
+    const userData = localStorage.getItem('userLoggedIn');
+    if (!userData) return;
 
-  // carousal function ⬇️
+    const userId = JSON.parse(userData).id;
 
-  previousSlide() {
+    this.recoService.getRecommendations(userId).subscribe(recos => {
+      if (!recos.length || !this.productData) return;
+
+      this.recommendedProducts = this.productData.filter(p =>
+        recos.some(r => r.product_id === Number(p._id))
+      );
+
+      this.showRecommendations = this.recommendedProducts.length > 0;
+    });
+  }
+
+  // =========================
+  // SLIDER LOGIC
+  // =========================
+  previousSlide(): void {
     if (this.slidePosition === 0) {
       this.slidePosition = (this.popularProduct.length - 1) * -100;
     } else {
@@ -67,7 +100,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  nextSlide() {
+  nextSlide(): void {
     if (this.slidePosition === (this.popularProduct.length - 1) * -100) {
       this.slidePosition = 0;
     } else {
@@ -75,15 +108,13 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  startAutoplay() {
+  startAutoplay(): void {
     this.autoplayInterval = setInterval(() => {
       this.nextSlide();
     }, 2000);
   }
 
-  stopAutoplay() {
+  stopAutoplay(): void {
     clearInterval(this.autoplayInterval);
   }
-
-
 }
