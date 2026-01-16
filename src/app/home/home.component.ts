@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
   // =========================
   // DATA
   // =========================
-  productData?: products[];
+  productData: products[] = [];
   recommendedProducts: products[] = [];
   showRecommendations = false;
 
@@ -53,8 +53,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.titleService.setTitle('E-Comm | Home');
     this.startAutoplay();
-    this.loadProducts();
-    this.loadRecommendations();
+    this.loadProducts(); // ✅ recommendations triggered AFTER products load
   }
 
   // =========================
@@ -66,6 +65,10 @@ export class HomeComponent implements OnInit {
     this.productService.getProductList().subscribe(data => {
       this.productData = data;
       this.isLoading = false;
+
+      // ✅ IMPORTANT FIX:
+      // Call recommendations ONLY after products are loaded
+      this.loadRecommendations();
     });
   }
 
@@ -79,7 +82,7 @@ export class HomeComponent implements OnInit {
     const userId = JSON.parse(userData).id;
 
     this.recoService.getRecommendations(userId).subscribe(recos => {
-      if (!recos.length || !this.productData) return;
+      if (!recos.length || !this.productData.length) return;
 
       this.recommendedProducts = this.productData.filter(p =>
         recos.some(r => r.product_id === Number(p._id))

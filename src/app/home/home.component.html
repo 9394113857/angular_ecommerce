@@ -33,7 +33,7 @@
 ></app-loading>
 
 <!-- ===============================
-     ML RECOMMENDATIONS (NEW)
+     ML RECOMMENDATIONS
 =============================== -->
 <div *ngIf="showRecommendations && !isLoading">
   <h1 class="trendyHead">Recommended For You</h1>
@@ -46,7 +46,7 @@
 </div>
 
 <!-- ===============================
-     TRENDING PRODUCTS (EXISTING)
+     TRENDING PRODUCTS
 =============================== -->
 <h1 class="trendyHead" *ngIf="!isLoading">Trendy Products</h1>
 
@@ -55,4 +55,3 @@
     <app-product-card [productData]="product"></app-product-card>
   </ng-container>
 </div>
-
