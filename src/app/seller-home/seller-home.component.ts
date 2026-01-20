@@ -15,10 +15,8 @@ export class SellerHomeComponent implements OnInit {
   deleteFonticon = faTrash;
   EditFonticon = faEdit;
 
-  // product list
   productList: products[] | undefined;
 
-  // UI states
   showDeleteSuccessMessage: string = '';
   isLoading: boolean = false;
   loadingText: string = 'Please wait while retrieving data...';
@@ -37,15 +35,16 @@ export class SellerHomeComponent implements OnInit {
   // -----------------------------
   // DELETE PRODUCT
   // -----------------------------
-  deleteProductFn(id: string) {
+  deleteProductFn(id: string | number) {
     const isConfirm = window.confirm(
       'Are you sure you want to delete this product?'
     );
 
     if (isConfirm) {
-      this.product.deleteProduct(id).subscribe(response => {
+      this.product.deleteProduct(String(id)).subscribe(response => {
         if (response) {
-          this.showDeleteSuccessMessage = `Product deleted successfully with id : ${id}`;
+          this.showDeleteSuccessMessage =
+            `Product deleted successfully with id : ${id}`;
           this.showProduct();
         }
       });
@@ -59,7 +58,7 @@ export class SellerHomeComponent implements OnInit {
   // -----------------------------
   // EDIT PRODUCT
   // -----------------------------
-  editFn(id: string) {
+  editFn(id: string | number) {
     this.route.navigate([`seller-update-product/${id}`]);
   }
 

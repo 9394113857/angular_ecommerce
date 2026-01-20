@@ -1,46 +1,44 @@
 <div class="product-details" *ngIf="!isLoading; else loadingBlock">
   <div class="product-container">
 
-    <!-- IMAGE -->
     <div class="product-image">
       <img src="https://via.placeholder.com/400x400" alt="Product Image">
     </div>
 
-    <!-- INFO -->
     <div class="product-info">
       <h1>{{ productData.name }}</h1>
       <p class="price">₹ {{ productData.price }}</p>
       <p class="description">{{ productData.description }}</p>
 
-      <!-- QUANTITY (USER) -->
+      <!-- 🔥 VARIANT SELECTION -->
+      <div *ngIf="variants.length > 0">
+        <h4>Select Color</h4>
+        <button
+          *ngFor="let v of variants"
+          (click)="selectVariant(v)"
+          [class.selected]="selectedVariantId === v.id"
+        >
+          {{ v.color }} ({{ v.stock }} left)
+        </button>
+      </div>
+
+      <!-- QUANTITY -->
       <div class="quantity-controls" *ngIf="!isSellerLoggedIn">
         <button (click)="handleQuantity('min')">-</button>
         <span>{{ productQuantity }}</span>
         <button (click)="handleQuantity('plus')">+</button>
       </div>
 
-      <!-- USER CART ACTIONS -->
+      <!-- ADD TO CART -->
       <div *ngIf="!isSellerLoggedIn">
-        <button
-          class="form-button"
-          *ngIf="!isProductInCart"
-          (click)="addToCart()">
+        <button class="form-button" (click)="addToCart()">
           Add to Cart
-        </button>
-
-        <button
-          class="form-button marginLeftbtn"
-          *ngIf="isProductInCart && productData._id"
-          (click)="removeFromCart(productData._id)">
-          Remove from Cart
         </button>
       </div>
 
       <!-- SELLER EDIT -->
       <div *ngIf="isSellerLoggedIn">
-        <button
-          class="form-button Editbtn"
-          (click)="EditRedirect(productData.id!)">
+        <button class="form-button Editbtn" (click)="EditRedirect(productData.id!)">
           Edit Product
         </button>
       </div>

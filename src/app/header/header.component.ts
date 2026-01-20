@@ -17,7 +17,6 @@ export class HeaderComponent implements OnInit {
   sellerName = 'Seller';
   userName = 'User';
 
-  // 🔥 FIX: NEVER undefined
   searchResult: products[] = [];
 
   constructor(
@@ -67,7 +66,8 @@ export class HeaderComponent implements OnInit {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  redirectToDetails(id: string) {
+  // 🔥 FIX HERE
+  redirectToDetails(id: string | number) {
     this.router.navigate([`product/details/${id}`]);
   }
 

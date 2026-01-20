@@ -88,16 +88,21 @@ export class LoginComponent implements OnInit {
     const items: products[] = JSON.parse(localCart);
 
     items.forEach((product, index) => {
+
+      // 🔥 IMPORTANT: DO NOT spread product
       const cartData: cartType = {
-        ...product,
-        productId: product._id,
-        userId,
-        quantity: product.quantity ?? 1
+        productId: product._id!,     // safe now
+        variantId: 0,                // 🔥 TEMP DEFAULT (legacy cart)
+        color: 'default',            // 🔥 TEMP DEFAULT
+        userId: userId,
+        name: product.name,
+        price: product.price,
+        quantity: product.quantity ?? 1,
+        image: product.image
       };
 
       this.cartService.addToCart(cartData).subscribe();
 
-      // Clear local cart after last item
       if (index === items.length - 1) {
         localStorage.removeItem('localCart');
       }

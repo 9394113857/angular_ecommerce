@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../services/product.service';
 import { CartServiceService } from '../services/cart-service.service';
 import { products, cartType } from 'src/data.type';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { EventTrackingService } from '../services/event-tracking.service';
 
 @Component({
@@ -15,16 +14,15 @@ export class ProductDetailsComponent implements OnInit {
 
   productData!: products;
 
+  // 🔥 VARIANTS
+  variants: any[] = [];
+  selectedVariantId!: number;
+  selectedColor!: string;
+
   isLoading = false;
-
-  /** ✅ FIX: Added because HTML uses it */
   loadingText = 'Loading product details...';
-
   isSellerLoggedIn = false;
-  isProductInCart = false;
   productQuantity = 1;
-
-  faEditIcon = faEdit;
 
   constructor(
     private activeRoute: ActivatedRoute,
@@ -42,16 +40,22 @@ export class ProductDetailsComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.productService.getSingleProduct(productId).subscribe(result => {
+    this.productService.getSingleProduct(productId).subscribe((result: products) => {
       this.productData = result;
-      this.isLoading = false;
-      this.checkProductInCart();
+      this.variants = (result as any).variants || [];
 
-      // 📊 ML EVENT
+      if (this.variants.length > 0) {
+        this.selectedVariantId = this.variants[0].id;
+        this.selectedColor = this.variants[0].color;
+      }
+
+      this.isLoading = false;
+
+      // 📊 ML EVENT (force string id)
       this.eventTracker.trackEvent({
         event_type: 'view_product',
         object_type: 'product',
-        object_id: this.productData._id,
+        object_id: String(this.productData._id),
         metadata: {
           price: this.productData.price,
           category: this.productData.category
@@ -60,62 +64,49 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 
+  selectVariant(variant: any) {
+    this.selectedVariantId = variant.id;
+    this.selectedColor = variant.color;
+  }
+
   handleQuantity(type: 'min' | 'plus') {
     if (type === 'min' && this.productQuantity > 1) this.productQuantity--;
     if (type === 'plus' && this.productQuantity < 5) this.productQuantity++;
   }
 
   addToCart() {
-    if (!localStorage.getItem('userLoggedIn')) {
-      this.cartService.localAddToCart(this.productData);
-      this.isProductInCart = true;
-    } else {
-      const user = JSON.parse(localStorage.getItem('userLoggedIn')!);
-
-      const cartData: cartType = {
-        ...this.productData,
-        productId: this.productData._id,
-        userId: user.id,
-        quantity: this.productQuantity
-      };
-
-      this.cartService.addToCart(cartData).subscribe(() => {
-        this.isProductInCart = true;
-      });
+    if (!this.selectedVariantId || !this.selectedColor) {
+      alert('Please select a color');
+      return;
     }
 
-    // 📊 ADD TO CART EVENT
+    const user = JSON.parse(localStorage.getItem('userLoggedIn')!);
+
+    const cartData: cartType = {
+      productId: this.productData._id,
+      variantId: this.selectedVariantId,
+      color: this.selectedColor,
+      name: this.productData.name,
+      price: this.productData.price,
+      quantity: this.productQuantity,
+      image: this.productData.image,
+      userId: user.id
+    };
+
+    this.cartService.addToCart(cartData).subscribe(() => {
+      alert('Added to cart');
+    });
+
     this.eventTracker.trackEvent({
       event_type: 'add_to_cart',
       object_type: 'product',
-      object_id: this.productData._id,
+      object_id: String(this.productData._id),
       metadata: {
-        quantity: this.productQuantity,
-        price: this.productData.price
+        variant_id: this.selectedVariantId,
+        color: this.selectedColor,
+        quantity: this.productQuantity
       }
     });
-  }
-
-  removeFromCart(id: string) {
-    this.cartService.removeLocalItem(id);
-    this.isProductInCart = false;
-
-    // 📊 REMOVE FROM CART EVENT
-    this.eventTracker.trackEvent({
-      event_type: 'remove_from_cart',
-      object_type: 'product',
-      object_id: id
-    });
-  }
-
-  checkProductInCart() {
-    const localCart = localStorage.getItem('localCart');
-    if (!localCart) return;
-
-    const items: products[] = JSON.parse(localCart);
-    this.isProductInCart = items.some(
-      item => item._id === this.productData._id
-    );
   }
 
   EditRedirect(id: number) {
