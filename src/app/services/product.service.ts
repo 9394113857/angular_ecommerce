@@ -12,11 +12,11 @@ export class ProductService {
   // =====================================================
   // LOCAL DEVELOPMENT PRODUCT SERVICE (COMMENTED)
   // =====================================================
-  // baseUrl = 'http://127.0.0.1:5002/api/angularProduct';
+  baseUrl = 'http://127.0.0.1:5002/api/angularProduct';
 
   // =====================================================
   // PRODUCTION PRODUCT SERVICE (RENDER) ✅ ACTIVE
-  baseUrl = 'https://backend-product-service-ipnq.onrender.com/api/angularProduct';
+  // baseUrl = 'https://backend-product-service-ipnq.onrender.com/api/angularProduct';
 
   // -------------------------------
   // ADD PRODUCT (SELLER)
@@ -43,8 +43,12 @@ export class ProductService {
   // UPDATE PRODUCT
   // -------------------------------
   updateProduct(data: products) {
-    const productId = data._id;
-    const { _id, ...updatedData } = data;
+    // const productId = data._id;
+    // const { _id, ...updatedData } = data;
+
+    const productId = data.id ?? data._id;
+const { _id, id, ...updatedData } = data;
+
 
     return this.http.patch<any>(`${this.baseUrl}/update`, {
       productId: productId,

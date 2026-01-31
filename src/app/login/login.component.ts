@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 import { AuthenticationService } from '../services/authentication.service';
 import { CartServiceService } from '../services/cart-service.service';
@@ -13,6 +13,9 @@ import { cartType, products } from 'src/data.type';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+redirectToSignup() {
+throw new Error('Method not implemented.');
+}
 
   loginFailed = '';
   isLoading = false;
@@ -28,83 +31,52 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle('E-Comm | Login');
-    this.authService.notAllowedAuth();
   }
 
-  // ===============================
-  // LOGIN SUBMIT
-  // ===============================
-  loginFormhandle(loginData: NgForm): void {
-    if (loginData.invalid) return;
+  loginFormhandle(form: NgForm): void {
+    if (form.invalid) return;
 
     this.isLoading = true;
 
-    this.authService.loginUser(loginData.value).subscribe({
-      next: (result: any) => {
-        this.loginFormRef?.resetForm();
+    this.authService.loginUser(form.value).subscribe({
+      next: (res: any) => {
+        localStorage.setItem('token', res.access_token);
 
-        // JWT
-        localStorage.setItem('token', result.access_token);
-
-        // SELLER LOGIN
-        if (result.role === 'seller') {
-          localStorage.setItem('sellerLoggedIn', result.userId);
-          this.router.navigate(['seller-home']);
-        }
-        // USER LOGIN
-        else {
-          localStorage.setItem(
-            'userLoggedIn',
-            JSON.stringify({ id: result.userId })
-          );
-
-          // 🔁 MOVE LOCAL CART → BACKEND CART
-          this.syncLocalCartToBackend();
-
+        if (res.role === 'seller') {
+          localStorage.setItem('sellerLoggedIn', res.userId);
+          this.router.navigate(['/seller-home']);
+        } else {
+          localStorage.setItem('userLoggedIn', JSON.stringify({ id: res.userId }));
+          this.syncLocalCart();
           this.router.navigate(['/']);
         }
       },
       error: () => {
-        this.loginFailed = 'Invalid email or password';
-        setTimeout(() => (this.loginFailed = ''), 2000);
-        this.isLoading = false;
-      },
-      complete: () => {
+        this.loginFailed = 'Invalid credentials';
         this.isLoading = false;
       }
     });
   }
 
-  // ===============================
-  // LOCAL CART → BACKEND CART
-  // ===============================
-  syncLocalCartToBackend(): void {
-    const localCart = localStorage.getItem('localCart');
-    const userData = localStorage.getItem('userLoggedIn');
+  syncLocalCart() {
+    const local = localStorage.getItem('localCart');
+    if (!local) return;
 
-    if (!localCart || !userData) return;
+    const items: products[] = JSON.parse(local);
 
-    const userId = JSON.parse(userData).id;
-    const items: products[] = JSON.parse(localCart);
-
-    items.forEach((product, index) => {
-      const cartData: cartType = {
-        ...product,
-        productId: product._id,
-        userId,
-        quantity: product.quantity ?? 1
+    items.forEach(p => {
+      const cart: cartType = {
+        productId: p.id,
+        variantId: 1,
+        name: p.name,
+        price: p.price,
+        quantity: p.quantity ?? 1,
+        image: p.image,
+        color: p.color
       };
-
-      this.cartService.addToCart(cartData).subscribe();
-
-      // Clear local cart after last item
-      if (index === items.length - 1) {
-        localStorage.removeItem('localCart');
-      }
+      this.cartService.addToCart(cart).subscribe();
     });
-  }
 
-  redirectToSignup(): void {
-    this.router.navigate(['auth']);
+    localStorage.removeItem('localCart');
   }
 }

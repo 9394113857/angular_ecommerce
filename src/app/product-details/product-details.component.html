@@ -1,25 +1,21 @@
 <div class="product-details" *ngIf="!isLoading; else loadingBlock">
   <div class="product-container">
 
-    <!-- IMAGE -->
     <div class="product-image">
       <img src="https://via.placeholder.com/400x400" alt="Product Image">
     </div>
 
-    <!-- INFO -->
     <div class="product-info">
       <h1>{{ productData.name }}</h1>
       <p class="price">₹ {{ productData.price }}</p>
       <p class="description">{{ productData.description }}</p>
 
-      <!-- QUANTITY (USER) -->
       <div class="quantity-controls" *ngIf="!isSellerLoggedIn">
         <button (click)="handleQuantity('min')">-</button>
         <span>{{ productQuantity }}</span>
         <button (click)="handleQuantity('plus')">+</button>
       </div>
 
-      <!-- USER CART ACTIONS -->
       <div *ngIf="!isSellerLoggedIn">
         <button
           class="form-button"
@@ -30,17 +26,16 @@
 
         <button
           class="form-button marginLeftbtn"
-          *ngIf="isProductInCart && productData._id"
-          (click)="removeFromCart(productData._id)">
+          *ngIf="isProductInCart"
+          (click)="removeFromCart(productData.id)">
           Remove from Cart
         </button>
       </div>
 
-      <!-- SELLER EDIT -->
       <div *ngIf="isSellerLoggedIn">
         <button
           class="form-button Editbtn"
-          (click)="EditRedirect(productData.id!)">
+          (click)="EditRedirect(productData.id)">
           Edit Product
         </button>
       </div>

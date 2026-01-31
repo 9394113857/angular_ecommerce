@@ -5,7 +5,6 @@ import { SharedService } from '../services/shared.service';
 import { Subscription } from 'rxjs';
 
 
-
 @Component({
   selector: 'app-product-card',
   templateUrl: './product-card.component.html',
@@ -31,15 +30,38 @@ export class ProductCardComponent implements OnInit {
   }
 
 
-  // redirect to product details page
-  redirectProductDetails(id: Number) {
-    this.route.navigate([`product/details/${id}`])
+  redirectProductDetails(id: number | undefined) {
+  if (!id) {
+    console.error('Product ID missing');
+    return;
   }
-
-  // if seller truet then below function will execute
-
-  EditRedirect(id: number) {
-    this.route.navigate([`seller-update-product/${id}`])
-  }
-
+  this.route.navigate([`product/details/${id}`]);
 }
+
+EditRedirect(id: number | undefined) {
+  if (!id) {
+    console.error('Product ID missing');
+    return;
+  }
+  this.route.navigate([`seller-update-product/${id}`]);
+}
+
+}// end class
+
+// ==============================================================
+
+
+// This is a VERY IMPORTANT comment for all developers working on this project.
+// So _id and id main difference is whats going on the backend is explained here:
+
+// 🧠 IMPORTANT RULE (REMEMBER THIS FOREVER)
+// Flask / SQL backend:
+// id
+
+// Mongo backend:
+// _id
+
+
+// 🚫 Never mix them
+
+// Your Angular app was half Mongo, half SQL — now it’s clean.

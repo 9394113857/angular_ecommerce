@@ -15,13 +15,11 @@ export class SellerHomeComponent implements OnInit {
   deleteFonticon = faTrash;
   EditFonticon = faEdit;
 
-  // product list
-  productList: products[] | undefined;
+  productList: products[] = [];
 
-  // UI states
   showDeleteSuccessMessage: string = '';
   isLoading: boolean = false;
-  loadingText: string = 'Please wait while retrieving data...';
+  loadingText: string = 'Please wait while retrieving data...'; // ✅ FIX
 
   constructor(
     private product: ProductService,
@@ -30,44 +28,34 @@ export class SellerHomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('E-Comm | Seller Home');
     this.showProduct();
-    this.titleService.setTitle('E-Comm | Seller-Home');
   }
 
-  // -----------------------------
-  // DELETE PRODUCT
-  // -----------------------------
-  deleteProductFn(id: string) {
+  deleteProductFn(id: number) {
     const isConfirm = window.confirm(
       'Are you sure you want to delete this product?'
     );
 
-    if (isConfirm) {
-      this.product.deleteProduct(id).subscribe(response => {
-        if (response) {
-          this.showDeleteSuccessMessage = `Product deleted successfully with id : ${id}`;
-          this.showProduct();
-        }
-      });
-    }
+    if (!isConfirm) return;
 
-    setTimeout(() => {
-      this.showDeleteSuccessMessage = '';
-    }, 4000);
+    this.product.deleteProduct(id.toString()).subscribe(() => {
+      this.showDeleteSuccessMessage = `Product deleted successfully (ID: ${id})`;
+      this.showProduct();
+
+      setTimeout(() => {
+        this.showDeleteSuccessMessage = '';
+      }, 3000);
+    });
   }
 
-  // -----------------------------
-  // EDIT PRODUCT
-  // -----------------------------
-  editFn(id: string) {
+  editFn(id: number) {
     this.route.navigate([`seller-update-product/${id}`]);
   }
 
-  // -----------------------------
-  // LOAD PRODUCTS
-  // -----------------------------
   showProduct() {
     this.isLoading = true;
+
     this.product.getProductList().subscribe(data => {
       this.productList = data;
       this.isLoading = false;

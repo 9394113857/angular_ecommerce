@@ -25,19 +25,17 @@
 
         <td>
           <fa-icon
-            *ngIf="item._id"
             [icon]="deleteFonticon"
             class="delete-icon"
-            [style.cursor]="'pointer'"
-            (click)="deleteProductFn(item._id)">
+            style="cursor:pointer"
+            (click)="deleteProductFn(item.id)">
           </fa-icon>
 
           <fa-icon
-            *ngIf="item._id"
             [icon]="EditFonticon"
             class="edit-icon"
-            [style.cursor]="'pointer'"
-            (click)="editFn(item._id)">
+            style="cursor:pointer"
+            (click)="editFn(item.id)">
           </fa-icon>
         </td>
       </tr>

@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../services/product.service';
 import { CartServiceService } from '../services/cart-service.service';
-import { products, cartType } from 'src/data.type';
+import { products } from 'src/data.type';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
-import { EventTrackingService } from '../services/event-tracking.service';
 
 @Component({
   selector: 'app-product-details',
@@ -16,9 +15,7 @@ export class ProductDetailsComponent implements OnInit {
   productData!: products;
 
   isLoading = false;
-
-  /** ✅ FIX: Added because HTML uses it */
-  loadingText = 'Loading product details...';
+  loadingText: string = 'Loading product details...'; // ✅ FIX
 
   isSellerLoggedIn = false;
   isProductInCart = false;
@@ -30,31 +27,26 @@ export class ProductDetailsComponent implements OnInit {
     private activeRoute: ActivatedRoute,
     private productService: ProductService,
     private cartService: CartServiceService,
-    private router: Router,
-    private eventTracker: EventTrackingService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.isSellerLoggedIn = !!localStorage.getItem('sellerLoggedIn');
 
-    const productId = this.activeRoute.snapshot.paramMap.get('productId');
-    if (!productId) return;
+    this.activeRoute.paramMap.subscribe(params => {
+      const productId = params.get('productId');
+      if (!productId) return;
 
-    this.isLoading = true;
+      this.isLoading = true;
 
-    this.productService.getSingleProduct(productId).subscribe(result => {
-      this.productData = result;
-      this.isLoading = false;
-      this.checkProductInCart();
-
-      // 📊 ML EVENT
-      this.eventTracker.trackEvent({
-        event_type: 'view_product',
-        object_type: 'product',
-        object_id: this.productData._id,
-        metadata: {
-          price: this.productData.price,
-          category: this.productData.category
+      this.productService.getSingleProduct(productId).subscribe({
+        next: result => {
+          this.productData = result;
+          this.isLoading = false;
+          this.checkProductInCart();
+        },
+        error: () => {
+          this.isLoading = false;
         }
       });
     });
@@ -66,56 +58,30 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   addToCart() {
-    if (!localStorage.getItem('userLoggedIn')) {
-      this.cartService.localAddToCart(this.productData);
+    const cartData = {
+      productId: this.productData.id,
+      variantId: 1,
+      name: this.productData.name,
+      color: this.productData.color ?? 'Black',  // ✅ FIX
+      price: this.productData.price,
+      quantity: this.productQuantity
+    };
+
+    this.cartService.addToCart(cartData).subscribe(() => {
       this.isProductInCart = true;
-    } else {
-      const user = JSON.parse(localStorage.getItem('userLoggedIn')!);
-
-      const cartData: cartType = {
-        ...this.productData,
-        productId: this.productData._id,
-        userId: user.id,
-        quantity: this.productQuantity
-      };
-
-      this.cartService.addToCart(cartData).subscribe(() => {
-        this.isProductInCart = true;
-      });
-    }
-
-    // 📊 ADD TO CART EVENT
-    this.eventTracker.trackEvent({
-      event_type: 'add_to_cart',
-      object_type: 'product',
-      object_id: this.productData._id,
-      metadata: {
-        quantity: this.productQuantity,
-        price: this.productData.price
-      }
     });
   }
 
-  removeFromCart(id: string) {
-    this.cartService.removeLocalItem(id);
-    this.isProductInCart = false;
-
-    // 📊 REMOVE FROM CART EVENT
-    this.eventTracker.trackEvent({
-      event_type: 'remove_from_cart',
-      object_type: 'product',
-      object_id: id
+  removeFromCart(id: number) {
+    this.cartService.removeCartItem(id).subscribe(() => {
+      this.isProductInCart = false;
     });
   }
 
   checkProductInCart() {
-    const localCart = localStorage.getItem('localCart');
-    if (!localCart) return;
-
-    const items: products[] = JSON.parse(localCart);
-    this.isProductInCart = items.some(
-      item => item._id === this.productData._id
-    );
+    this.cartService.getCart().subscribe(items => {
+      this.isProductInCart = items.some(i => i.productId === this.productData.id);
+    });
   }
 
   EditRedirect(id: number) {

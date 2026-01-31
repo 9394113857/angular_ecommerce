@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { Title } from '@angular/platform-browser';
-
 import { ProductService } from '../services/product.service';
 import { RecommendationService } from '../services/recommendation.service';
 import { products } from 'src/data.type';
@@ -13,22 +12,13 @@ import { products } from 'src/data.type';
 })
 export class HomeComponent implements OnInit {
 
-  // =========================
-  // UI STATE
-  // =========================
   isLoading = false;
   loadingText = 'Loading products...';
 
-  // =========================
-  // DATA
-  // =========================
-  productData?: products[];
+  productData: products[] = [];
   recommendedProducts: products[] = [];
   showRecommendations = false;
 
-  // =========================
-  // SLIDER
-  // =========================
   nextFontIcon = faChevronLeft;
   prevFonticon = faChevronRight;
 
@@ -47,74 +37,50 @@ export class HomeComponent implements OnInit {
     private titleService: Title
   ) {}
 
-  // =========================
-  // INIT
-  // =========================
   ngOnInit(): void {
     this.titleService.setTitle('E-Comm | Home');
     this.startAutoplay();
     this.loadProducts();
-    this.loadRecommendations();
   }
 
-  // =========================
-  // PRODUCTS
-  // =========================
   loadProducts(): void {
     this.isLoading = true;
-
     this.productService.getProductList().subscribe(data => {
       this.productData = data;
       this.isLoading = false;
+      this.loadRecommendations();
     });
   }
 
-  // =========================
-  // ML RECOMMENDATIONS
-  // =========================
   loadRecommendations(): void {
-    const userData = localStorage.getItem('userLoggedIn');
-    if (!userData) return;
+    const user = localStorage.getItem('userLoggedIn');
+    if (!user) return;
 
-    const userId = JSON.parse(userData).id;
+    const userId = JSON.parse(user).id;
 
     this.recoService.getRecommendations(userId).subscribe(recos => {
-      if (!recos.length || !this.productData) return;
-
       this.recommendedProducts = this.productData.filter(p =>
-        recos.some(r => r.product_id === Number(p._id))
+        recos.some(r => r.product_id === p.id)
       );
-
       this.showRecommendations = this.recommendedProducts.length > 0;
     });
   }
 
-  // =========================
-  // SLIDER LOGIC
-  // =========================
-  previousSlide(): void {
-    if (this.slidePosition === 0) {
-      this.slidePosition = (this.popularProduct.length - 1) * -100;
-    } else {
-      this.slidePosition += 100;
-    }
+  previousSlide() {
+    this.slidePosition =
+      this.slidePosition === 0
+        ? (this.popularProduct.length - 1) * -100
+        : this.slidePosition + 100;
   }
 
-  nextSlide(): void {
-    if (this.slidePosition === (this.popularProduct.length - 1) * -100) {
-      this.slidePosition = 0;
-    } else {
-      this.slidePosition -= 100;
-    }
+  nextSlide() {
+    this.slidePosition =
+      this.slidePosition === (this.popularProduct.length - 1) * -100
+        ? 0
+        : this.slidePosition - 100;
   }
 
-  startAutoplay(): void {
-    this.autoplayInterval = setInterval(() => {
-      this.nextSlide();
-    }, 2000);
-  }
-
-  stopAutoplay(): void {
-    clearInterval(this.autoplayInterval);
+  startAutoplay() {
+    this.autoplayInterval = setInterval(() => this.nextSlide(), 2000);
   }
 }

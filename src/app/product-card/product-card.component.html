@@ -1,21 +1,29 @@
 <div class="product-card">
   <div class="image-container">
-    <img src={{productData.image}} alt={{productData.name}}>
+    <img src="{{ productData.image || 'https://via.placeholder.com/300' }}"
+         alt="{{ productData.name }}">
   </div>
+
   <div class="productData-details">
-    <p>Name: {{productData.name}}</p>
-    <p>Category: {{productData.category}}</p>
-    <p>Price: ₹ {{productData.price}}</p>
+    <p>Name: {{ productData.name }}</p>
+    <p>Category: {{ productData.category }}</p>
+    <p>Price: ₹ {{ productData.price }}</p>
   </div>
+
   <div class="button-container">
-    <button (click)="redirectProductDetails(productData._id)" [class.onlyViewDetailsbtn]="!isSellerLoggedIn">
-      <fa-icon [icon]="viewdet"></fa-icon>
-      View details
-    </button>
-    <button *ngIf="isSellerLoggedIn" (click)="EditRedirect(productData._id)">
+    <!-- ✅ USE productData.id -->
+    <button (click)="redirectProductDetails(productData.id)">
+  <fa-icon [icon]="viewdet"></fa-icon>
+  View details
+</button>
+
+
+    <!-- ✅ USE productData.id -->
+    <button
+      *ngIf="isSellerLoggedIn"
+      (click)="EditRedirect(productData.id)">
       <fa-icon [icon]="faEditIcon"></fa-icon>
       Edit
     </button>
   </div>
-
 </div>
