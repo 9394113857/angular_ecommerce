@@ -1,0 +1,123 @@
+====================================================================
+ANGULAR FEATURE BRANCH RESET STRATEGY (CLEAN & SAFE)
+Filename: angular-branch-reset-and-rebuild-steps.txt
+Purpose : Reset broken feature branch to main, then rebuild cleanly
+====================================================================
+
+CONTEXT
+-------
+Current branch has many experimental / broken changes.
+We want the SAME clean state as `main`, but still continue work
+inside the SAME feature branch (feature/stock-cart-order-flow).
+
+DO NOT MERGE BROKEN CODE.
+DO NOT PATCH RANDOMLY.
+RESET → REBUILD CLEAN.
+
+====================================================================
+STEP 0: VERIFY CURRENT STATE
+====================================================================
+
+# Check current branch
+git branch
+
+# You should see:
+# * feature/stock-cart-order-flow
+#   main
+
+====================================================================
+STEP 1: SAFETY BACKUP (VERY IMPORTANT)
+====================================================================
+# This keeps your current broken work just in case
+# (No data loss, zero risk)
+
+git checkout feature/stock-cart-order-flow
+git branch backup/feature-stock-cart-order-flow-broken
+
+# Explanation:
+# - backup/* branch stores current state
+# - You will NOT work on this branch again
+# - It is only for reference if needed
+
+====================================================================
+STEP 2: RESET FEATURE BRANCH TO MAIN (CLEAN SLATE)
+====================================================================
+# This makes your feature branch EXACTLY SAME as main
+
+git checkout feature/stock-cart-order-flow
+git reset --hard main
+
+# What this does:
+# - Removes all broken Angular changes
+# - Feature branch now equals main
+# - No merge conflicts
+# - No hidden bugs
+
+====================================================================
+STEP 3: CONFIRM CLEAN STATE
+====================================================================
+
+git status
+
+# Expected output:
+# nothing to commit, working tree clean
+
+====================================================================
+STEP 4: START CLEAN REBUILD (NO MERGES)
+====================================================================
+
+# From now on:
+# - DO NOT merge other feature branches
+# - DO NOT cherry-pick old commits
+# - Implement step-by-step only
+
+REBUILD ORDER (MANDATORY):
+--------------------------
+1) Auth only
+   - Login
+   - JWT storage
+   - Auth interceptor
+   - Test with /api/v1/auth/profile
+
+2) Products (READ ONLY)
+   - Product list
+   - Variants
+   - Stock display
+
+3) Cart
+   - Add to cart
+   - View cart
+
+4) Checkout
+   - Place order
+   - Verify stock decrease
+
+5) Cancel order
+   - Cancel
+   - Verify stock restore
+
+====================================================================
+STEP 5: WHAT ABOUT OTHER FEATURE BRANCHES?
+====================================================================
+
+IGNORE THESE FOR NOW:
+- feature/ml-events-cart-checkout-services-too
+- feature/orders-flow-v1
+
+Reason:
+- Experimental
+- Partial
+- Will confuse current flow
+
+====================================================================
+FINAL RULES (IMPORTANT)
+====================================================================
+
+✔ Backend is already VERIFIED by curl
+✔ Angular issues are UI wiring issues
+✔ Resetting is the CORRECT professional move
+✔ This is how real teams recover from broken branches
+
+====================================================================
+END
+====================================================================
