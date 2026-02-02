@@ -1,51 +1,45 @@
-<div class="product-details" *ngIf="!isLoading; else loadingBlock">
-  <div class="product-container">
-
-    <div class="product-image">
-      <img src="https://via.placeholder.com/400x400" alt="Product Image">
-    </div>
-
-    <div class="product-info">
-      <h1>{{ productData.name }}</h1>
-      <p class="price">₹ {{ productData.price }}</p>
-      <p class="description">{{ productData.description }}</p>
-
-      <div class="quantity-controls" *ngIf="!isSellerLoggedIn">
-        <button (click)="handleQuantity('min')">-</button>
-        <span>{{ productQuantity }}</span>
-        <button (click)="handleQuantity('plus')">+</button>
-      </div>
-
-      <div *ngIf="!isSellerLoggedIn">
-        <button
-          class="form-button"
-          *ngIf="!isProductInCart"
-          (click)="addToCart()">
-          Add to Cart
-        </button>
-
-        <button
-          class="form-button marginLeftbtn"
-          *ngIf="isProductInCart"
-          (click)="removeFromCart(productData.id)">
-          Remove from Cart
-        </button>
-      </div>
-
-      <div *ngIf="isSellerLoggedIn">
-        <button
-          class="form-button Editbtn"
-          (click)="EditRedirect(productData.id)">
-          Edit Product
-        </button>
-      </div>
-
-    </div>
-  </div>
+<div *ngIf="isLoading">
+  <p>Loading product...</p>
 </div>
 
-<ng-template #loadingBlock>
-  <div class="loading">
-    <p>{{ loadingText }}</p>
+<div *ngIf="!isLoading && product" class="product-details">
+
+  <h1>{{ product.name }}</h1>
+
+  <img
+    [src]="product.image || 'https://via.placeholder.com/400'"
+    alt="Product image"
+  />
+
+  <p class="price">₹ {{ product.price }}</p>
+
+  <p *ngIf="product.description">
+    {{ product.description }}
+  </p>
+
+  <!-- VARIANT -->
+  <div *ngIf="!isSeller">
+    <p><b>Color:</b> {{ selectedVariant.color }}</p>
   </div>
-</ng-template>
+
+  <!-- QUANTITY -->
+  <div *ngIf="!isSeller" class="quantity-controls">
+    <button (click)="decreaseQty()">-</button>
+    <span>{{ quantity }}</span>
+    <button (click)="increaseQty()">+</button>
+  </div>
+
+  <!-- ACTIONS -->
+  <div *ngIf="!isSeller">
+    <button class="form-button" (click)="addToCart()">
+      Add to Cart
+    </button>
+  </div>
+
+  <div *ngIf="isSeller">
+    <button class="form-button" (click)="editProduct()">
+      Edit Product
+    </button>
+  </div>
+
+</div>

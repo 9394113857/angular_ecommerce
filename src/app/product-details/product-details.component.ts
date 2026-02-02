@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../services/product.service';
 import { CartServiceService } from '../services/cart-service.service';
-import { products } from 'src/data.type';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { Product } from 'src/data.type';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-product-details',
@@ -12,79 +12,83 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 })
 export class ProductDetailsComponent implements OnInit {
 
-  productData!: products;
+  product!: Product;
+  isLoading = true;
 
-  isLoading = false;
-  loadingText: string = 'Loading product details...'; // ✅ FIX
+  isSeller = false;
+  quantity = 1;
 
-  isSellerLoggedIn = false;
-  isProductInCart = false;
-  productQuantity = 1;
-
-  faEditIcon = faEdit;
+  // simple variant model (extend later)
+  selectedVariant = {
+    variant_id: 1,
+    color: 'Black'
+  };
 
   constructor(
-    private activeRoute: ActivatedRoute,
+    private route: ActivatedRoute,
     private productService: ProductService,
     private cartService: CartServiceService,
-    private router: Router
+    private router: Router,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
-    this.isSellerLoggedIn = !!localStorage.getItem('sellerLoggedIn');
+    this.isSeller = !!localStorage.getItem('sellerLoggedIn');
 
-    this.activeRoute.paramMap.subscribe(params => {
-      const productId = params.get('productId');
-      if (!productId) return;
+    const productId = Number(this.route.snapshot.paramMap.get('productId'));
+    if (!productId) return;
 
-      this.isLoading = true;
+    this.isLoading = true;
 
-      this.productService.getSingleProduct(productId).subscribe({
-        next: result => {
-          this.productData = result;
-          this.isLoading = false;
-          this.checkProductInCart();
-        },
-        error: () => {
-          this.isLoading = false;
-        }
-      });
+    this.productService.getSingleProduct(productId.toString()).subscribe({
+      next: (data) => {
+        this.product = data;
+        this.titleService.setTitle(`E-Comm | ${data.name}`);
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      }
     });
   }
 
-  handleQuantity(type: 'min' | 'plus') {
-    if (type === 'min' && this.productQuantity > 1) this.productQuantity--;
-    if (type === 'plus' && this.productQuantity < 5) this.productQuantity++;
+  increaseQty() {
+    this.quantity++;
   }
 
-  addToCart() {
-    const cartData = {
-      productId: this.productData.id,
-      variantId: 1,
-      name: this.productData.name,
-      color: this.productData.color ?? 'Black',  // ✅ FIX
-      price: this.productData.price,
-      quantity: this.productQuantity
+  decreaseQty() {
+    if (this.quantity > 1) this.quantity--;
+  }
+
+  // ==========================
+  // ADD TO CART
+  // ==========================
+  addToCart(): void {
+    if (!localStorage.getItem('userLoggedIn')) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const payload = {
+      product_id: this.product.id,
+      variant_id: this.selectedVariant.variant_id,
+      name: this.product.name,
+      color: this.selectedVariant.color,
+      price: this.product.price,
+      quantity: this.quantity
     };
 
-    this.cartService.addToCart(cartData).subscribe(() => {
-      this.isProductInCart = true;
+    this.cartService.addToCart(payload).subscribe({
+      next: () => {
+        // update header count
+        this.cartService.getCart().subscribe(items => {
+          this.cartService.cartChanged.emit(items.length);
+        });
+      }
     });
   }
 
-  removeFromCart(id: number) {
-    this.cartService.removeCartItem(id).subscribe(() => {
-      this.isProductInCart = false;
-    });
-  }
-
-  checkProductInCart() {
-    this.cartService.getCart().subscribe(items => {
-      this.isProductInCart = items.some(i => i.productId === this.productData.id);
-    });
-  }
-
-  EditRedirect(id: number) {
-    this.router.navigate([`seller-update-product/${id}`]);
+  editProduct(): void {
+    this.router.navigate([`/seller-update-product/${this.product.id}`]);
   }
 }

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CartServiceService } from '../services/cart-service.service';
-import { products } from 'src/data.type';
 
 @Component({
   selector: 'app-header',
@@ -11,14 +10,7 @@ import { products } from 'src/data.type';
 export class HeaderComponent implements OnInit {
 
   menuType: 'default' | 'seller' | 'user' = 'default';
-  isMenuOpen = false;
-
-  cartItems = 0;
-  sellerName = 'Seller';
-  userName = 'User';
-
-  // ✅ NEVER undefined
-  searchResult: products[] = [];
+  cartCount = 0;
 
   constructor(
     private router: Router,
@@ -37,50 +29,22 @@ export class HeaderComponent implements OnInit {
       }
     });
 
-    const localCart = localStorage.getItem('localCart');
-    if (localCart) {
-      this.cartItems = JSON.parse(localCart).length;
+    // initial cart count
+    if (localStorage.getItem('userLoggedIn')) {
+      this.cartService.getCart().subscribe(items => {
+        this.cartCount = items.length;
+      });
     }
 
-    this.cartService.cartData.subscribe(items => {
-      this.cartItems = items.length;
+    // live updates
+    this.cartService.cartChanged.subscribe(count => {
+      this.cartCount = count;
     });
   }
 
-  onSearchInput(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-    if (value) {
-      this.router.navigate([`search/${value}`]);
-    }
-  }
-
-  hideSearch() {
-    this.searchResult = [];
-  }
-
-  searchbtn(value: string) {
-    if (!value) return;
-    this.router.navigate([`search/${value}`]);
-  }
-
-  toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
-  }
-
-  // ✅ FIX: accept number
-  redirectToDetails(id: number) {
-    this.router.navigate([`product/details/${id}`]);
-  }
-
-  sellerLogout() {
+  logout(): void {
     localStorage.clear();
-    this.cartItems = 0;
-    this.router.navigate(['/']);
-  }
-
-  userLogout() {
-    localStorage.clear();
-    this.cartItems = 0;
+    this.cartCount = 0;
     this.router.navigate(['/']);
   }
 }
