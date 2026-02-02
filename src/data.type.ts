@@ -12,6 +12,7 @@ export interface Login {
 
 // ================= PRODUCTS =================
 export interface Product {
+_id: any;
   id: number;          // Flask / SQL id
   name: string;
   price: number;

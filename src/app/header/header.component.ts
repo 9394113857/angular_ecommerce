@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CartServiceService } from '../services/cart-service.service';
+import { Product } from 'src/data.type';
 
 @Component({
   selector: 'app-header',
@@ -10,7 +11,14 @@ import { CartServiceService } from '../services/cart-service.service';
 export class HeaderComponent implements OnInit {
 
   menuType: 'default' | 'seller' | 'user' = 'default';
-  cartCount = 0;
+  isMenuOpen = false;
+
+  cartItems = 0;
+  sellerName = 'Seller';
+  userName = 'User';
+
+  // search results (safe)
+  searchResult: Product[] = [];
 
   constructor(
     private router: Router,
@@ -19,6 +27,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
 
+    // menu switching
     this.router.events.subscribe(() => {
       if (localStorage.getItem('sellerLoggedIn')) {
         this.menuType = 'seller';
@@ -29,22 +38,44 @@ export class HeaderComponent implements OnInit {
       }
     });
 
-    // initial cart count
-    if (localStorage.getItem('userLoggedIn')) {
-      this.cartService.getCart().subscribe(items => {
-        this.cartCount = items.length;
-      });
-    }
-
-    // live updates
-    this.cartService.cartChanged.subscribe(count => {
-      this.cartCount = count;
-    });
+    // cart count (local only for now)
+    const localCart = localStorage.getItem('localCart');
+    this.cartItems = localCart ? JSON.parse(localCart).length : 0;
   }
 
-  logout(): void {
+  onSearchInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    if (value) {
+      this.router.navigate([`search/${value}`]);
+    }
+  }
+
+  hideSearch() {
+    this.searchResult = [];
+  }
+
+  searchbtn(value: string) {
+    if (!value) return;
+    this.router.navigate([`search/${value}`]);
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  redirectToDetails(id: number) {
+    this.router.navigate([`product/details/${id}`]);
+  }
+
+  sellerLogout() {
     localStorage.clear();
-    this.cartCount = 0;
+    this.cartItems = 0;
+    this.router.navigate(['/']);
+  }
+
+  userLogout() {
+    localStorage.clear();
+    this.cartItems = 0;
     this.router.navigate(['/']);
   }
 }

@@ -1,25 +1,77 @@
-<nav>
-  <a routerLink="/">Home</a>
+<div class="nav">
+  <div class="nav-content">
 
-  <ng-container [ngSwitch]="menuType">
-
-    <div *ngSwitchCase="'default'">
-      <a routerLink="/login">Login</a>
-      <a routerLink="/auth">Signup</a>
-      <a routerLink="/cart">Cart ({{ cartCount }})</a>
+    <div class="logo" routerLink="">
+      <h1>E-COMM</h1>
     </div>
 
-    <div *ngSwitchCase="'user'">
-      <a routerLink="/">Home</a>
-      <a routerLink="/cart">Cart ({{ cartCount }})</a>
-      <a (click)="logout()">Logout</a>
+    <!-- SEARCH -->
+    <div class="search">
+      <input
+        type="text"
+        #searchInput
+        placeholder="Search products..."
+        (input)="onSearchInput($event)"
+        (blur)="hideSearch()"
+      />
+      <button (click)="searchbtn(searchInput.value)">Search</button>
+
+      <!-- SEARCH RESULTS -->
+      <ul
+        [ngClass]="{
+          'small-search': searchResult.length <= 5,
+          'large-search': searchResult.length > 5,
+          'no-search': searchResult.length === 0
+        }"
+      >
+        <li *ngFor="let item of searchResult">
+          <a
+            *ngIf="item._id"
+            (mousedown)="redirectToDetails(item._id)"
+          >
+            {{ item.name }}
+          </a>
+        </li>
+      </ul>
     </div>
 
-    <div *ngSwitchCase="'seller'">
-      <a routerLink="/seller-home">Dashboard</a>
-      <a routerLink="/seller-add-product">Add Product</a>
-      <a (click)="logout()">Logout</a>
-    </div>
+    <!-- MENU -->
+    <div [ngSwitch]="menuType">
 
-  </ng-container>
-</nav>
+      <ul class="menu defaultMenu" *ngSwitchCase="'default'" [class.open]="isMenuOpen">
+        <li><a routerLink="login">Login</a></li>
+        <li><a routerLink="auth">Signup</a></li>
+        <li>
+          <a routerLink="cart">
+            Cart <span>{{ cartItems }}</span>
+          </a>
+        </li>
+      </ul>
+
+      <ul class="menu sellerMenu" *ngSwitchCase="'seller'" [class.open]="isMenuOpen">
+        <li><a routerLink="seller-add-product">Add Product</a></li>
+        <li><a routerLink="seller-home">List</a></li>
+        <li><a (click)="sellerLogout()">Logout</a></li>
+        <li><a>{{ sellerName | titlecase }}</a></li>
+      </ul>
+
+      <ul class="menu userMenu" *ngSwitchCase="'user'" [class.open]="isMenuOpen">
+        <li><a routerLink="">Home</a></li>
+        <li><a>{{ userName | titlecase }}</a></li>
+        <li><a (click)="userLogout()">Logout</a></li>
+        <li>
+          <a routerLink="cart">
+            Cart <span>{{ cartItems }}</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="burger" (click)="toggleMenu()" [class.open]="isMenuOpen">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+      </div>
+
+    </div>
+  </div>
+</div>

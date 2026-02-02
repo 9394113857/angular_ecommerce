@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { Title } from '@angular/platform-browser';
 import { ProductService } from '../services/product.service';
@@ -10,7 +10,7 @@ import { Product } from 'src/data.type';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
   isLoading = false;
   loadingText = 'Loading products...';
@@ -19,16 +19,19 @@ export class HomeComponent implements OnInit {
   recommendedProducts: Product[] = [];
   showRecommendations = false;
 
-  nextFontIcon = faChevronLeft;
-  prevFonticon = faChevronRight;
-
-  // ✅ SLIDER FIX
+  // SLIDER
   slidePosition = 0;
-  popularProduct = [
-    'https://my-shoping-frontend.vercel.app/static/media/slider-1.2.jpg',
-    'https://my-shoping-frontend.vercel.app/static/media/slider-2.1.jpg',
-    'https://my-shoping-frontend.vercel.app/static/media/slider-3.1.jpg'
+
+  popularProduct: string[] = [
+    'https://my-shoping-frontend.vercel.app/static/media/slider-1.2.87b6e70aa5f62e364f8d.jpg',
+    'https://my-shoping-frontend.vercel.app/static/media/slider-1.1.e60d4fc52cc2a1d111a7.jpg',
+    'https://my-shoping-frontend.vercel.app/static/media/slider-2.1.9aa725195d5160024a1c.jpg'
   ];
+
+  nextFontIcon = faChevronRight;
+  prevFonticon = faChevronLeft;
+
+  private autoplayInterval: any;
 
   constructor(
     private productService: ProductService,
@@ -38,7 +41,34 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle('E-Comm | Home');
+    this.startAutoplay();
     this.loadProducts();
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.autoplayInterval);
+  }
+
+  previousSlide(): void {
+    if (this.slidePosition === 0) {
+      this.slidePosition = (this.popularProduct.length - 1) * -100;
+    } else {
+      this.slidePosition += 100;
+    }
+  }
+
+  nextSlide(): void {
+    if (this.slidePosition === (this.popularProduct.length - 1) * -100) {
+      this.slidePosition = 0;
+    } else {
+      this.slidePosition -= 100;
+    }
+  }
+
+  startAutoplay(): void {
+    this.autoplayInterval = setInterval(() => {
+      this.nextSlide();
+    }, 3000);
   }
 
   loadProducts(): void {
@@ -62,19 +92,5 @@ export class HomeComponent implements OnInit {
       );
       this.showRecommendations = this.recommendedProducts.length > 0;
     });
-  }
-
-  previousSlide() {
-    this.slidePosition =
-      this.slidePosition === 0
-        ? (this.popularProduct.length - 1) * -100
-        : this.slidePosition + 100;
-  }
-
-  nextSlide() {
-    this.slidePosition =
-      this.slidePosition === (this.popularProduct.length - 1) * -100
-        ? 0
-        : this.slidePosition - 100;
   }
 }

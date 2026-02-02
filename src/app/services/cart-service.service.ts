@@ -7,6 +7,7 @@ import { CartItem, CheckoutPayload } from 'src/data.type';
   providedIn: 'root'
 })
 export class CartServiceService {
+  [x: string]: any;
 
   // 🔔 Used by Header to update cart count
   cartChanged = new EventEmitter<number>();
