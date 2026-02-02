@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { cartType } from 'src/data.type';
-import { CartServiceService } from '../services/cart-service.service';
 import { Router } from '@angular/router';
+import { CartServiceService } from '../services/cart-service.service';
+import { CartItem, CheckoutPayload } from 'src/data.type';
 
 @Component({
   selector: 'app-checkout',
@@ -15,10 +15,11 @@ export class CheckoutComponent implements OnInit {
   @ViewChild('checkoutForm') checkoutForm!: NgForm;
 
   contact!: number;
-  deliveryAddress!: string;
+  address!: string;
 
-  cartData: cartType[] = [];
+  cartItems: CartItem[] = [];
   totalPrice = 0;
+
   isLoading = false;
 
   constructor(
@@ -32,27 +33,52 @@ export class CheckoutComponent implements OnInit {
     this.loadCart();
   }
 
-  loadCart() {
+  // ==========================
+  // LOAD CART
+  // ==========================
+  loadCart(): void {
     this.isLoading = true;
-    this.cartService.getCart().subscribe(data => {
-      this.cartData = data;
-      this.totalPrice = data.reduce(
-        (sum, item) => sum + item.price * item.quantity, 0
-      );
-      this.isLoading = false;
+
+    this.cartService.getCart().subscribe({
+      next: (items) => {
+        this.cartItems = items || [];
+        this.totalPrice = this.cartItems.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      }
     });
   }
 
-  submitForm() {
-    if (this.checkoutForm.invalid) return;
+  // ==========================
+  // PLACE ORDER
+  // ==========================
+  placeOrder(): void {
+    if (this.checkoutForm.invalid || this.cartItems.length === 0) return;
 
-    this.cartService['checkout']({
+    const payload: CheckoutPayload = {
       contact: this.contact,
-      address: this.deliveryAddress,
-      total_price: this.totalPrice
-    }).subscribe(() => {
-      alert('Order placed successfully');
-      this.router.navigate(['/']);
+      address: this.address
+    };
+
+    this.isLoading = true;
+
+    this.cartService.checkout(payload).subscribe({
+      next: () => {
+        // cart cleared on backend
+        this.cartService.cartChanged.emit(0);
+
+        // redirect to orders
+        this.router.navigate(['/orders']);
+      },
+      error: () => {
+        alert('Checkout failed. Please try again.');
+        this.isLoading = false;
+      }
     });
   }
 }
