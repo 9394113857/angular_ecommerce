@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ProductService } from '../services/product.service';
-import { products } from 'src/data.type';
+import { Product } from 'src/data.type';   // ✅ FIXED
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
 
@@ -15,11 +15,11 @@ export class SellerHomeComponent implements OnInit {
   deleteFonticon = faTrash;
   EditFonticon = faEdit;
 
-  productList: products[] = [];
+  productList: Product[] = [];   // ✅ FIXED
 
   showDeleteSuccessMessage: string = '';
   isLoading: boolean = false;
-  loadingText: string = 'Please wait while retrieving data...'; // ✅ FIX
+  loadingText: string = 'Please wait while retrieving data...';
 
   constructor(
     private product: ProductService,
