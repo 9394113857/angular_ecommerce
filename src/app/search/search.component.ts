@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { products } from 'src/data.type';
+import { Product } from 'src/data.type';
 import { ProductService } from '../services/product.service';
 import { EventTrackingService } from '../services/event-tracking.service';
 
@@ -13,7 +13,7 @@ import { EventTrackingService } from '../services/event-tracking.service';
 export class SearchComponent implements OnInit {
 
   paramsQue = '';
-  productData: products[] = [];
+  productData: Product[] = [];
   noDataFoundMessage = '';
   isLoading = false;
   loadingText = 'Loading search results...';
@@ -38,16 +38,6 @@ export class SearchComponent implements OnInit {
       this.productService.searchProducts(query).subscribe(data => {
         this.productData = data || [];
         this.noDataFoundMessage = this.productData.length ? '' : 'No results found';
-
-        // 📊 SEARCH EVENT
-        this.eventTracker.trackEvent({
-          event_type: 'search',
-          metadata: {
-            query,
-            results_count: this.productData.length
-          }
-        });
-
         this.isLoading = false;
       });
     });

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser'
 import { ProductService } from '../services/product.service';
-import { products } from 'src/data.type';
+import { Product } from 'src/data.type';
 import { Router } from '@angular/router';
 
 @Component({
@@ -27,7 +27,7 @@ export class SellerAddProductComponent {
     this.titleService.setTitle("E-Comm | Seller-Add-Product")
   }
 
-  addProductHandle(data: products) {
+  addProductHandle(data: Product) {
     this.isProductAdded = true;
     this.loadingText = this.isProductAdded ? "Please wait while adding product to the database..." : '""';
     this.productService.postProduct(data).subscribe((result) => {

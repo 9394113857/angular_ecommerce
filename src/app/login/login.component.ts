@@ -5,7 +5,7 @@ import { Title } from '@angular/platform-browser';
 
 import { AuthenticationService } from '../services/authentication.service';
 import { CartServiceService } from '../services/cart-service.service';
-import { cartType, products } from 'src/data.type';
+import { CartItem, Product } from 'src/data.type';
 
 @Component({
   selector: 'app-login',
@@ -13,9 +13,6 @@ import { cartType, products } from 'src/data.type';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-redirectToSignup() {
-throw new Error('Method not implemented.');
-}
 
   loginFailed = '';
   isLoading = false;
@@ -33,6 +30,9 @@ throw new Error('Method not implemented.');
     this.titleService.setTitle('E-Comm | Login');
   }
 
+  // =========================
+  // LOGIN
+  // =========================
   loginFormhandle(form: NgForm): void {
     if (form.invalid) return;
 
@@ -46,7 +46,10 @@ throw new Error('Method not implemented.');
           localStorage.setItem('sellerLoggedIn', res.userId);
           this.router.navigate(['/seller-home']);
         } else {
-          localStorage.setItem('userLoggedIn', JSON.stringify({ id: res.userId }));
+          localStorage.setItem(
+            'userLoggedIn',
+            JSON.stringify({ id: res.userId })
+          );
           this.syncLocalCart();
           this.router.navigate(['/']);
         }
@@ -58,22 +61,32 @@ throw new Error('Method not implemented.');
     });
   }
 
-  syncLocalCart() {
+  // =========================
+  // REDIRECT TO SIGNUP  ✅ FIX
+  // =========================
+  redirectToSignup(): void {
+    this.router.navigate(['/auth']);
+  }
+
+  // =========================
+  // SYNC LOCAL CART  ✅ FIX
+  // =========================
+  syncLocalCart(): void {
     const local = localStorage.getItem('localCart');
     if (!local) return;
 
-    const items: products[] = JSON.parse(local);
+    const items: Product[] = JSON.parse(local);
 
     items.forEach(p => {
-      const cart: cartType = {
-        productId: p.id,
-        variantId: 1,
+      const cart: CartItem = {
+        product_id: p.id,
+        variant_id: 1,
         name: p.name,
         price: p.price,
-        quantity: p.quantity ?? 1,
-        image: p.image,
-        color: p.color
+        quantity: 1,                // ✅ Product has NO quantity
+        color: p.color ?? 'Black'
       };
+
       this.cartService.addToCart(cart).subscribe();
     });
 

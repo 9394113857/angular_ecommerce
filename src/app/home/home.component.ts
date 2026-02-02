@@ -3,7 +3,7 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 import { Title } from '@angular/platform-browser';
 import { ProductService } from '../services/product.service';
 import { RecommendationService } from '../services/recommendation.service';
-import { products } from 'src/data.type';
+import { Product } from 'src/data.type';
 
 @Component({
   selector: 'app-home',
@@ -15,21 +15,20 @@ export class HomeComponent implements OnInit {
   isLoading = false;
   loadingText = 'Loading products...';
 
-  productData: products[] = [];
-  recommendedProducts: products[] = [];
+  productData: Product[] = [];
+  recommendedProducts: Product[] = [];
   showRecommendations = false;
 
   nextFontIcon = faChevronLeft;
   prevFonticon = faChevronRight;
 
-  popularProduct = [
-    'https://my-shoping-frontend.vercel.app/static/media/slider-1.2.87b6e70aa5f62e364f8d.jpg',
-    'https://my-shoping-frontend.vercel.app/static/media/slider-1.1.e60d4fc52cc2a1d111a7.jpg',
-    'https://my-shoping-frontend.vercel.app/static/media/slider-2.1.9aa725195d5160024a1c.jpg'
-  ];
-
+  // ✅ SLIDER FIX
   slidePosition = 0;
-  autoplayInterval: any;
+  popularProduct = [
+    'https://my-shoping-frontend.vercel.app/static/media/slider-1.2.jpg',
+    'https://my-shoping-frontend.vercel.app/static/media/slider-2.1.jpg',
+    'https://my-shoping-frontend.vercel.app/static/media/slider-3.1.jpg'
+  ];
 
   constructor(
     private productService: ProductService,
@@ -39,7 +38,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle('E-Comm | Home');
-    this.startAutoplay();
     this.loadProducts();
   }
 
@@ -60,7 +58,7 @@ export class HomeComponent implements OnInit {
 
     this.recoService.getRecommendations(userId).subscribe(recos => {
       this.recommendedProducts = this.productData.filter(p =>
-        recos.some(r => r.product_id === p.id)
+        recos.some((r: any) => r.product_id === p.id)
       );
       this.showRecommendations = this.recommendedProducts.length > 0;
     });
@@ -78,9 +76,5 @@ export class HomeComponent implements OnInit {
       this.slidePosition === (this.popularProduct.length - 1) * -100
         ? 0
         : this.slidePosition - 100;
-  }
-
-  startAutoplay() {
-    this.autoplayInterval = setInterval(() => this.nextSlide(), 2000);
   }
 }

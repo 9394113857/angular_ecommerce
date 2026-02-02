@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { AuthenticationService } from '../services/authentication.service';
-import { signUp } from 'src/data.type';
+import { SignUp } from 'src/data.type';
 
 @Component({
   selector: 'app-authentication',
@@ -28,8 +28,7 @@ export class AuthenticationComponent implements OnInit {
   }
 
   registerFormhandle(form: NgForm) {
-    const payload: signUp = {
-      name: form.value.name,
+    const payload: SignUp = {
       email: form.value.email,
       password: form.value.password,
       role_type: form.value.role_type
@@ -61,15 +60,18 @@ export class AuthenticationComponent implements OnInit {
           localStorage.setItem('sellerLoggedIn', res.userId);
           this.router.navigate(['seller-home']);
         } else {
-          localStorage.setItem('userLoggedIn', JSON.stringify({ id: res.userId }));
+          localStorage.setItem(
+            'userLoggedIn',
+            JSON.stringify({ id: res.userId })
+          );
           this.router.navigate(['/']);
         }
       },
       error: () => {
         this.loginFailed = 'Invalid credentials';
-        setTimeout(() => this.loginFailed = '', 2000);
+        setTimeout(() => (this.loginFailed = ''), 2000);
       },
-      complete: () => this.isLoading = false
+      complete: () => (this.isLoading = false)
     });
   }
 
