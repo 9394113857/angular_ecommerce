@@ -2,26 +2,34 @@
 
 <p *ngIf="isLoading">Loading orders...</p>
 
-<table *ngIf="!isLoading && orders.length">
-  <tr>
-    <th>ID</th>
-    <th>Total</th>
-    <th>Status</th>
-    <th>Date</th>
-    <th>Action</th>
-  </tr>
+<div *ngIf="!isLoading && orders.length === 0">
+  <p>No orders found.</p>
+</div>
 
-  <tr *ngFor="let order of orders">
-    <td>#{{ order.order_id }}</td>
-    <td>₹ {{ order.total_price }}</td>
-    <td>
-      <span class="badge" [ngClass]="order.status">
-        {{ order.status }}
-      </span>
-    </td>
-    <td>{{ order.created_at | date:'medium' }}</td>
-    <td>
-      <button (click)="viewOrder(order.order_id)">View</button>
-    </td>
-  </tr>
+<table *ngIf="!isLoading && orders.length > 0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Total</th>
+      <th>Status</th>
+      <th>Date</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let order of orders">
+      <td>#{{ order.order_id }}</td>
+      <td>₹ {{ order.total_price }}</td>
+      <td>
+        <span class="badge" [ngClass]="order.status">
+          {{ order.status }}
+        </span>
+      </td>
+      <td>{{ order.created_at | date:'medium' }}</td>
+      <td>
+        <button (click)="viewOrder(order)">View</button>
+      </td>
+    </tr>
+  </tbody>
 </table>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { OrderService } from '../services/order.service';
+import { Order } from 'src/data.type';
 
 @Component({
   selector: 'app-orders',
@@ -9,7 +10,7 @@ import { OrderService } from '../services/order.service';
 })
 export class OrdersComponent implements OnInit {
 
-  orders: any[] = [];
+  orders: Order[] = [];
   isLoading = true;
 
   constructor(
@@ -21,10 +22,12 @@ export class OrdersComponent implements OnInit {
     this.loadOrders();
   }
 
-  loadOrders() {
+  loadOrders(): void {
+    this.isLoading = true;
+
     this.orderService.getMyOrders().subscribe({
       next: (data) => {
-        this.orders = data;
+        this.orders = data || [];
         this.isLoading = false;
       },
       error: () => {
@@ -33,7 +36,9 @@ export class OrdersComponent implements OnInit {
     });
   }
 
-  viewOrder(orderId: number) {
-    this.router.navigate(['/orders', orderId]);
+  viewOrder(order: Order): void {
+    this.router.navigate(['/orders', order.order_id], {
+      state: { order }
+    });
   }
 }

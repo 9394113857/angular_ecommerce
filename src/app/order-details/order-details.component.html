@@ -1,36 +1,29 @@
-<p *ngIf="isLoading">Loading order details...</p>
-
 <div *ngIf="order">
 
   <h2>Order #{{ order.order_id }}</h2>
-  <p>Status: <b>{{ order.status }}</b></p>
-  <p>Total: ₹ {{ order.total_price }}</p>
+
+  <p>Status:
+    <strong>{{ order.status }}</strong>
+  </p>
+
+  <p>Total Price:
+    <strong>₹ {{ order.total_price }}</strong>
+  </p>
+
+  <p>Placed On:
+    {{ order.created_at | date:'medium' }}
+  </p>
 
   <button
     *ngIf="order.status === 'placed'"
     (click)="cancelOrder()"
+    [disabled]="isLoading"
   >
-    Cancel Order
+    {{ isLoading ? 'Cancelling...' : 'Cancel Order' }}
   </button>
 
-  <h3>Items</h3>
+  <br /><br />
 
-  <table>
-    <thead>
-      <tr>
-        <th>Product</th>
-        <th>Price</th>
-        <th>Qty</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr *ngFor="let item of order.items">
-        <td>{{ item.name }}</td>
-        <td>₹ {{ item.price }}</td>
-        <td>{{ item.quantity }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <button (click)="goBack()">Back to Orders</button>
 
 </div>
