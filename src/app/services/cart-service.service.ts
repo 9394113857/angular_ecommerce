@@ -1,34 +1,64 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { cartType, products } from 'src/data.type';
+import { Observable } from 'rxjs';
+import { CartItem, CheckoutPayload } from 'src/data.type';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class CartServiceService {
-  [x: string]: any;
 
-  cartData = new EventEmitter<products[]>();
+  // 🔔 Used by Header to update cart count
+  cartChanged = new EventEmitter<number>();
 
-  baseUrl = 'http://127.0.0.1:5003/api/cart';
+  // LOCAL
+  private baseUrl = 'http://127.0.0.1:5003/api';
+
+  // PROD (later)
+  // private baseUrl = 'https://backend-cart-service.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 
-  private headers() {
-    return {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      })
-    };
+  // 🔐 JWT headers
+  private headers(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
   }
 
-  addToCart(cart: cartType) {
-    return this.http.post(`${this.baseUrl}/`, cart, this.headers());
+  // ==============================
+  // 🛒 ADD TO CART
+  // POST /api/cart/
+  // ==============================
+  addToCart(payload: CartItem): Observable<any> {
+    return this.http.post(
+      `${this.baseUrl}/cart/`,
+      payload,
+      { headers: this.headers() }
+    );
   }
 
-  getCart() {
-    return this.http.get<cartType[]>(`${this.baseUrl}/`, this.headers());
+  // ==============================
+  // 📦 GET CART
+  // GET /api/cart/
+  // ==============================
+  getCart(): Observable<CartItem[]> {
+    return this.http.get<CartItem[]>(
+      `${this.baseUrl}/cart/`,
+      { headers: this.headers() }
+    );
   }
 
-  removeCartItem(id: number) {
-    return this.http.delete(`${this.baseUrl}/${id}`, this.headers());
+  // ==============================
+  // 💳 CHECKOUT
+  // POST /api/checkout/
+  // ==============================
+  checkout(payload: CheckoutPayload): Observable<any> {
+    return this.http.post(
+      `${this.baseUrl}/checkout/`,
+      payload,
+      { headers: this.headers() }
+    );
   }
 }
