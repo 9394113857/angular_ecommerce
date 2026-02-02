@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { cartType, priceSummary } from 'src/data.type';
-import { CartServiceService } from '../services/cart-service.service';
 import { Router } from '@angular/router';
+import { CartServiceService } from '../services/cart-service.service';
+import { CartItem } from 'src/data.type';
 
 @Component({
   selector: 'app-cart',
@@ -11,19 +11,14 @@ import { Router } from '@angular/router';
 })
 export class CartComponent implements OnInit {
 
-  cartData: cartType[] = [];
-  isLoggedIn = false;
+  cartItems: CartItem[] = [];
+  isLoading = true;
+  isUserLoggedIn = false;
 
-  priceSummary: priceSummary = {
-    price: 0,
-    tax: 10,
-    delivery: 100,
-    discount: 10,
-    total: 0
-  };
-
-  loading = true;
-  loadingText = 'Loading cart items...';
+  // price summary
+  subtotal = 0;
+  deliveryCharge = 100;
+  total = 0;
 
   constructor(
     private cartService: CartServiceService,
@@ -33,37 +28,52 @@ export class CartComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle('E-Comm | Cart');
-    this.loadCartItems();
-  }
 
-  loadCartItems() {
-    if (!localStorage.getItem('userLoggedIn')) {
-      this.isLoggedIn = true;
-      this.loading = false;
+    this.isUserLoggedIn = !!localStorage.getItem('userLoggedIn');
+
+    if (!this.isUserLoggedIn) {
+      this.isLoading = false;
       return;
     }
 
-    this.cartService.getCart().subscribe(data => {
-      this.cartData = data;
-      this.calculateSummary(data);
-      this.loading = false;
+    this.loadCart();
+  }
+
+  // ==========================
+  // LOAD CART
+  // ==========================
+  loadCart(): void {
+    this.isLoading = true;
+
+    this.cartService.getCart().subscribe({
+      next: (items) => {
+        this.cartItems = items || [];
+        this.calculateTotals();
+        this.cartService.cartChanged.emit(this.cartItems.length);
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      }
     });
   }
 
-  calculateSummary(data: cartType[]) {
-    const price = data.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const discount = price * (this.priceSummary.discount / 100);
-    this.priceSummary.price = price;
-    this.priceSummary.total = price + this.priceSummary.delivery - discount;
+  // ==========================
+  // CALCULATE TOTALS
+  // ==========================
+  calculateTotals(): void {
+    this.subtotal = this.cartItems.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+
+    this.total = this.subtotal + this.deliveryCharge;
   }
 
-  removeFromCart(id: number) {
-    this.cartService.removeCartItem(id).subscribe(() => {
-      this.loadCartItems();
-    });
-  }
-
-  checkout() {
+  // ==========================
+  // CHECKOUT
+  // ==========================
+  goToCheckout(): void {
     this.router.navigate(['/checkout']);
   }
 }
