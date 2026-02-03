@@ -30,9 +30,6 @@ export class LoginComponent implements OnInit {
     this.titleService.setTitle('E-Comm | Login');
   }
 
-  // =========================
-  // LOGIN
-  // =========================
   loginFormhandle(form: NgForm): void {
     if (form.invalid) return;
 
@@ -61,16 +58,11 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  // =========================
-  // REDIRECT TO SIGNUP  ✅ FIX
-  // =========================
   redirectToSignup(): void {
     this.router.navigate(['/auth']);
   }
 
-  // =========================
-  // SYNC LOCAL CART  ✅ FIX
-  // =========================
+  // ✅ FIXED: no Product.color
   syncLocalCart(): void {
     const local = localStorage.getItem('localCart');
     if (!local) return;
@@ -83,8 +75,8 @@ export class LoginComponent implements OnInit {
         variant_id: 1,
         name: p.name,
         price: p.price,
-        quantity: 1,                // ✅ Product has NO quantity
-        color: p.color ?? 'Black'
+        quantity: 1,
+        color: 'Black'
       };
 
       this.cartService.addToCart(cart).subscribe();

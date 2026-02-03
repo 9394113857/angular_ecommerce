@@ -26,8 +26,8 @@
       >
         <li *ngFor="let item of searchResult">
           <a
-            *ngIf="item._id"
-            (mousedown)="redirectToDetails(item._id)"
+            *ngIf="item.id"
+            (mousedown)="redirectToDetails(item.id)"
           >
             {{ item.name }}
           </a>

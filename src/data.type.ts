@@ -11,27 +11,27 @@ export interface Login {
 }
 
 // ================= PRODUCTS =================
+export interface ProductVariant {
+  variant_id: number;
+  color: string;
+  stock: number;
+}
+
 export interface Product {
-_id: any;
-  id: number;          // Flask / SQL id
+  id: number;
   name: string;
   price: number;
-
-  description?: string;
   category?: string;
   image?: string;
-  color?: string;
-
-  // seller-side stock info (optional)
-  stock?: number;
+  description?: string;
+  variants: ProductVariant[];
 }
 
 // ================= CART =================
 export interface CartItem {
-  cart_item_id?: number;   // returned by backend (GET cart)
+  cart_item_id?: number;
   product_id: number;
   variant_id: number;
-
   name: string;
   color: string;
   price: number;
