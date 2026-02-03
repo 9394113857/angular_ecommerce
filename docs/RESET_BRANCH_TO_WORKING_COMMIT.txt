@@ -1,0 +1,60 @@
+========================================================
+RESET feature/stock-cart-order-flow TO WORKING COMMIT
+========================================================
+
+PURPOSE:
+--------
+This file documents the exact Git steps used to reset
+the branch `feature/stock-cart-order-flow` to a known
+working commit where Angular flow is stable.
+
+Working Commit:
+---------------
+e1523ae9c40bdb3a708f5451245341bbeeae7d55
+
+Broken commits after this point are intentionally removed
+from branch history. A backup branch already exists.
+
+Backup Branch:
+--------------
+backup/feature-stock-cart-order-flow-broken
+
+--------------------------------------------------------
+STEP 1: Ensure we are on the correct branch
+--------------------------------------------------------
+
+git checkout feature/stock-cart-order-flow
+
+--------------------------------------------------------
+STEP 2: Hard reset branch to the working commit
+--------------------------------------------------------
+
+git reset --hard e1523ae9c40bdb3a708f5451245341bbeeae7d55
+
+NOTE:
+- This moves the branch pointer to the working commit
+- All commits after this are removed locally
+- Angular app returns to stable flow state
+
+--------------------------------------------------------
+STEP 3: Force push corrected history to GitHub
+--------------------------------------------------------
+
+git push origin feature/stock-cart-order-flow --force-with-lease
+
+NOTE:
+- --force-with-lease is safer than --force
+- Updates GitHub branch to match local state
+- Broken commits are removed from visible history
+
+--------------------------------------------------------
+FINAL RESULT:
+--------------------------------------------------------
+
+- Branch HEAD = e1523ae9c40bdb3a708f5451245341bbeeae7d55
+- Angular cart / checkout / order flow works
+- Development can safely continue from here
+
+========================================================
+END OF DOCUMENT
+========================================================
