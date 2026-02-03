@@ -28,6 +28,18 @@ export interface Product {
 }
 
 // ================= CART =================
+
+// ✅ PAYLOAD SENT TO BACKEND
+export interface AddToCartPayload {
+  productId: number;
+  variantId: number;
+  name: string;
+  color: string;
+  price: number;
+  quantity: number;
+}
+
+// ✅ CART ITEM RECEIVED FROM BACKEND
 export interface CartItem {
   cart_item_id?: number;
   product_id: number;
@@ -37,6 +49,7 @@ export interface CartItem {
   price: number;
   quantity: number;
 }
+
 
 // ================= CHECKOUT =================
 export interface CheckoutPayload {

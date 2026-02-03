@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Title } from '@angular/platform-browser'
+import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ProductService } from '../services/product.service';
 import { Product } from 'src/data.type';
 import { Router } from '@angular/router';
@@ -9,36 +9,29 @@ import { Router } from '@angular/router';
   templateUrl: './seller-add-product.component.html',
   styleUrls: ['./seller-add-product.component.css']
 })
-export class SellerAddProductComponent {
+export class SellerAddProductComponent implements OnInit {
 
-  isProductAdded: boolean = false;
-  loadingText: string = '';
+  isProductAdded = false;
+  loadingText = '';
 
   constructor(
     private productService: ProductService,
     private titleService: Title,
-    private navigateRoute: Router
-  ) {
-
-  }
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-
-    this.titleService.setTitle("E-Comm | Seller-Add-Product")
+    this.titleService.setTitle('E-Comm | Seller Add Product');
   }
 
-  addProductHandle(data: Product) {
+  addProductHandle(data: Product): void {
     this.isProductAdded = true;
-    this.loadingText = this.isProductAdded ? "Please wait while adding product to the database..." : '""';
-    this.productService.postProduct(data).subscribe((result) => {
-      if (result) {
-        this.isProductAdded = false;
-        alert('The product has been successfully added');
+    this.loadingText = 'Adding product...';
 
-        this.navigateRoute.navigate(['seller-home']);
-      } else {
-        alert("Something went wrong");
-      }
+    this.productService.postProduct(data).subscribe(() => {
+      this.isProductAdded = false;
+      alert('Product added successfully');
+      this.router.navigate(['/seller-home']);
     });
   }
 }

@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { Product } from 'src/data.type';
 import { ProductService } from '../services/product.service';
-import { EventTrackingService } from '../services/event-tracking.service';
 
 @Component({
   selector: 'app-search',
@@ -21,8 +20,7 @@ export class SearchComponent implements OnInit {
   constructor(
     private activeRoute: ActivatedRoute,
     private productService: ProductService,
-    private titleService: Title,
-    private eventTracker: EventTrackingService
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
@@ -35,9 +33,9 @@ export class SearchComponent implements OnInit {
       this.paramsQue = query;
       this.isLoading = true;
 
-      this.productService.searchProducts(query).subscribe(data => {
-        this.productData = data || [];
-        this.noDataFoundMessage = this.productData.length ? '' : 'No results found';
+      this.productService.searchProducts(query).subscribe((data: Product[]) => {
+        this.productData = data;
+        this.noDataFoundMessage = data.length ? '' : 'No results found';
         this.isLoading = false;
       });
     });

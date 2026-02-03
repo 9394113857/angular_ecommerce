@@ -1,49 +1,25 @@
-<div class="product-list">
-  <h1>Product List</h1>
-  <p class="showMessage-p">{{ showDeleteSuccessMessage }}</p>
+<app-loading
+  [isLoading]="isLoading"
+  [loadingText]="loadingText">
+</app-loading>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Image</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Category</th>
-        <th>Action</th>
-      </tr>
-    </thead>
+<p class="showMessage-p">{{ showDeleteSuccessMessage }}</p>
 
-    <tbody *ngIf="!isLoading">
-      <tr *ngFor="let item of productList">
-        <td>
-          <img *ngIf="item.image" [src]="item.image" [alt]="item.name">
-        </td>
+<div class="seller-home" *ngIf="!isLoading">
+  <div *ngFor="let product of productList" class="product-row">
 
-        <td>{{ item.name }}</td>
-        <td>₹ {{ item.price }}.00</td>
-        <td>{{ item.category }}</td>
+    <p><b>{{ product.name }}</b></p>
+    <p>₹ {{ product.price }}</p>
 
-        <td>
-          <fa-icon
-            [icon]="deleteFonticon"
-            class="delete-icon"
-            style="cursor:pointer"
-            (click)="deleteProductFn(item.id)">
-          </fa-icon>
+    <button (click)="deleteProductFn(product.id)">
+      <fa-icon [icon]="deleteFonticon"></fa-icon>
+      Delete
+    </button>
 
-          <fa-icon
-            [icon]="EditFonticon"
-            class="edit-icon"
-            style="cursor:pointer"
-            (click)="editFn(item.id)">
-          </fa-icon>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <button (click)="editFn(product.id)">
+      <fa-icon [icon]="EditFonticon"></fa-icon>
+      Edit
+    </button>
 
-  <app-loading
-    [isLoading]="isLoading"
-    [loadingText]="loadingText">
-  </app-loading>
+  </div>
 </div>

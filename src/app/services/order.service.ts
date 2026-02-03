@@ -8,15 +8,14 @@ import { Order } from 'src/data.type';
 })
 export class OrderService {
 
-  // LOCAL
-  private baseUrl = 'http://127.0.0.1:5003/api/orders';
+  // ❌ OLD (caused 308 → JWT lost)
+  // private baseUrl = 'http://127.0.0.1:5003/api/orders/';
 
-  // PROD (later)
-  // private baseUrl = 'https://backend-cart-service.onrender.com/api/orders';
+  // ✅ FIXED (NO trailing slash)
+  private baseUrl = 'http://127.0.0.1:5003/api/orders';
 
   constructor(private http: HttpClient) {}
 
-  // 🔐 JWT headers
   private headers(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders({
@@ -24,10 +23,9 @@ export class OrderService {
     });
   }
 
-  // ==============================
-  // 📄 GET MY ORDERS
-  // GET /api/orders/
-  // ==============================
+  // ==========================
+  // GET MY ORDERS
+  // ==========================
   getMyOrders(): Observable<Order[]> {
     return this.http.get<Order[]>(
       this.baseUrl,
@@ -35,10 +33,9 @@ export class OrderService {
     );
   }
 
-  // ==============================
-  // ❌ CANCEL ORDER
-  // PATCH /api/orders/:id/cancel
-  // ==============================
+  // ==========================
+  // CANCEL ORDER
+  // ==========================
   cancelOrder(orderId: number): Observable<any> {
     return this.http.patch(
       `${this.baseUrl}/${orderId}/cancel`,

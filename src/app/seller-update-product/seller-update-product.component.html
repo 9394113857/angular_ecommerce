@@ -3,36 +3,18 @@
   [loadingText]="loadingText">
 </app-loading>
 
+<p>{{ showUpdatSuccesMessage }}</p>
+
 <div class="container" *ngIf="!isLoading && !isProductUpdated">
-  <h2>Update product</h2>
-  <p class="showMessage-p">{{ showUpdatSuccesMessage }}</p>
 
-  <form #productForm="ngForm" (ngSubmit)="updateProductHandle(productForm.value)">
+  <form #productForm="ngForm"
+        (ngSubmit)="updateProductHandle(productForm.value)">
 
-    <div class="form-group">
-      <label>Product Name:</label>
-      <input type="text" name="name" [ngModel]="productData?.name">
-    </div>
-
-    <div class="form-group">
-      <label>Price:</label>
-      <input type="number" name="price" [ngModel]="productData?.price">
-    </div>
-
-    <div class="form-group">
-      <label>Category:</label>
-      <input type="text" name="category" [ngModel]="productData?.category">
-    </div>
-
-    <div class="form-group">
-      <label>Description:</label>
-      <textarea name="description" [ngModel]="productData?.description"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label>Image URL:</label>
-      <input type="text" name="image" [ngModel]="productData?.image">
-    </div>
+    <input type="text" name="name" ngModel="{{ productData?.name }}">
+    <input type="text" name="price" ngModel="{{ productData?.price }}">
+    <input type="text" name="category" ngModel="{{ productData?.category }}">
+    <textarea name="description" ngModel="{{ productData?.description }}"></textarea>
+    <input type="text" name="image" ngModel="{{ productData?.image }}">
 
     <button type="submit">Update Product</button>
   </form>

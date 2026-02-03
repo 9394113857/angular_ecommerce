@@ -1,23 +1,19 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Title } from '@angular/platform-browser';
-
 import { AuthenticationService } from '../services/authentication.service';
 import { CartServiceService } from '../services/cart-service.service';
-import { CartItem, Product } from 'src/data.type';
+import { Product } from 'src/data.type';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
 
   loginFailed = '';
   isLoading = false;
-
-  @ViewChild('loginForm') loginFormRef?: NgForm;
 
   constructor(
     private authService: AuthenticationService,
@@ -30,23 +26,30 @@ export class LoginComponent implements OnInit {
     this.titleService.setTitle('E-Comm | Login');
   }
 
+  // ✅ REQUIRED BY TEMPLATE
+  redirectToSignup(): void {
+    this.router.navigate(['/auth']);
+  }
+
   loginFormhandle(form: NgForm): void {
     if (form.invalid) return;
 
     this.isLoading = true;
 
     this.authService.loginUser(form.value).subscribe({
-      next: (res: any) => {
+      next: (res) => {
         localStorage.setItem('token', res.access_token);
 
         if (res.role === 'seller') {
           localStorage.setItem('sellerLoggedIn', res.userId);
+          this.authService.setAuthState('seller');
           this.router.navigate(['/seller-home']);
         } else {
           localStorage.setItem(
             'userLoggedIn',
             JSON.stringify({ id: res.userId })
           );
+          this.authService.setAuthState('user');
           this.syncLocalCart();
           this.router.navigate(['/']);
         }
@@ -58,30 +61,25 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  redirectToSignup(): void {
-    this.router.navigate(['/auth']);
-  }
-
-  // ✅ FIXED: no Product.color
   syncLocalCart(): void {
-    const local = localStorage.getItem('localCart');
-    if (!local) return;
+  const local = localStorage.getItem('localCart');
+  if (!local) return;
 
-    const items: Product[] = JSON.parse(local);
+  const items: Product[] = JSON.parse(local);
 
-    items.forEach(p => {
-      const cart: CartItem = {
-        product_id: p.id,
-        variant_id: 1,
-        name: p.name,
-        price: p.price,
-        quantity: 1,
-        color: 'Black'
-      };
+  items.forEach(p => {
+    this.cartService.addToCart({
+      product_id: p.id,
+      variant_id: 1,
+      name: p.name,
+      color: 'Black',
+      price: p.price,
+      quantity: 1
+    }).subscribe();
+  });
 
-      this.cartService.addToCart(cart).subscribe();
-    });
-
-    localStorage.removeItem('localCart');
-  }
+  localStorage.removeItem('localCart');
 }
+
+
+}//End of LoginComponent class

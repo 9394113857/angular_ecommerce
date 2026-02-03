@@ -1,26 +1,31 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CartItem, CheckoutPayload } from 'src/data.type';
+
+export interface CartItemPayload {
+  product_id: number;
+  variant_id: number;
+  name: string;
+  color: string;
+  price: number;
+  quantity: number;
+}
+
+export interface CheckoutPayload {
+  contact: number;
+  address: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartServiceService {
-  [x: string]: any;
 
-  // 🔔 Used by Header to update cart count
   cartChanged = new EventEmitter<number>();
-
-  // LOCAL
   private baseUrl = 'http://127.0.0.1:5003/api';
-
-  // PROD (later)
-  // private baseUrl = 'https://backend-cart-service.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 
-  // 🔐 JWT headers
   private headers(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders({
@@ -29,10 +34,9 @@ export class CartServiceService {
   }
 
   // ==============================
-  // 🛒 ADD TO CART
-  // POST /api/cart/
+  // ADD TO CART
   // ==============================
-  addToCart(payload: CartItem): Observable<any> {
+  addToCart(payload: CartItemPayload): Observable<any> {
     return this.http.post(
       `${this.baseUrl}/cart/`,
       payload,
@@ -41,19 +45,17 @@ export class CartServiceService {
   }
 
   // ==============================
-  // 📦 GET CART
-  // GET /api/cart/
+  // GET CART
   // ==============================
-  getCart(): Observable<CartItem[]> {
-    return this.http.get<CartItem[]>(
+  getCart(): Observable<any[]> {
+    return this.http.get<any[]>(
       `${this.baseUrl}/cart/`,
       { headers: this.headers() }
     );
   }
 
   // ==============================
-  // 💳 CHECKOUT
-  // POST /api/checkout/
+  // CHECKOUT
   // ==============================
   checkout(payload: CheckoutPayload): Observable<any> {
     return this.http.post(

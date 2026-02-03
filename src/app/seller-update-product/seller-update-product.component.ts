@@ -12,7 +12,10 @@ import { Product } from 'src/data.type';
 export class SellerUpdateProductComponent implements OnInit {
 
   productData?: Product;
+
+  // ✅ REQUIRED by template
   showUpdatSuccesMessage = '';
+
   isLoading = false;
   isProductUpdated = false;
   loadingText = 'Fetching product...';
@@ -20,44 +23,38 @@ export class SellerUpdateProductComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private navigateRoute: Router,
+    private router: Router,
     private titleService: Title
   ) {}
 
   ngOnInit(): void {
-    this.titleService.setTitle('E-Comm | Seller-Update-Product');
-    const productIdParam = this.route.snapshot.paramMap.get('id');
+    this.titleService.setTitle('E-Comm | Seller Update Product');
 
-    if (productIdParam) {
-      this.isLoading = true;
-      this.productService.getSingleProduct(productIdParam).subscribe(data => {
-        this.productData = data;
-        this.isLoading = false;
-      });
-    }
+    const id = this.route.snapshot.paramMap.get('id');
+    if (!id) return;
+
+    this.isLoading = true;
+
+    this.productService.getSingleProduct(id).subscribe(data => {
+      this.productData = data;
+      this.isLoading = false;
+    });
   }
 
-  setLoadingText(): void {
-    this.loadingText = this.isProductUpdated
-      ? 'Please hold on while updating product...'
-      : '';
-  }
-
-  updateProductHandle(data: Product) {
+  updateProductHandle(data: Product): void {
     if (!this.productData) return;
 
     data.id = this.productData.id;
-
     this.isProductUpdated = true;
-    this.setLoadingText();
+    this.loadingText = 'Updating product...';
 
     this.productService.updateProduct(data).subscribe(() => {
       this.showUpdatSuccesMessage = 'Product updated successfully';
       this.isProductUpdated = false;
 
       setTimeout(() => {
-        this.navigateRoute.navigate(['seller-home']);
-      }, 2000);
+        this.router.navigate(['/seller-home']);
+      }, 1500);
     });
   }
 }

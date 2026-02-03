@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthenticationService } from '../services/authentication.service';
 import { CartServiceService } from '../services/cart-service.service';
 import { Product } from 'src/data.type';
 
@@ -11,42 +12,30 @@ import { Product } from 'src/data.type';
 export class HeaderComponent implements OnInit {
 
   menuType: 'default' | 'seller' | 'user' = 'default';
-  isMenuOpen = false;
-
   cartItems = 0;
-  sellerName = 'Seller';
-  userName = 'User';
-
-  // search results (safe)
   searchResult: Product[] = [];
 
   constructor(
     private router: Router,
+    private authService: AuthenticationService,
     private cartService: CartServiceService
   ) {}
 
   ngOnInit(): void {
-
-    // menu switching
-    this.router.events.subscribe(() => {
-      if (localStorage.getItem('sellerLoggedIn')) {
-        this.menuType = 'seller';
-      } else if (localStorage.getItem('userLoggedIn')) {
-        this.menuType = 'user';
-      } else {
-        this.menuType = 'default';
-      }
+    this.authService.authState$.subscribe(state => {
+      this.menuType = state;
     });
 
-    // cart count (local only for now)
-    const localCart = localStorage.getItem('localCart');
-    this.cartItems = localCart ? JSON.parse(localCart).length : 0;
+    this.cartService.cartChanged.subscribe(count => {
+      this.cartItems = count;
+    });
   }
 
+  // ✅ REQUIRED BY TEMPLATE
   onSearchInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     if (value) {
-      this.router.navigate([`search/${value}`]);
+      this.router.navigate([`/search/${value}`]);
     }
   }
 
@@ -56,26 +45,18 @@ export class HeaderComponent implements OnInit {
 
   searchbtn(value: string) {
     if (!value) return;
-    this.router.navigate([`search/${value}`]);
-  }
-
-  toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
+    this.router.navigate([`/search/${value}`]);
   }
 
   redirectToDetails(id: number) {
-    this.router.navigate([`product/details/${id}`]);
+    this.router.navigate([`/product/details/${id}`]);
   }
 
   sellerLogout() {
-    localStorage.clear();
-    this.cartItems = 0;
-    this.router.navigate(['/']);
+    this.authService.logout();
   }
 
   userLogout() {
-    localStorage.clear();
-    this.cartItems = 0;
-    this.router.navigate(['/']);
+    this.authService.logout();
   }
 }

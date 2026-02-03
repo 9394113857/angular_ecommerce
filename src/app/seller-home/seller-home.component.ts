@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ProductService } from '../services/product.service';
-import { Product } from 'src/data.type';   // ✅ FIXED
+import { Product } from 'src/data.type';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
 
@@ -12,36 +12,47 @@ import { Router } from '@angular/router';
 })
 export class SellerHomeComponent implements OnInit {
 
+  // ✅ icons (MATCH TEMPLATE)
   deleteFonticon = faTrash;
   EditFonticon = faEdit;
 
-  productList: Product[] = [];   // ✅ FIXED
+  // ✅ data
+  productList: Product[] = [];
 
-  showDeleteSuccessMessage: string = '';
-  isLoading: boolean = false;
-  loadingText: string = 'Please wait while retrieving data...';
+  // ✅ message shown in HTML
+  showDeleteSuccessMessage = '';
+
+  // ✅ loading
+  isLoading = false;
+  loadingText = 'Please wait while retrieving data...';
 
   constructor(
-    private product: ProductService,
-    private route: Router,
+    private productService: ProductService,
+    private router: Router,
     private titleService: Title
   ) {}
 
   ngOnInit(): void {
     this.titleService.setTitle('E-Comm | Seller Home');
-    this.showProduct();
+    this.loadProducts();
   }
 
-  deleteProductFn(id: number) {
-    const isConfirm = window.confirm(
-      'Are you sure you want to delete this product?'
-    );
+  loadProducts(): void {
+    this.isLoading = true;
 
-    if (!isConfirm) return;
+    this.productService.getProductList().subscribe(data => {
+      this.productList = data;
+      this.isLoading = false;
+    });
+  }
 
-    this.product.deleteProduct(id.toString()).subscribe(() => {
+  deleteProductFn(id: number): void {
+    const ok = confirm('Are you sure you want to delete this product?');
+    if (!ok) return;
+
+    this.productService.deleteProduct(id.toString()).subscribe(() => {
       this.showDeleteSuccessMessage = `Product deleted successfully (ID: ${id})`;
-      this.showProduct();
+      this.loadProducts();
 
       setTimeout(() => {
         this.showDeleteSuccessMessage = '';
@@ -49,16 +60,7 @@ export class SellerHomeComponent implements OnInit {
     });
   }
 
-  editFn(id: number) {
-    this.route.navigate([`seller-update-product/${id}`]);
-  }
-
-  showProduct() {
-    this.isLoading = true;
-
-    this.product.getProductList().subscribe(data => {
-      this.productList = data;
-      this.isLoading = false;
-    });
+  editFn(id: number): void {
+    this.router.navigate([`/seller-update-product/${id}`]);
   }
 }

@@ -1,7 +1,9 @@
 <div class="product-card">
   <div class="image-container">
-    <img src="{{ productData.image || 'https://via.placeholder.com/300' }}"
-         alt="{{ productData.name }}">
+    <img
+      [src]="productData.image || 'https://via.placeholder.com/300'"
+      [alt]="productData.name"
+    />
   </div>
 
   <div class="productData-details">
@@ -11,17 +13,18 @@
   </div>
 
   <div class="button-container">
-    <!-- ✅ USE productData.id -->
-    <button (click)="redirectProductDetails(productData.id)">
-  <fa-icon [icon]="viewdet"></fa-icon>
-  View details
-</button>
+    <button
+      (click)="redirectProductDetails(productData.id)"
+      [class.onlyViewDetailsbtn]="!isSellerLoggedIn"
+    >
+      <fa-icon [icon]="viewdet"></fa-icon>
+      View details
+    </button>
 
-
-    <!-- ✅ USE productData.id -->
     <button
       *ngIf="isSellerLoggedIn"
-      (click)="EditRedirect(productData.id)">
+      (click)="EditRedirect(productData.id)"
+    >
       <fa-icon [icon]="faEditIcon"></fa-icon>
       Edit
     </button>

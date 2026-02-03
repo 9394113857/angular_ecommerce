@@ -14,11 +14,9 @@ export class ProductDetailsComponent implements OnInit {
 
   product!: Product;
   isLoading = true;
-
   isSeller = false;
   quantity = 1;
 
-  // simple variant model (extend later)
   selectedVariant = {
     variant_id: 1,
     color: 'Black'
@@ -36,9 +34,10 @@ export class ProductDetailsComponent implements OnInit {
     this.isSeller = !!localStorage.getItem('sellerLoggedIn');
 
     const productId = Number(this.route.snapshot.paramMap.get('productId'));
-    if (!productId) return;
-
-    this.isLoading = true;
+    if (!productId) {
+      this.isLoading = false;
+      return;
+    }
 
     this.productService.getSingleProduct(productId.toString()).subscribe({
       next: (data) => {
@@ -46,19 +45,12 @@ export class ProductDetailsComponent implements OnInit {
         this.titleService.setTitle(`E-Comm | ${data.name}`);
         this.isLoading = false;
       },
-      error: () => {
-        this.isLoading = false;
-      }
+      error: () => (this.isLoading = false)
     });
   }
 
-  increaseQty() {
-    this.quantity++;
-  }
-
-  decreaseQty() {
-    if (this.quantity > 1) this.quantity--;
-  }
+  increaseQty() { this.quantity++; }
+  decreaseQty() { if (this.quantity > 1) this.quantity--; }
 
   // ==========================
   // ADD TO CART
@@ -69,22 +61,17 @@ export class ProductDetailsComponent implements OnInit {
       return;
     }
 
-    const payload = {
+    this.cartService.addToCart({
       product_id: this.product.id,
       variant_id: this.selectedVariant.variant_id,
       name: this.product.name,
       color: this.selectedVariant.color,
       price: this.product.price,
       quantity: this.quantity
-    };
-
-    this.cartService.addToCart(payload).subscribe({
-      next: () => {
-        // update header count
-        this.cartService.getCart().subscribe(items => {
-          this.cartService.cartChanged.emit(items.length);
-        });
-      }
+    }).subscribe(() => {
+      this.cartService.getCart().subscribe(items => {
+        this.cartService.cartChanged.emit(items.length);
+      });
     });
   }
 

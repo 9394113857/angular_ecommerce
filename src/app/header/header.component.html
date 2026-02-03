@@ -1,6 +1,7 @@
 <div class="nav">
   <div class="nav-content">
 
+    <!-- LOGO -->
     <div class="logo" routerLink="">
       <h1>E-COMM</h1>
     </div>
@@ -18,17 +19,11 @@
 
       <!-- SEARCH RESULTS -->
       <ul
-        [ngClass]="{
-          'small-search': searchResult.length <= 5,
-          'large-search': searchResult.length > 5,
-          'no-search': searchResult.length === 0
-        }"
+        *ngIf="searchResult.length > 0"
+        class="small-search"
       >
         <li *ngFor="let item of searchResult">
-          <a
-            *ngIf="item.id"
-            (mousedown)="redirectToDetails(item.id)"
-          >
+          <a (mousedown)="redirectToDetails(item.id)">
             {{ item.name }}
           </a>
         </li>
@@ -38,7 +33,8 @@
     <!-- MENU -->
     <div [ngSwitch]="menuType">
 
-      <ul class="menu defaultMenu" *ngSwitchCase="'default'" [class.open]="isMenuOpen">
+      <!-- DEFAULT -->
+      <ul class="menu defaultMenu" *ngSwitchCase="'default'">
         <li><a routerLink="login">Login</a></li>
         <li><a routerLink="auth">Signup</a></li>
         <li>
@@ -48,16 +44,16 @@
         </li>
       </ul>
 
-      <ul class="menu sellerMenu" *ngSwitchCase="'seller'" [class.open]="isMenuOpen">
+      <!-- SELLER -->
+      <ul class="menu sellerMenu" *ngSwitchCase="'seller'">
         <li><a routerLink="seller-add-product">Add Product</a></li>
         <li><a routerLink="seller-home">List</a></li>
         <li><a (click)="sellerLogout()">Logout</a></li>
-        <li><a>{{ sellerName | titlecase }}</a></li>
       </ul>
 
-      <ul class="menu userMenu" *ngSwitchCase="'user'" [class.open]="isMenuOpen">
+      <!-- USER -->
+      <ul class="menu userMenu" *ngSwitchCase="'user'">
         <li><a routerLink="">Home</a></li>
-        <li><a>{{ userName | titlecase }}</a></li>
         <li><a (click)="userLogout()">Logout</a></li>
         <li>
           <a routerLink="cart">
@@ -65,12 +61,6 @@
           </a>
         </li>
       </ul>
-
-      <div class="burger" (click)="toggleMenu()" [class.open]="isMenuOpen">
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line"></div>
-      </div>
 
     </div>
   </div>
