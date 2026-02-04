@@ -8,11 +8,23 @@ import { Product } from 'src/data.type';
 })
 export class ProductService {
 
+  // ---------------------------------------------
+  // BASE URLS
+  // ---------------------------------------------
+
+  // ✅ LOCAL (ACTIVE)
+
   // READ (Angular routes)
   private baseUrl = 'http://127.0.0.1:5002/api/angularProduct';
 
   // SELLER routes
   private sellerUrl = 'http://127.0.0.1:5002/api/v1/products';
+
+  // 🚀 RENDER (UNCOMMENT WHEN DEPLOYING)
+  // private baseUrl = 'https://backend-product-service.onrender.com/api/angularProduct';
+  // private sellerUrl = 'https://backend-product-service.onrender.com/api/v1/products';
+
+  // ---------------------------------------------
 
   constructor(private http: HttpClient) {}
 

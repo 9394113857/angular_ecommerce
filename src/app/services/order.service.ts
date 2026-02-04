@@ -8,8 +8,17 @@ import { Order } from 'src/data.type';
 })
 export class OrderService {
 
-  // IMPORTANT: no trailing slash
+  // ---------------------------------------------
+  // BASE URL (NO TRAILING SLASH)
+  // ---------------------------------------------
+
+  // ✅ LOCAL (ACTIVE)
   private baseUrl = 'http://127.0.0.1:5003/api/orders';
+
+  // 🚀 RENDER (UNCOMMENT WHEN DEPLOYING)
+  // private baseUrl = 'https://backend-cart-service.onrender.com/api/orders';
+
+  // ---------------------------------------------
 
   constructor(private http: HttpClient) {}
 

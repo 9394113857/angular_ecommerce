@@ -22,7 +22,18 @@ export interface CheckoutPayload {
 export class CartServiceService {
 
   cartChanged = new EventEmitter<number>();
+
+  // ---------------------------------------------
+  // BASE URL
+  // ---------------------------------------------
+
+  // ✅ LOCAL (ACTIVE)
   private baseUrl = 'http://127.0.0.1:5003/api';
+
+  // 🚀 RENDER (UNCOMMENT WHEN DEPLOYING)
+  // private baseUrl = 'https://backend-cart-service.onrender.com/api';
+
+  // ---------------------------------------------
 
   constructor(private http: HttpClient) {}
 

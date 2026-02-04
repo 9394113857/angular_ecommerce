@@ -9,7 +9,17 @@ import { Login, SignUp } from 'src/data.type';
 })
 export class AuthenticationService {
 
+  // ---------------------------------------------
+  // BASE URL
+  // ---------------------------------------------
+
+  // ✅ LOCAL (ACTIVE)
   baseUrl = 'http://127.0.0.1:5001/api/v1/auth/angularUser';
+
+  // 🚀 RENDER (UNCOMMENT WHEN DEPLOYING)
+  // baseUrl = 'https://backend-auth-service-dkn7.onrender.com/api/v1/auth/angularUser';
+
+  // ---------------------------------------------
 
   authState$ = new BehaviorSubject<'default' | 'user' | 'seller'>('default');
 
@@ -20,6 +30,9 @@ export class AuthenticationService {
     this.initAuthState();
   }
 
+  // ---------------------------------------------
+  // INIT AUTH STATE
+  // ---------------------------------------------
   private initAuthState() {
     if (localStorage.getItem('sellerLoggedIn')) {
       this.authState$.next('seller');
@@ -30,7 +43,9 @@ export class AuthenticationService {
     }
   }
 
-  // ✅ REQUIRED BY authentication.component.ts
+  // ---------------------------------------------
+  // BLOCK AUTH PAGES IF LOGGED IN
+  // ---------------------------------------------
   notAllowedAuth() {
     if (
       localStorage.getItem('sellerLoggedIn') ||
@@ -40,6 +55,9 @@ export class AuthenticationService {
     }
   }
 
+  // ---------------------------------------------
+  // SIGNUP
+  // ---------------------------------------------
   userSignup(data: SignUp) {
     return this.http.post(`${this.baseUrl}/register`, {
       email: data.email,
@@ -48,14 +66,23 @@ export class AuthenticationService {
     });
   }
 
+  // ---------------------------------------------
+  // LOGIN
+  // ---------------------------------------------
   loginUser(data: Login) {
     return this.http.post<any>(`${this.baseUrl}/login`, data);
   }
 
+  // ---------------------------------------------
+  // SET AUTH STATE
+  // ---------------------------------------------
   setAuthState(role: 'user' | 'seller') {
     this.authState$.next(role);
   }
 
+  // ---------------------------------------------
+  // LOGOUT
+  // ---------------------------------------------
   logout() {
     localStorage.clear();
     this.authState$.next('default');
