@@ -1,0 +1,93 @@
+============================================================
+GIT: FORCE SYNC LOCAL BRANCH WITH REMOTE (CLEAN & VERIFIED)
+============================================================
+
+Use Case:
+---------
+- Remote branch is FINAL, VERIFIED, CI-tested
+- Local system is new / broken / out-of-sync
+- We DON'T care about local uncommitted changes
+- We want local branch to EXACTLY MATCH remote
+
+Common Scenarios:
+-----------------
+- New laptop / new OS
+- Force-push happened on remote
+- Git pull blocked due to local changes
+- Feature branch already approved & merged-tested
+- Angular / React / Backend projects (any stack)
+
+------------------------------------------------------------
+STEP 1: (Optional but SAFE) Backup local changes
+------------------------------------------------------------
+If there is even 1% doubt that local changes may be needed later:
+
+git stash push -m "backup-before-hard-reset"
+
+This stores local changes safely.
+
+------------------------------------------------------------
+STEP 2: Fetch latest remote updates
+------------------------------------------------------------
+git fetch origin
+
+This updates remote references without touching local files.
+
+------------------------------------------------------------
+STEP 3: FORCE local branch to match remote branch
+------------------------------------------------------------
+IMPORTANT:
+This WILL DELETE all local uncommitted changes.
+
+git reset --hard origin/feature/stock-cart-order-flow
+
+Replace branch name if needed:
+origin/<branch-name>
+
+------------------------------------------------------------
+STEP 4: Verify clean state
+------------------------------------------------------------
+git status
+
+Expected output:
+"nothing to commit, working tree clean"
+
+------------------------------------------------------------
+WHY git pull --force DOES NOT WORK
+------------------------------------------------------------
+- git pull = fetch + merge
+- merge NEVER overwrites local changes
+- --force works for PUSH, not PULL
+- That is why Git blocks pull when files are modified
+
+------------------------------------------------------------
+MENTAL MODEL (REMEMBER THIS)
+------------------------------------------------------------
+"git pull tries to MERGE"
+"git reset --hard REPLACES"
+
+------------------------------------------------------------
+WHEN TO USE THIS METHOD
+------------------------------------------------------------
+✔ Remote is source of truth
+✔ Team-approved code
+✔ CI/CD already passed
+✔ Fresh system setup
+✔ Feature branch finalized
+
+------------------------------------------------------------
+WHEN NOT TO USE
+------------------------------------------------------------
+✘ Local changes are important
+✘ You haven't pushed your work
+✘ You are mid-development
+
+------------------------------------------------------------
+RESTORE STASHED CHANGES (If needed)
+------------------------------------------------------------
+git stash list
+git stash apply
+
+============================================================
+END OF FILE
+============================================================
