@@ -1,37 +1,36 @@
-import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
+import { Component } from '@angular/core';
 import { ProductService } from '../services/product.service';
-import { Product } from 'src/data.type';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-seller-add-product',
   templateUrl: './seller-add-product.component.html',
   styleUrls: ['./seller-add-product.component.css']
 })
-export class SellerAddProductComponent implements OnInit {
+export class SellerAddProductComponent {
 
-  isProductAdded = false;
-  loadingText = '';
+  isLoading = false;
 
   constructor(
     private productService: ProductService,
-    private titleService: Title,
-    private router: Router
-  ) {}
-
-  ngOnInit(): void {
-    this.titleService.setTitle('E-Comm | Seller Add Product');
+    private router: Router,
+    private titleService: Title
+  ) {
+    this.titleService.setTitle('E-Comm | Add Product');
   }
 
-  addProductHandle(data: Product): void {
-    this.isProductAdded = true;
-    this.loadingText = 'Adding product...';
+  submit(form: any): void {
+    this.isLoading = true;
 
-    this.productService.postProduct(data).subscribe(() => {
-      this.isProductAdded = false;
-      alert('Product added successfully');
-      this.router.navigate(['/seller-home']);
+    this.productService.addProduct(form).subscribe({
+      next: (res) => {
+        this.router.navigate(['/seller-add-stock', res.id]);
+      },
+      error: () => {
+        alert('Failed to add product');
+        this.isLoading = false;
+      }
     });
   }
 }

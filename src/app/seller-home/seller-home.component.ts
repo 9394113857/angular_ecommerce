@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { ProductService } from '../services/product.service';
 import { Product } from 'src/data.type';
-import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-seller-home',
@@ -12,19 +11,8 @@ import { Router } from '@angular/router';
 })
 export class SellerHomeComponent implements OnInit {
 
-  // ✅ icons (MATCH TEMPLATE)
-  deleteFonticon = faTrash;
-  EditFonticon = faEdit;
-
-  // ✅ data
   productList: Product[] = [];
-
-  // ✅ message shown in HTML
-  showDeleteSuccessMessage = '';
-
-  // ✅ loading
   isLoading = false;
-  loadingText = 'Please wait while retrieving data...';
 
   constructor(
     private productService: ProductService,
@@ -40,27 +28,18 @@ export class SellerHomeComponent implements OnInit {
   loadProducts(): void {
     this.isLoading = true;
 
-    this.productService.getProductList().subscribe(data => {
-      this.productList = data;
-      this.isLoading = false;
+    this.productService.getProductList().subscribe({
+      next: (data) => {
+        this.productList = data || [];
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      }
     });
   }
 
-  deleteProductFn(id: number): void {
-    const ok = confirm('Are you sure you want to delete this product?');
-    if (!ok) return;
-
-    this.productService.deleteProduct(id.toString()).subscribe(() => {
-      this.showDeleteSuccessMessage = `Product deleted successfully (ID: ${id})`;
-      this.loadProducts();
-
-      setTimeout(() => {
-        this.showDeleteSuccessMessage = '';
-      }, 3000);
-    });
-  }
-
-  editFn(id: number): void {
-    this.router.navigate([`/seller-update-product/${id}`]);
+  goToAddProduct(): void {
+    this.router.navigate(['/seller-add-product']);
   }
 }

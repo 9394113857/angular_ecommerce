@@ -1,45 +1,42 @@
 .seller-home {
-  max-width: 700px;
-  margin: 0 auto;
+  max-width: 900px;
+  margin: auto;
 }
 
-.product-row {
-  background: #fff;
-  padding: 15px;
-  margin-bottom: 12px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  margin-bottom: 15px;
 }
 
-.product-row p {
-  margin: 0;
-  font-size: 16px;
-}
-
-.product-row button {
-  padding: 6px 12px;
+button {
+  background: #2ecc71;
   border: none;
+  color: white;
+  padding: 8px 14px;
   border-radius: 4px;
   cursor: pointer;
-  margin-left: 10px;
 }
 
-.product-row button:first-child {
-  background-color: #e74c3c;
-  color: #fff;
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.product-row button:last-child {
-  background-color: #3498db;
-  color: #fff;
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
 }
 
-.showMessage-p {
-  text-align: center;
-  color: green;
-  font-weight: 600;
-  margin-bottom: 10px;
+.variant-row {
+  font-size: 14px;
+}
+
+.out {
+  color: red;
+  font-weight: bold;
+}
+
+.no-stock {
+  color: #888;
 }

@@ -1,28 +1,46 @@
 <app-loading
   [isLoading]="isLoading"
-  [loadingText]="loadingText">
+  loadingText="Loading products...">
 </app-loading>
-
-<p class="showMessage-p">{{ showDeleteSuccessMessage }}</p>
 
 <div class="seller-home" *ngIf="!isLoading">
 
-  <div *ngFor="let product of productList" class="product-row">
-    <p>
-      <b>{{ product.name }}</b> — ₹ {{ product.price }}
-    </p>
+  <h2>My Products</h2>
 
-    <div>
-      <button (click)="deleteProductFn(product.id)">
-        <fa-icon [icon]="deleteFonticon"></fa-icon>
-        Delete
-      </button>
+  <table *ngIf="productList.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Variants (Color → Stock)</th>
+      </tr>
+    </thead>
 
-      <button (click)="editFn(product.id)">
-        <fa-icon [icon]="EditFonticon"></fa-icon>
-        Edit
-      </button>
-    </div>
-  </div>
+    <tbody>
+      <tr *ngFor="let product of productList">
+        <td>#{{ product.id }}</td>
+        <td>{{ product.name }}</td>
+        <td>₹ {{ product.price }}</td>
+        <td>
+          <div *ngIf="product.variants?.length; else noVariants">
+            <div *ngFor="let v of product.variants" class="variant-row">
+              <span>{{ v.color }}</span>
+              <span [class.out]="v.stock === 0">
+                {{ v.stock > 0 ? v.stock : 'Out of stock' }}
+              </span>
+            </div>
+          </div>
+          <ng-template #noVariants>
+            <span>No variants</span>
+          </ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="productList.length === 0">
+    No products found.
+  </p>
 
 </div>

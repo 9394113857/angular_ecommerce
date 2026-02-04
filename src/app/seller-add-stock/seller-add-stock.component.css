@@ -1,0 +1,39 @@
+.container {
+  max-width: 500px;
+  margin: auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 6px;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+}
+
+.add-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.variant-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+
+.done-btn {
+  margin-top: 15px;
+  background: #2ecc71;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+}

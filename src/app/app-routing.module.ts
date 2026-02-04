@@ -5,8 +5,11 @@ import { HomeComponent } from './home/home.component';
 import { SellerHomeComponent } from './seller-home/seller-home.component';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { SellerAddProductComponent } from './seller-add-product/seller-add-product.component';
-import { SellerUpdateProductComponent } from './seller-update-product/seller-update-product.component';
-import { SearchComponent } from './search/search.component';
+
+// import { SellerUpdateProductComponent } from './seller-update-product/seller-update-product.component';
+
+import { SellerAddStockComponent } from './seller-add-stock/seller-add-stock.component';
+// import { SearchComponent } from './search/search.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { LoginComponent } from './login/login.component';
 import { CartComponent } from './cart/cart.component';
@@ -47,16 +50,21 @@ const routes: Routes = [
     canActivate: [protectRouteGuard]
   },
   {
-    path: 'seller-update-product/:id',
-    component: SellerUpdateProductComponent,
+    path: 'seller-add-stock/:id',
+    component: SellerAddStockComponent,
     canActivate: [protectRouteGuard]
   },
+  // {
+  //   path: 'seller-update-product/:id',
+  //   component: SellerUpdateProductComponent,
+  //   canActivate: [protectRouteGuard]
+  // },
 
   // ---------------- PRODUCTS ----------------
-  {
-    path: 'search/:query',
-    component: SearchComponent
-  },
+  // {
+  //   path: 'search/:query',
+  //   component: SearchComponent
+  // },
   {
     path: 'product/details/:productId',
     component: ProductDetailsComponent
@@ -73,7 +81,7 @@ const routes: Routes = [
     canActivate: [protectRouteGuard]
   },
 
-  // ---------------- ORDERS (NEW) ----------------
+  // ---------------- ORDERS ----------------
   {
     path: 'orders',
     component: OrdersComponent,
