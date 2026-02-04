@@ -17,21 +17,53 @@
     {{ product.description }}
   </p>
 
-  <!-- VARIANT -->
-  <div *ngIf="!isSeller">
-    <p><b>Color:</b> {{ selectedVariant.color }}</p>
+  <!-- ==========================
+       VARIANT DROPDOWN
+  =========================== -->
+  <div *ngIf="!isSeller && product.variants?.length">
+    <label><b>Color:</b></label>
+
+    <select
+      [(ngModel)]="selectedVariant"
+      (ngModelChange)="onVariantChange($event)"
+    >
+      <option
+        *ngFor="let v of product.variants"
+        [ngValue]="v"
+      >
+        {{ v.color }} ({{ v.stock }} left)
+      </option>
+    </select>
   </div>
 
-  <!-- QUANTITY -->
+  <!-- ==========================
+       STOCK DISPLAY
+  =========================== -->
+  <p *ngIf="!isSeller">
+    <b>Stock:</b>
+    <span [style.color]="selectedStock === 0 ? 'red' : 'green'">
+      {{ selectedStock > 0 ? selectedStock + ' available' : 'Out of stock' }}
+    </span>
+  </p>
+
+  <!-- ==========================
+       QUANTITY
+  =========================== -->
   <div *ngIf="!isSeller" class="quantity-controls">
     <button (click)="decreaseQty()">-</button>
     <span>{{ quantity }}</span>
     <button (click)="increaseQty()">+</button>
   </div>
 
-  <!-- ACTIONS -->
+  <!-- ==========================
+       ACTIONS
+  =========================== -->
   <div *ngIf="!isSeller">
-    <button class="form-button" (click)="addToCart()">
+    <button
+      class="form-button"
+      (click)="addToCart()"
+      [disabled]="selectedStock === 0"
+    >
       Add to Cart
     </button>
   </div>
