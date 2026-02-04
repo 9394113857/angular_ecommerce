@@ -11,9 +11,17 @@ import { Product } from 'src/data.type';
 })
 export class SellerUpdateProductComponent implements OnInit {
 
-  productData?: Product;
+  // ✅ INITIALIZE (STRICT MODE SAFE)
+  productData: Product = {
+    id: 0,
+    name: '',
+    price: 0,
+    category: '',
+    description: '',
+    image: '',
+    variants: []
+  };
 
-  // ✅ REQUIRED by template
   showUpdatSuccesMessage = '';
 
   isLoading = false;
@@ -35,16 +43,20 @@ export class SellerUpdateProductComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.productService.getSingleProduct(id).subscribe(data => {
-      this.productData = data;
-      this.isLoading = false;
+    this.productService.getSingleProduct(id).subscribe({
+      next: (data) => {
+        this.productData = data;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      }
     });
   }
 
   updateProductHandle(data: Product): void {
-    if (!this.productData) return;
-
     data.id = this.productData.id;
+
     this.isProductUpdated = true;
     this.loadingText = 'Updating product...';
 

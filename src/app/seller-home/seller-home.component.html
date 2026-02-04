@@ -6,20 +6,23 @@
 <p class="showMessage-p">{{ showDeleteSuccessMessage }}</p>
 
 <div class="seller-home" *ngIf="!isLoading">
+
   <div *ngFor="let product of productList" class="product-row">
+    <p>
+      <b>{{ product.name }}</b> — ₹ {{ product.price }}
+    </p>
 
-    <p><b>{{ product.name }}</b></p>
-    <p>₹ {{ product.price }}</p>
+    <div>
+      <button (click)="deleteProductFn(product.id)">
+        <fa-icon [icon]="deleteFonticon"></fa-icon>
+        Delete
+      </button>
 
-    <button (click)="deleteProductFn(product.id)">
-      <fa-icon [icon]="deleteFonticon"></fa-icon>
-      Delete
-    </button>
-
-    <button (click)="editFn(product.id)">
-      <fa-icon [icon]="EditFonticon"></fa-icon>
-      Edit
-    </button>
-
+      <button (click)="editFn(product.id)">
+        <fa-icon [icon]="EditFonticon"></fa-icon>
+        Edit
+      </button>
+    </div>
   </div>
+
 </div>

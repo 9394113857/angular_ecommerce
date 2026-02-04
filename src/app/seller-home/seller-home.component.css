@@ -1,68 +1,45 @@
-.product-list {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 20px;
+.seller-home {
+  max-width: 700px;
+  margin: 0 auto;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
+.product-row {
+  background: #fff;
+  padding: 15px;
+  margin-bottom: 12px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
+.product-row p {
+  margin: 0;
+  font-size: 16px;
 }
 
-thead th {
-    background-color: #f5f5f5;
-    padding: 10px;
-    text-align: center;
+.product-row button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
 }
 
-tbody td {
-    padding: 10px;
-    text-align: center;
+.product-row button:first-child {
+  background-color: #e74c3c;
+  color: #fff;
 }
 
-tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+.product-row button:last-child {
+  background-color: #3498db;
+  color: #fff;
 }
 
-img {
-    max-width: 40px;
-    height: 45px;
-}
-
-.delete-icon {
-    margin-right: 25px;
-    color: red;
-}
-
-.edit-icon {
-  
-    color: blue;
-}
-
-
-
-@media (max-width: 768px) {
-    table thead {
-        display: none;
-    }
-
-    td {
-        display: block;
-        width: 100%;
-        text-align: center;
-        padding: 10px 0;
-        border-bottom: 1px solid #ddd;
-    }
-
-    td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        display: block;
-        margin-bottom: 5px;
-    }
+.showMessage-p {
+  text-align: center;
+  color: green;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
