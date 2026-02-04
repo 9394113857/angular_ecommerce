@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ProductService } from '../services/product.service';
+import { EventTrackingService } from '../services/event-tracking.service';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
@@ -15,13 +16,18 @@ export class SellerAddProductComponent {
   constructor(
     private productService: ProductService,
     private router: Router,
-    private titleService: Title
+    private titleService: Title,
+    private eventTracking: EventTrackingService
   ) {
     this.titleService.setTitle('E-Comm | Add Product');
   }
 
   submit(form: any): void {
     this.isLoading = true;
+
+    
+
+    
 
     this.productService.addProduct(form).subscribe({
       next: (res) => {

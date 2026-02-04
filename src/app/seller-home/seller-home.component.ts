@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../services/product.service';
+import { EventTrackingService } from '../services/event-tracking.service';
 import { Product } from 'src/data.type';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
@@ -17,10 +18,15 @@ export class SellerHomeComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private router: Router,
-    private titleService: Title
+    private titleService: Title,
+    private eventTracking: EventTrackingService
   ) {}
 
   ngOnInit(): void {
+    this.eventTracking.trackEvent({
+  event_type: 'seller_dashboard_view'
+});
+
     this.titleService.setTitle('E-Comm | Seller Home');
     this.loadProducts();
   }

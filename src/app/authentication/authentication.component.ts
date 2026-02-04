@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { AuthenticationService } from '../services/authentication.service';
+import { EventTrackingService } from '../services/event-tracking.service';
 import { SignUp } from 'src/data.type';
 
 @Component({
@@ -20,7 +21,8 @@ export class AuthenticationComponent implements OnInit {
 
   constructor(
     private authService: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private eventTracking: EventTrackingService
   ) {}
 
   ngOnInit(): void {
@@ -36,7 +38,14 @@ export class AuthenticationComponent implements OnInit {
 
     this.isLoading = true;
 
+    this.eventTracking.trackEvent({
+  event_type: 'signup_success',
+  metadata: { role: payload.role_type }
+});
+
+
     this.authService.userSignup(payload).subscribe({
+      
       next: () => {
         alert('Registration successful');
         this.router.navigate(['/login']);

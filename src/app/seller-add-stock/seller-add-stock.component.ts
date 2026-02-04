@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../services/product.service';
+import { EventTrackingService } from '../services/event-tracking.service';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -21,7 +22,8 @@ export class SellerAddStockComponent implements OnInit {
     private route: ActivatedRoute,
     private productService: ProductService,
     private router: Router,
-    private titleService: Title
+    private titleService: Title,
+    private eventTracking: EventTrackingService
   ) {
     this.titleService.setTitle('E-Comm | Add Stock');
   }

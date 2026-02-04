@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 import { CartServiceService } from '../services/cart-service.service';
+import { EventTrackingService } from '../services/event-tracking.service';
 import { Product } from 'src/data.type';
 import { Title } from '@angular/platform-browser';
 
@@ -19,7 +20,8 @@ export class LoginComponent implements OnInit {
     private authService: AuthenticationService,
     private router: Router,
     private cartService: CartServiceService,
-    private titleService: Title
+    private titleService: Title,
+    private eventTracking: EventTrackingService
   ) {}
 
   ngOnInit(): void {
@@ -34,11 +36,16 @@ export class LoginComponent implements OnInit {
   loginFormhandle(form: NgForm): void {
     if (form.invalid) return;
 
-    this.isLoading = true;
+this.isLoading = true;
 
-    this.authService.loginUser(form.value).subscribe({
-      next: (res) => {
-        localStorage.setItem('token', res.access_token);
+this.authService.loginUser(form.value).subscribe({
+  next: (res) => {
+    localStorage.setItem('token', res.access_token);
+
+    this.eventTracking.trackEvent({
+      event_type: 'login_success',
+      metadata: { role: res.role }
+    });
 
         if (res.role === 'seller') {
           localStorage.setItem('sellerLoggedIn', res.userId);
@@ -55,6 +62,10 @@ export class LoginComponent implements OnInit {
         }
       },
       error: () => {
+        this.eventTracking.trackEvent({
+  event_type: 'login_failed'
+});
+
         this.loginFailed = 'Invalid credentials';
         this.isLoading = false;
       }

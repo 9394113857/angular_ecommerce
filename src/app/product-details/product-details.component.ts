@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../services/product.service';
 import { CartServiceService } from '../services/cart-service.service';
+import { EventTrackingService } from '../services/event-tracking.service';
 import { Product, ProductVariant } from 'src/data.type';
 import { Title } from '@angular/platform-browser';
 
@@ -26,7 +27,9 @@ export class ProductDetailsComponent implements OnInit {
     private productService: ProductService,
     private cartService: CartServiceService,
     private router: Router,
-    private titleService: Title
+    private titleService: Title,
+    private eventTracking: EventTrackingService
+
   ) {}
 
   ngOnInit(): void {
@@ -42,6 +45,12 @@ export class ProductDetailsComponent implements OnInit {
       next: (data) => {
         this.product = data;
 
+        this.eventTracking.trackEvent({
+    event_type: 'view_product',
+    object_type: 'product',
+    object_id: data.id.toString()
+  });
+
         // default variant
         if (this.product.variants?.length) {
           this.onVariantChange(this.product.variants[0]);
@@ -49,7 +58,7 @@ export class ProductDetailsComponent implements OnInit {
 
         this.titleService.setTitle(`E-Comm | ${data.name}`);
         this.isLoading = false;
-      },
+      }, //next
       error: () => (this.isLoading = false)
     });
   }
@@ -64,7 +73,14 @@ export class ProductDetailsComponent implements OnInit {
     if (this.quantity > this.selectedStock) {
       this.quantity = this.selectedStock || 1;
     }
-  }
+    this.eventTracking.trackEvent({
+  event_type: 'variant_selected',
+  object_type: 'variant',
+  object_id: variant.variant_id.toString(),
+  metadata: { color: variant.color }
+});
+
+  }// onVariantChange
 
   // ==========================
   // QUANTITY CONTROLS
@@ -86,6 +102,17 @@ export class ProductDetailsComponent implements OnInit {
   // ==========================
   addToCart(): void {
     if (this.selectedStock === 0) return;
+
+    this.eventTracking.trackEvent({
+  event_type: 'add_to_cart',
+  object_type: 'product',
+  object_id: this.product.id.toString(),
+  metadata: {
+    variant_id: this.selectedVariant.variant_id,
+    quantity: this.quantity
+  }
+});
+
 
     if (!localStorage.getItem('userLoggedIn')) {
       this.router.navigate(['/login']);

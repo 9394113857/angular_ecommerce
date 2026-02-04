@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 import { CartServiceService } from '../services/cart-service.service';
+import { EventTrackingService } from '../services/event-tracking.service';
 import { Product } from 'src/data.type';
 
 @Component({
@@ -18,7 +19,8 @@ export class HeaderComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthenticationService,
-    private cartService: CartServiceService
+    private cartService: CartServiceService,
+    private eventTracking: EventTrackingService
   ) {}
 
   ngOnInit(): void {

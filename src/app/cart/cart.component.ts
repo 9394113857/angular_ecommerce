@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { CartServiceService } from '../services/cart-service.service';
+import { EventTrackingService } from '../services/event-tracking.service';
 import { CartItem } from 'src/data.type';
 
 @Component({
@@ -23,7 +24,8 @@ export class CartComponent implements OnInit {
   constructor(
     private cartService: CartServiceService,
     private router: Router,
-    private titleService: Title
+    private titleService: Title,
+    private eventTracking: EventTrackingService
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +46,11 @@ export class CartComponent implements OnInit {
   // ==========================
   loadCart(): void {
     this.isLoading = true;
+
+    this.eventTracking.trackEvent({
+  event_type: 'cart_view'
+});
+
 
     this.cartService.getCart().subscribe({
       next: (items) => {
@@ -74,6 +81,10 @@ export class CartComponent implements OnInit {
   // CHECKOUT
   // ==========================
   goToCheckout(): void {
+    this.eventTracking.trackEvent({
+  event_type: 'checkout_started'
+});
+
     this.router.navigate(['/checkout']);
   }
 }

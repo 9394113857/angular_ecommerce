@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from '../services/order.service';
+import { EventTrackingService } from '../services/event-tracking.service';
 
 @Component({
   selector: 'app-order-details',
@@ -15,7 +16,8 @@ export class OrderDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private eventTracking: EventTrackingService
   ) {}
 
   ngOnInit(): void {
@@ -34,6 +36,13 @@ export class OrderDetailsComponent implements OnInit {
   // ==========================
   loadOrder(orderId: number): void {
     this.isLoading = true;
+
+    this.eventTracking.trackEvent({
+  event_type: 'order_details_view',
+  object_type: 'order',
+  object_id: orderId.toString()
+});
+
 
     this.orderService.getOrderDetails(orderId).subscribe({
       next: (data) => {
@@ -56,6 +65,13 @@ export class OrderDetailsComponent implements OnInit {
     }
 
     this.isLoading = true;
+
+    this.eventTracking.trackEvent({
+  event_type: 'order_cancel_attempt',
+  object_type: 'order',
+  object_id: this.order.order_id.toString()
+});
+
 
     this.orderService.cancelOrder(this.order.order_id).subscribe({
       next: () => {
