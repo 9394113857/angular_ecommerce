@@ -1,18 +1,57 @@
-<div *ngIf="order">
+<div *ngIf="isLoading">
+  <p>Loading order details...</p>
+</div>
+
+<div *ngIf="!isLoading && order" class="order-details">
 
   <h2>Order #{{ order.order_id }}</h2>
 
-  <p>Status:
-    <strong>{{ order.status }}</strong>
+  <p>
+    Status:
+    <strong class="{{ order.status }}">
+      {{ order.status }}
+    </strong>
   </p>
 
-  <p>Total Price:
+  <p>
+    Total Price:
     <strong>₹ {{ order.total_price }}</strong>
   </p>
 
-  <p>Placed On:
+  <p>
+    Placed On:
     {{ order.created_at | date:'medium' }}
   </p>
+
+  <hr />
+
+  <h3>Order Items</h3>
+
+  <table *ngIf="order.items?.length">
+    <thead>
+      <tr>
+        <th>Product ID</th>
+        <th>Variant ID</th>
+        <th>Quantity</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of order.items">
+        <td>{{ item.product_id }}</td>
+        <td>{{ item.variant_id }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>₹ {{ item.price }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!order.items?.length">
+    No items found for this order.
+  </p>
+
+  <br />
 
   <button
     *ngIf="order.status === 'placed'"

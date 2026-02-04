@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from '../services/order.service';
-import { Order } from 'src/data.type';
 
 @Component({
   selector: 'app-order-details',
@@ -10,26 +9,51 @@ import { Order } from 'src/data.type';
 })
 export class OrderDetailsComponent implements OnInit {
 
-  order!: Order;
-  isLoading = false;
+  order: any = null;
+  isLoading = true;
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     private orderService: OrderService
   ) {}
 
   ngOnInit(): void {
-    const nav = this.router.getCurrentNavigation();
-    this.order = nav?.extras?.state?.['order'];
+    const orderId = Number(this.route.snapshot.paramMap.get('orderId'));
 
-    if (!this.order) {
-      // direct refresh protection
+    if (!orderId) {
       this.router.navigate(['/orders']);
+      return;
     }
+
+    this.loadOrder(orderId);
   }
 
+  // ==========================
+  // LOAD ORDER DETAILS
+  // ==========================
+  loadOrder(orderId: number): void {
+    this.isLoading = true;
+
+    this.orderService.getOrderDetails(orderId).subscribe({
+      next: (data) => {
+        this.order = data;
+        this.isLoading = false;
+      },
+      error: () => {
+        // invalid order / unauthorized
+        this.router.navigate(['/orders']);
+      }
+    });
+  }
+
+  // ==========================
+  // CANCEL ORDER
+  // ==========================
   cancelOrder(): void {
-    if (!confirm('Are you sure you want to cancel this order?')) return;
+    if (!confirm('Are you sure you want to cancel this order?')) {
+      return;
+    }
 
     this.isLoading = true;
 
@@ -45,6 +69,9 @@ export class OrderDetailsComponent implements OnInit {
     });
   }
 
+  // ==========================
+  // BACK TO ORDERS
+  // ==========================
   goBack(): void {
     this.router.navigate(['/orders']);
   }

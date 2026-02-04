@@ -28,6 +28,7 @@
       </td>
       <td>{{ order.created_at | date:'medium' }}</td>
       <td>
+        <!-- IMPORTANT: just navigate, no state -->
         <button (click)="viewOrder(order)">View</button>
       </td>
     </tr>

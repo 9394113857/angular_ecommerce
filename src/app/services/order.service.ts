@@ -8,10 +8,7 @@ import { Order } from 'src/data.type';
 })
 export class OrderService {
 
-  // ❌ OLD (caused 308 → JWT lost)
-  // private baseUrl = 'http://127.0.0.1:5003/api/orders/';
-
-  // ✅ FIXED (NO trailing slash)
+  // IMPORTANT: no trailing slash
   private baseUrl = 'http://127.0.0.1:5003/api/orders';
 
   constructor(private http: HttpClient) {}
@@ -24,11 +21,21 @@ export class OrderService {
   }
 
   // ==========================
-  // GET MY ORDERS
+  // GET ALL MY ORDERS
   // ==========================
   getMyOrders(): Observable<Order[]> {
     return this.http.get<Order[]>(
       this.baseUrl,
+      { headers: this.headers() }
+    );
+  }
+
+  // ==========================
+  // GET SINGLE ORDER DETAILS
+  // ==========================
+  getOrderDetails(orderId: number): Observable<any> {
+    return this.http.get<any>(
+      `${this.baseUrl}/${orderId}`,
       { headers: this.headers() }
     );
   }
