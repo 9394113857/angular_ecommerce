@@ -17,11 +17,11 @@ import { HomeComponent } from './home/home.component';
 import { SellerHomeComponent } from './seller-home/seller-home.component';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { SellerAddProductComponent } from './seller-add-product/seller-add-product.component';
-import { SellerUpdateProductComponent } from './seller-update-product/seller-update-product.component';
+// import { SellerUpdateProductComponent } from './seller-update-product/seller-update-product.component';
 import { SellerAddStockComponent } from './seller-add-stock/seller-add-stock.component';
 
 import { ProductCardComponent } from './product-card/product-card.component';
-import { SearchComponent } from './search/search.component';
+// import { SearchComponent } from './search/search.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { LoginComponent } from './login/login.component';
 
@@ -52,12 +52,12 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     HomeComponent,
     AuthenticationComponent,
     LoginComponent,
-    SearchComponent,
+    // SearchComponent,
 
     SellerHomeComponent,
     SellerAddProductComponent,
     SellerAddStockComponent,
-    SellerUpdateProductComponent,
+    // SellerUpdateProductComponent,
 
     ProductCardComponent,
     ProductDetailsComponent,

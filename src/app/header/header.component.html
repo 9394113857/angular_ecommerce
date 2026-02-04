@@ -18,10 +18,7 @@
       <button (click)="searchbtn(searchInput.value)">Search</button>
 
       <!-- SEARCH RESULTS -->
-      <ul
-        *ngIf="searchResult.length > 0"
-        class="small-search"
-      >
+      <ul *ngIf="searchResult.length > 0" class="small-search">
         <li *ngFor="let item of searchResult">
           <a (mousedown)="redirectToDetails(item.id)">
             {{ item.name }}
@@ -35,10 +32,10 @@
 
       <!-- DEFAULT -->
       <ul class="menu defaultMenu" *ngSwitchCase="'default'">
-        <li><a routerLink="login">Login</a></li>
-        <li><a routerLink="auth">Signup</a></li>
+        <li><a routerLink="/login">Login</a></li>
+        <li><a routerLink="/auth">Signup</a></li>
         <li>
-          <a routerLink="cart">
+          <a routerLink="/cart">
             Cart <span>{{ cartItems }}</span>
           </a>
         </li>
@@ -46,20 +43,25 @@
 
       <!-- SELLER -->
       <ul class="menu sellerMenu" *ngSwitchCase="'seller'">
-        <li><a routerLink="seller-add-product">Add Product</a></li>
-        <li><a routerLink="seller-home">List</a></li>
+        <li><a routerLink="/seller-add-product">Add Product</a></li>
+        <li><a routerLink="/seller-home">My Products</a></li>
         <li><a (click)="sellerLogout()">Logout</a></li>
       </ul>
 
       <!-- USER -->
       <ul class="menu userMenu" *ngSwitchCase="'user'">
-        <li><a routerLink="">Home</a></li>
-        <li><a (click)="userLogout()">Logout</a></li>
+        <li><a routerLink="/">Home</a></li>
+
+        <!-- ✅ ORDERS LINK (FIX) -->
+        <li><a (click)="goToOrders()">My Orders</a></li>
+
         <li>
-          <a routerLink="cart">
+          <a routerLink="/cart">
             Cart <span>{{ cartItems }}</span>
           </a>
         </li>
+
+        <li><a (click)="userLogout()">Logout</a></li>
       </ul>
 
     </div>

@@ -1,0 +1,46 @@
+PROJECT: Angular Frontend (angular_ecommerce)
+BRANCH: feature/stock-cart-order-flow
+
+====================================
+ANGULAR GIT WORKFLOW
+====================================
+
+1. Check current branch
+   git branch
+
+2. Make sure you are on feature branch
+   git checkout feature/stock-cart-order-flow
+
+3. Check changes
+   git status
+
+4. Stage all changes
+   git add .
+
+5. Commit Angular changes
+   git commit -m "feat: angular seller-product-stock-orders flow completed"
+
+6. Push feature branch
+   git push origin feature/stock-cart-order-flow
+
+====================================
+FEATURES COMPLETED
+====================================
+
+- Seller add product flow
+- Seller add stock (variants)
+- Seller home listing with variants
+- User cart & checkout
+- Orders list and order details
+- Header menu updated with Orders
+- Routing finalized
+- Auth-based menu rendering
+
+====================================
+MERGE NOTE
+====================================
+
+This branch is READY to merge into main.
+
+Merge command (from main):
+git merge feature/stock-cart-order-flow

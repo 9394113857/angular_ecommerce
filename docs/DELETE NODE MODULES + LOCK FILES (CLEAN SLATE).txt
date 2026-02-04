@@ -34,8 +34,8 @@ npm install
 ⏳ Wait until it finishes fully (no Ctrl+C).
 ________________________________________
 ✅ STEP 5: INSTALL REQUIRED ANGULAR DEPENDENCIES (SAFE)
-
 Run these even if they already exist (no harm):
+
 npm install @angular/forms @angular/common @angular/router
 npm install @fortawesome/angular-fontawesome @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons
 
