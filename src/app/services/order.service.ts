@@ -8,11 +8,28 @@ import { Order } from 'src/data.type';
 })
 export class OrderService {
 
+  // =====================================
+  // 🌱 LOCAL BACKEND (COMMENTED)
   // IMPORTANT: no trailing slash
-  private baseUrl = 'http://127.0.0.1:5003/api/orders';
+  // =====================================
+  // private readonly LOCAL_BASE_URL =
+  //   'http://127.0.0.1:5003/api/orders';
+
+  // =====================================
+  // 🚀 RENDER BACKEND (ACTIVE)
+  // IMPORTANT: no trailing slash
+  // =====================================
+  private readonly RENDER_BASE_URL =
+    'https://backend-cart-order-service.onrender.com/api/orders';
+
+  // ✅ ACTIVE BASE URL
+  private readonly baseUrl = this.RENDER_BASE_URL;
 
   constructor(private http: HttpClient) {}
 
+  // ==========================
+  // 🔐 AUTH HEADERS
+  // ==========================
   private headers(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders({
@@ -21,7 +38,7 @@ export class OrderService {
   }
 
   // ==========================
-  // GET ALL MY ORDERS
+  // 📦 GET ALL MY ORDERS
   // ==========================
   getMyOrders(): Observable<Order[]> {
     return this.http.get<Order[]>(
@@ -31,7 +48,7 @@ export class OrderService {
   }
 
   // ==========================
-  // GET SINGLE ORDER DETAILS
+  // 🔍 GET SINGLE ORDER DETAILS
   // ==========================
   getOrderDetails(orderId: number): Observable<any> {
     return this.http.get<any>(
@@ -41,7 +58,7 @@ export class OrderService {
   }
 
   // ==========================
-  // CANCEL ORDER
+  // ❌ CANCEL ORDER
   // ==========================
   cancelOrder(orderId: number): Observable<any> {
     return this.http.patch(

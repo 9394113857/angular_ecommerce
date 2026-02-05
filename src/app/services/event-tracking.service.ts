@@ -7,13 +7,19 @@ import { HttpClient } from '@angular/common/http';
 export class EventTrackingService {
 
   // =====================================================
-  // LOCAL DEVELOPMENT ML EVENTS SERVICE (COMMENTED)
+  // 🌱 LOCAL DEVELOPMENT ML EVENTS SERVICE (COMMENTED)
   // =====================================================
-  baseUrl = 'http://127.0.0.1:5004/api/events';
+  // private readonly LOCAL_BASE_URL =
+  //   'http://127.0.0.1:5004/api/events';
 
   // =====================================================
-  // PRODUCTION ML EVENTS SERVICE (RENDER) ✅ ACTIVE
-  // baseUrl = 'https://backend-ml-events-service.onrender.com/api/events';
+  // 🚀 PRODUCTION ML EVENTS SERVICE (RENDER) ✅ ACTIVE
+  // =====================================================
+  private readonly RENDER_BASE_URL =
+    'https://backend-ml-events-service.onrender.com/api/events';
+
+  // ✅ ACTIVE BASE URL
+  private readonly baseUrl = this.RENDER_BASE_URL;
 
   constructor(private http: HttpClient) {}
 
@@ -34,7 +40,7 @@ export class EventTrackingService {
 
     // 🔥 Fire & forget (never block UI)
     this.http.post(this.baseUrl, payload).subscribe({
-      error: () => {}
+      error: () => {} // silent fail by design
     });
   }
 

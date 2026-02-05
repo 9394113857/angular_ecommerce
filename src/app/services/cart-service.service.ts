@@ -22,10 +22,27 @@ export interface CheckoutPayload {
 export class CartServiceService {
 
   cartChanged = new EventEmitter<number>();
-  private baseUrl = 'http://127.0.0.1:5003/api';
+
+  // =====================================
+  // 🌱 LOCAL BACKEND (COMMENTED)
+  // =====================================
+  // private readonly LOCAL_BASE_URL =
+  //   'http://127.0.0.1:5003/api';
+
+  // =====================================
+  // 🚀 RENDER BACKEND (ACTIVE)
+  // =====================================
+  private readonly RENDER_BASE_URL =
+    'https://backend-cart-order-service.onrender.com/api';
+
+  // ✅ ACTIVE BASE URL
+  private readonly baseUrl = this.RENDER_BASE_URL;
 
   constructor(private http: HttpClient) {}
 
+  // ==============================
+  // 🔐 AUTH HEADERS
+  // ==============================
   private headers(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders({
@@ -34,7 +51,7 @@ export class CartServiceService {
   }
 
   // ==============================
-  // ADD TO CART
+  // 🛒 ADD TO CART
   // ==============================
   addToCart(payload: CartItemPayload): Observable<any> {
     return this.http.post(
@@ -45,7 +62,7 @@ export class CartServiceService {
   }
 
   // ==============================
-  // GET CART
+  // 📦 GET CART
   // ==============================
   getCart(): Observable<any[]> {
     return this.http.get<any[]>(
@@ -55,7 +72,7 @@ export class CartServiceService {
   }
 
   // ==============================
-  // CHECKOUT
+  // 💳 CHECKOUT
   // ==============================
   checkout(payload: CheckoutPayload): Observable<any> {
     return this.http.post(
