@@ -35,16 +35,15 @@ export class CartServiceService {
   private readonly RENDER_BASE_URL =
     'https://backend-cart-order-service.onrender.com/api';
 
-  // ✅ ACTIVE BASE URL
   private readonly baseUrl = this.RENDER_BASE_URL;
 
   constructor(private http: HttpClient) {}
 
   // ==============================
-  // 🔐 AUTH HEADERS
+  // 🔐 AUTH HEADERS (FIXED)
   // ==============================
   private headers(): HttpHeaders {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access_token'); // ✅ FIX
     return new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
