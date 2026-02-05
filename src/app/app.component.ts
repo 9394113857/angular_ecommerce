@@ -16,63 +16,88 @@ export class AppComponent implements OnInit {
 
   /**
    * =====================================================
-   * 🚀 Render Cold-Start Warmup (ORDERED FLOW)
+   * 🚀 Render Cold-Start Warmup (BASE URL ONLY)
    * =====================================================
-   * Order:
-   * 1️⃣ Auth Service
-   * 2️⃣ Product Service
-   * 3️⃣ Cart / Order Service
-   * 4️⃣ ML Events Service
-   * 5️⃣ ML Recommendation Service
-   *
    * Purpose:
    * - Wake Render containers on app load
-   * - Avoid cold-start delays for real users
-   * - Errors are intentionally ignored
+   * - Ignore responses & errors
+   * - Just trigger the containers
    */
   warmUpBackends(): void {
 
-    // ---------------------------------------------
     // 🔐 1) Auth Service
-    // ---------------------------------------------
     this.http.get(
-      'https://backend-auth-service-6zwi.onrender.com/api/v1/auth/'
+      'https://backend-auth-service-6zwi.onrender.com'
     ).subscribe({ error: () => {} });
 
-    // ---------------------------------------------
     // 📦 2) Product Service
-    // ---------------------------------------------
     setTimeout(() => {
       this.http.get(
-        'https://backend-product-service-ipnq.onrender.com/api/angularProduct/health'
+        'https://backend-product-service-ipnq.onrender.com'
       ).subscribe({ error: () => {} });
     }, 500);
 
-    // ---------------------------------------------
     // 🛒 3) Cart / Order Service
-    // ---------------------------------------------
     setTimeout(() => {
       this.http.get(
-        'https://backend-cart-order-service.onrender.com/'
+        'https://backend-cart-order-service.onrender.com'
       ).subscribe({ error: () => {} });
     }, 1000);
 
-    // ---------------------------------------------
     // 📊 4) ML Events Service
-    // ---------------------------------------------
     setTimeout(() => {
       this.http.get(
-        'https://backend-ml-events-service.onrender.com/'
+        'https://backend-ml-events-service.onrender.com'
       ).subscribe({ error: () => {} });
     }, 1500);
 
-    // ---------------------------------------------
     // 🤖 5) ML Recommendation Service
-    // ---------------------------------------------
     setTimeout(() => {
       this.http.get(
-        'https://backend-ml-recommendation-service.onrender.com/'
+        'https://backend-ml-recommendation-service.onrender.com'
       ).subscribe({ error: () => {} });
     }, 2000);
   }
 }
+
+
+// ✅ How to Check Backend Warm-Up in Browser
+// 1️⃣ Open your Angular app in the browser
+//    → http://localhost:4200   (or your deployed frontend URL)
+
+// 2️⃣ Open Developer Tools
+//    → Press F12
+//    → OR Right-click anywhere → Inspect
+
+// 3️⃣ Go to the "Network" tab (top menu in DevTools)
+
+// 4️⃣ Click the "Fetch / XHR" filter
+//    → This shows only API calls
+
+// 5️⃣ HARD REFRESH the page
+//    → Press Ctrl + R
+//    → OR Ctrl + Shift + R (best)
+
+// 6️⃣ Watch the Network list immediately
+//    → You should see these requests appear in order:
+
+//       backend-auth-service-6zwi.onrender.com
+//       backend-product-service-ipnq.onrender.com
+//       backend-cart-order-service.onrender.com
+//       backend-ml-events-service.onrender.com
+//       backend-ml-recommendation-service.onrender.com
+
+// 7️⃣ Click any one request
+//    → Open the "Headers" tab
+//    → Check:
+//         - Request URL  ✅ correct base URL
+//         - Status       ✅ 200 / 404 / 502 (ALL OK)
+
+// 8️⃣ IMPORTANT:
+//    → Even if Status = 404 / 401 / 502
+//    → Backend is STILL warmed
+//    → Render container is awake now
+
+// 9️⃣ Final confirmation
+//    → Perform a real action (login / load products)
+//    → Response should be FAST (no cold delay)
