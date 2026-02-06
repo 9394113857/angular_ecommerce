@@ -48,7 +48,7 @@ PART 3: GIT BASH – CREATE STABLE TAG FROM MAIN
 git log --oneline --decorate --graph -10
 
 # Step 7: Create ANNOTATED TAG (stable version)
-git tag -a v1.0.0 -m "Stable release v1.0.0 - From Anguar Local Version to Local Auth Local Service base flow Fianlly Working nowa s expected"
+git tag -a v1.0.0 -m "Stable release v1.0.0 - From Anguar Local Version to Local Auth Local Service base flow Fianlly Working now as expected"
 
 # Tag naming examples:
 # v1.0.0  -> First stable release
