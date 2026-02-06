@@ -11,24 +11,24 @@ export class ProductService {
   // =====================================
   // 🌱 LOCAL BACKEND (COMMENTED)
   // =====================================
-  // private readonly LOCAL_BASE_URL =
-  //   'http://127.0.0.1:5002/api/angularProduct';
+  private readonly LOCAL_BASE_URL =
+    'http://127.0.0.1:5002/api/angularProduct';
 
-  // private readonly LOCAL_SELLER_URL =
-  //   'http://127.0.0.1:5002/api/v1/products';
+  private readonly LOCAL_SELLER_URL =
+    'http://127.0.0.1:5002/api/v1/products';
 
   // =====================================
   // 🚀 RENDER BACKEND (ACTIVE)
   // =====================================
-  private readonly RENDER_BASE_URL =
-    'https://backend-product-service-ipnq.onrender.com/api/angularProduct';
+  // private readonly RENDER_BASE_URL =
+  //   'https://backend-product-service-ipnq.onrender.com/api/angularProduct';
 
-  private readonly RENDER_SELLER_URL =
-    'https://backend-product-service-ipnq.onrender.com/api/v1/products';
+  // private readonly RENDER_SELLER_URL =
+  //   'https://backend-product-service-ipnq.onrender.com/api/v1/products';
 
   // ✅ ACTIVE URLS
-  private readonly baseUrl = this.RENDER_BASE_URL;
-  private readonly sellerUrl = this.RENDER_SELLER_URL;
+  private readonly baseUrl = this.LOCAL_BASE_URL;
+  private readonly sellerUrl = this.LOCAL_SELLER_URL;
 
   constructor(private http: HttpClient) {}
 

@@ -1,0 +1,165 @@
+========================================================
+GIT STABLE VERSIONING + LIFETIME HISTORY STRATEGY
+Author: Raghu
+Purpose: Keep long-term stable references of main branch
+========================================================
+
+
+--------------------------------------------------------
+PART 1: BASIC RULES (VERY IMPORTANT)
+--------------------------------------------------------
+
+1. main branch = ONLY STABLE, REVIEWED, DEPLOYABLE CODE
+2. feature/* branches = all experiments and new work
+3. NEVER delete tags (tags are lifetime references)
+4. Use ANNOTATED TAGS (not lightweight tags)
+5. Tags act like BACKUPS + CHECKPOINTS of history
+
+
+--------------------------------------------------------
+PART 2: POWERSHELL – SAFE SYNC BEFORE ANY WORK
+--------------------------------------------------------
+
+# Step 1: Go to project folder
+cd D:\ecommerce-platform\backend-auth-service
+
+# Step 2: Check current branch
+git branch
+
+# Step 3: Switch to main safely
+git checkout main
+
+# Step 4: Pull latest changes from remote main
+git pull origin main
+
+# Step 5: Verify clean working tree
+git status
+
+# If you see:
+# "Your branch is up to date with 'origin/main'"
+# You are SAFE to continue
+
+
+--------------------------------------------------------
+PART 3: GIT BASH – CREATE STABLE TAG FROM MAIN
+--------------------------------------------------------
+
+# Step 6: View commit history (optional but recommended)
+git log --oneline --decorate --graph -10
+
+# Step 7: Create ANNOTATED TAG (stable version)
+git tag -a v1.0.0 -m "Stable release v1.0.0 - From Anguar Local Version to Local Auth Local Service base flow Fianlly Working nowa s expected"
+
+# Tag naming examples:
+# v1.0.0  -> First stable release
+# v1.1.0  -> Feature additions
+# v1.1.1  -> Bug fixes
+# v2.0.0  -> Major refactor or architecture change
+
+
+--------------------------------------------------------
+PART 4: PUSH TAGS TO GITHUB (MOST IMPORTANT)
+--------------------------------------------------------
+
+# Step 8: Push only this tag
+git push origin v1.0.0
+
+# OR push all local tags together
+git push origin --tags
+
+# Now this tag is PERMANENTLY visible in GitHub
+# Anyone can check code exactly as it was at this point
+
+
+--------------------------------------------------------
+PART 5: MERGING FEATURE BRANCH INTO MAIN (SAFE FLOW)
+--------------------------------------------------------
+
+# Step 9: Switch to feature branch
+git checkout feature/stock-cart-order-flow
+
+# Step 10: Sync feature branch with latest main
+git fetch origin
+git merge origin/main
+
+# Resolve conflicts if any
+# Then commit
+
+git add .
+git commit -m "Resolve conflicts with main"
+
+# Step 11: Switch back to main
+git checkout main
+
+# Step 12: Merge feature branch into main
+git merge feature/stock-cart-order-flow
+
+# Step 13: Push updated main
+git push origin main
+
+
+--------------------------------------------------------
+PART 6: CREATE NEXT STABLE TAG AFTER MERGE
+--------------------------------------------------------
+
+# Step 14: Create new stable tag
+git tag -a v1.1.0 -m "Stable release v1.1.0 - Cart, Order flow added"
+
+# Step 15: Push tag
+git push origin v1.1.0
+
+
+--------------------------------------------------------
+PART 7: HOW TO VIEW OLD CODE ANYTIME (LIFETIME REFERENCE)
+--------------------------------------------------------
+
+# List all tags
+git tag
+
+# Checkout a specific stable version (READ-ONLY MODE)
+git checkout v1.0.0
+
+# You are now seeing code EXACTLY as it was at v1.0.0
+
+# To return back to main
+git checkout main
+
+
+--------------------------------------------------------
+PART 8: GITHUB UI USAGE (NO COMMANDS)
+--------------------------------------------------------
+
+1. Go to GitHub repository
+2. Click "Releases" or "Tags"
+3. Select any version (v1.0.0, v1.1.0, etc.)
+4. Browse code / download ZIP
+5. This acts like a PERMANENT BACKUP SNAPSHOT
+
+
+--------------------------------------------------------
+PART 9: RECOMMENDED TAGGING FREQUENCY
+--------------------------------------------------------
+
+✔ After production deployment
+✔ After major feature merge
+✔ After architecture changes
+✔ After bug-fix batch
+✔ Before risky refactors
+
+
+--------------------------------------------------------
+FINAL NOTE (VERY IMPORTANT)
+--------------------------------------------------------
+
+If main branch + tags exist,
+YOU NEVER LOSE HISTORY.
+
+Tags = Timeline checkpoints
+Main = Living stable branch
+Feature branches = experiments
+
+This is INDUSTRY-STANDARD and SAFE.
+
+========================================================
+END OF FILE
+========================================================
