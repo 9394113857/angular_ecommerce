@@ -12,18 +12,17 @@ export class AuthenticationService {
   // ================================
   // 🌱 LOCAL BACKEND (COMMENTED)
   // ================================
-  private readonly LOCAL_BASE_URL =
-    'http://127.0.0.1:5001/api/v1/auth/angularUser';
+  // private readonly LOCAL_BASE_URL =
+  //   'http://127.0.0.1:5001/api/v1/auth/angularUser';
 
   // ================================
-  // 🚀 RENDER BACKEND (ACTIVE NOW)
+  // 🚀 RAILWAY BACKEND (ACTIVE NOW)
   // ================================
-  // private readonly RENDER_BASE_URL =
-  //   'https://backend-auth-service-6zwi.onrender.com/api/v1/auth/angularUser';
+  private readonly RAILWAY_BASE_URL =
+    'https://mellow-illumination-production.up.railway.app/api/v1/auth/angularUser';
 
   // ✅ CURRENT ACTIVE BASE URL
-  private readonly baseUrl = this.LOCAL_BASE_URL;
-
+  private readonly baseUrl = this.RAILWAY_BASE_URL;
   // ================================
   authState$ = new BehaviorSubject<'default' | 'user' | 'seller'>('default');
 
