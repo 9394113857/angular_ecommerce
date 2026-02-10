@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
 
   /**
    * =====================================================
-   * 🚀 Render Cold-Start Warmup (BASE URL ONLY)
+   * 🚀 Railway Cold-Start Warmup (BASE URLs ONLY)
    * =====================================================
    * Purpose:
    * - Wake Render containers on app load
