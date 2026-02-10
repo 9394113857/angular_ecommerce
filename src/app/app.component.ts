@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
 
     // 🔐 1) Auth Service
     this.http.get(
-      'https://backend-auth-service-6zwi.onrender.com'
+      'https://mellow-illumination-production.up.railway.app'
     ).subscribe({ error: () => {} });
 
     // 📦 2) Product Service
