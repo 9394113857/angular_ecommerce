@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
     // 📦 2) Product Service
     setTimeout(() => {
       this.http.get(
-        'https://backend-product-service-ipnq.onrender.com'
+        'https://product-backend-production-8593.up.railway.app'
       ).subscribe({ error: () => {} });
     }, 500);
 
