@@ -1,0 +1,26 @@
+🧠 Important Notes
+✅ Why -u used?
+Only first time push.
+After that → just git push works.
+________________________________________
+✅ Why git pull origin main before merge?
+Prevents conflicts in real team workflow.
+________________________________________
+✅ When to delete branch?
+After:
+•	Merge successful
+•	Deployment successful
+•	Production tested
+________________________________________
+🏆 You Are Now Following Proper Enterprise Git Flow
+Feature → Test → Merge → Clean
+This is exactly how companies do it.
+________________________________________
+If you want next:
+I can now teach you:
+•	🔥 How to do Pull Request flow (real company style)
+•	🔥 How to enforce PR approval before merge
+•	🔥 How to protect main branch
+•	🔥 How to auto deploy only from main
+Tell me what next 😎
+
