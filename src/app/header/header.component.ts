@@ -16,6 +16,9 @@ export class HeaderComponent implements OnInit {
   cartItems = 0;
   searchResult: Product[] = [];
 
+  showDropdown = false;
+  username = 'User';
+
   constructor(
     private router: Router,
     private authService: AuthenticationService,
@@ -24,18 +27,29 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // menu state (default / seller / user)
+
     this.authService.authState$.subscribe(state => {
       this.menuType = state;
+
+      if (state === 'user') {
+        const user = localStorage.getItem('user');
+        if (user) {
+          const parsed = JSON.parse(user);
+          this.username = parsed.name || 'User';
+        }
+      }
     });
 
-    // cart count
     this.cartService.cartChanged.subscribe(count => {
       this.cartItems = count;
     });
   }
 
-  // ================= SEARCH =================
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
+  }
+
+  // SEARCH
   onSearchInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     if (value) {
@@ -56,12 +70,6 @@ export class HeaderComponent implements OnInit {
     this.router.navigate([`/product/details/${id}`]);
   }
 
-  // ================= NAV =================
-  goToOrders() {
-    this.router.navigate(['/orders']);
-  }
-
-  // ================= LOGOUT =================
   sellerLogout() {
     this.authService.logout();
   }

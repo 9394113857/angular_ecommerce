@@ -1,0 +1,41 @@
+# ===========================
+# Create Feature Branch
+# ===========================
+
+git checkout -b feature/amazon-style-user-header
+
+# ===========================
+# Add Changes
+# ===========================
+
+git add src/app/header/header.component.html
+git add src/app/header/header.component.ts
+git add src/app/header/header.component.css
+
+# ===========================
+# Commit Changes
+# ===========================
+
+git commit -m "Amazon style user header with dropdown and returns & orders section"
+
+# ===========================
+# Push Feature Branch
+# ===========================
+
+git push origin feature/amazon-style-user-header
+
+# ===========================
+# After Testing and Approval
+# ===========================
+
+git checkout main
+git pull origin main
+git merge feature/amazon-style-user-header
+git push origin main
+
+# ===========================
+# Delete Feature Branch
+# ===========================
+
+git branch -d feature/amazon-style-user-header
+git push origin --delete feature/amazon-style-user-header

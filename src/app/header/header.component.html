@@ -17,7 +17,6 @@
       />
       <button (click)="searchbtn(searchInput.value)">Search</button>
 
-      <!-- SEARCH RESULTS -->
       <ul *ngIf="searchResult.length > 0" class="small-search">
         <li *ngFor="let item of searchResult">
           <a (mousedown)="redirectToDetails(item.id)">
@@ -48,20 +47,38 @@
         <li><a (click)="sellerLogout()">Logout</a></li>
       </ul>
 
-      <!-- USER -->
+      <!-- USER (AMAZON STYLE) -->
       <ul class="menu userMenu" *ngSwitchCase="'user'">
-        <li><a routerLink="/">Home</a></li>
 
-        <!-- ✅ ORDERS LINK (FIX) -->
-        <li><a (click)="goToOrders()">My Orders</a></li>
+        <!-- ACCOUNT DROPDOWN -->
+        <li class="account-dropdown" (click)="toggleDropdown()">
+          <a>
+            Hello, {{ username }} ▼
+            <br />
+            <small>Account & Lists</small>
+          </a>
 
+          <ul class="dropdown" *ngIf="showDropdown">
+            <li><a routerLink="/orders">Your Orders</a></li>
+            <li><a (click)="userLogout()">Logout</a></li>
+          </ul>
+        </li>
+
+        <!-- RETURNS & ORDERS (ALWAYS VISIBLE) -->
+        <li>
+          <a routerLink="/orders">
+            Returns <br />
+            <strong>& Orders</strong>
+          </a>
+        </li>
+
+        <!-- CART -->
         <li>
           <a routerLink="/cart">
             Cart <span>{{ cartItems }}</span>
           </a>
         </li>
 
-        <li><a (click)="userLogout()">Logout</a></li>
       </ul>
 
     </div>
