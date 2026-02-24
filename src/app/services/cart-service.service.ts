@@ -4,10 +4,7 @@ import { Observable } from 'rxjs';
 
 export interface CartItemPayload {
   product_id: number;
-  variant_id: number;
-  name: string;
-  color: string;
-  price: number;
+  variant_id: number | null;
   quantity: number;
 }
 
@@ -23,59 +20,56 @@ export class CartServiceService {
 
   cartChanged = new EventEmitter<number>();
 
-  // =====================================
-  // 🌱 LOCAL BACKEND (COMMENTED)
-  // =====================================
-  // private readonly LOCAL_BASE_URL =
-  //   'http://127.0.0.1:5003/api';
-
-  // =====================================
-  // 🚀 RAILWAY BACKEND (ACTIVE)
-  // =====================================
-  private readonly RAILWAY_BASE_URL =
+  private readonly BASE_URL =
     'https://backend-cart-order-service-production.up.railway.app/api';
-
-  private readonly baseUrl = this.RAILWAY_BASE_URL;
 
   constructor(private http: HttpClient) {}
 
   // ==============================
-  // 🔐 AUTH HEADERS (FIXED)
+  // AUTH HEADERS
   // ==============================
   private headers(): HttpHeaders {
-    const token = localStorage.getItem('access_token'); // ✅ FIX
+    const token = localStorage.getItem('access_token');
+
     return new HttpHeaders({
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     });
   }
 
   // ==============================
-  // 🛒 ADD TO CART
+  // ADD TO CART (FIXED PAYLOAD)
   // ==============================
-  addToCart(payload: CartItemPayload): Observable<any> {
+  addToCart(productId: number, variantId: number | null, quantity: number): Observable<any> {
+    const payload: CartItemPayload = {
+      product_id: productId,
+      variant_id: variantId,
+      quantity: quantity
+    };
+
     return this.http.post(
-      `${this.baseUrl}/cart/`,
+      `${this.BASE_URL}/cart/`,
       payload,
       { headers: this.headers() }
     );
   }
 
   // ==============================
-  // 📦 GET CART
+  // GET CART
   // ==============================
   getCart(): Observable<any[]> {
     return this.http.get<any[]>(
-      `${this.baseUrl}/cart/`,
+      `${this.BASE_URL}/cart/`,
       { headers: this.headers() }
     );
   }
 
   // ==============================
-  // 💳 CHECKOUT
+  // CHECKOUT
   // ==============================
   checkout(payload: CheckoutPayload): Observable<any> {
     return this.http.post(
-      `${this.baseUrl}/checkout/`,
+      `${this.BASE_URL}/checkout/`,
       payload,
       { headers: this.headers() }
     );
