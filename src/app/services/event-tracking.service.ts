@@ -13,13 +13,13 @@ export class EventTrackingService {
   //   'http://127.0.0.1:5004/api/events';
 
   // =====================================================
-  // 🚀 PRODUCTION ML EVENTS SERVICE (RENDER) ✅ ACTIVE
+  // 🚀 PRODUCTION ML EVENTS SERVICE (RAILWAY) ✅ ACTIVE
   // =====================================================
-  private readonly RENDER_BASE_URL =
-    'https://backend-ml-events-service.onrender.com/api/events';
+  private readonly RAILWAY_BASE_URL =
+    'https://backend-ml-events-service-production.up.railway.app/api/events';
 
   // ✅ ACTIVE BASE URL
-  private readonly baseUrl = this.RENDER_BASE_URL;
+  private readonly baseUrl = this.RAILWAY_BASE_URL;
 
   constructor(private http: HttpClient) {}
 
