@@ -21,10 +21,10 @@ export class ProductService {
   // 🚀 RAILWAY BACKEND (ACTIVE)
   // =====================================
   private readonly RAILWAY_BASE_URL =
-    'https://backend-cart-order-service-production.up.railway.app/api/angularProduct';
+    'https://product-backend-production-8593.up.railway.app/api/angularProduct';
 
   private readonly RAILWAY_SELLER_URL =
-    'https://backend-cart-order-service-production.up.railway.app/api/v1/products';
+    'https://product-backend-production-8593.up.railway.app/api/v1/products';
 
   // ✅ ACTIVE URLS
   private readonly baseUrl = this.RAILWAY_BASE_URL;
