@@ -40,21 +40,21 @@ export class AppComponent implements OnInit {
     // 🛒 3) Cart / Order Service
     setTimeout(() => {
       this.http.get(
-        'https://backend-cart-order-service.onrender.com'
+        'https://backend-cart-order-service-production.up.railway.app'
       ).subscribe({ error: () => {} });
     }, 1000);
 
     // 📊 4) ML Events Service
     setTimeout(() => {
       this.http.get(
-        'https://backend-ml-events-service.onrender.com'
+        'https://backend-ml-events-service-production.up.railway.app'
       ).subscribe({ error: () => {} });
     }, 1500);
 
     // 🤖 5) ML Recommendation Service
     setTimeout(() => {
       this.http.get(
-        'https://backend-ml-recommendation-service.onrender.com'
+        'https://backend-ml-recommendation-service-production.up.railway.app'
       ).subscribe({ error: () => {} });
     }, 2000);
   }
