@@ -1,0 +1,10 @@
+git commit -m "feat(warmup): 🚀 implement Railway cold-start warmup for 6 backend services
+
+- 🔐 Auth Service
+- 📦 Product Service
+- 🛒 Cart / Order Service
+- 📊 ML Events Service
+- 🤖 ML Recommendation Service
+- 🧠 Assistant Service
+
+Date: $(date)"
