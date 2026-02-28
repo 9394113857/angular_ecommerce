@@ -1,0 +1,72 @@
+# ============================================================
+# 🚀 ASSISTANT FEATURE → MERGE INTO MAIN (CLEAN GIT FLOW)
+# ============================================================
+
+# ------------------------------------------------------------
+# STEP 1️⃣  Add all modified files to staging
+# ------------------------------------------------------------
+git add .
+# Stages all modified files in feature/assistant-integration
+
+
+# ------------------------------------------------------------
+# STEP 2️⃣  Commit changes with meaningful message
+# ------------------------------------------------------------
+git commit -m "Assistant service integrated with Railway production backend"
+# Creates a commit snapshot in feature branch
+
+
+# ------------------------------------------------------------
+# STEP 3️⃣  Push feature branch to remote (backup + PR ready)
+# ------------------------------------------------------------
+git push origin feature/assistant-integration
+# Uploads feature branch to GitHub
+
+
+# ------------------------------------------------------------
+# STEP 4️⃣  Switch to main branch
+# ------------------------------------------------------------
+git checkout main
+# Moves from feature branch to main
+
+
+# ------------------------------------------------------------
+# STEP 5️⃣  Pull latest changes from remote main
+# ------------------------------------------------------------
+git pull origin main
+# Ensures local main is up-to-date before merging
+
+
+# ------------------------------------------------------------
+# STEP 6️⃣  Merge feature branch into main
+# ------------------------------------------------------------
+git merge feature/assistant-integration
+# Combines assistant integration into main branch
+
+
+# ------------------------------------------------------------
+# STEP 7️⃣  Push updated main to remote
+# ------------------------------------------------------------
+git push origin main
+# Updates GitHub main branch with merged changes
+
+
+# ------------------------------------------------------------
+# STEP 8️⃣  (Optional - Clean Up Feature Branch)
+# ------------------------------------------------------------
+git branch -d feature/assistant-integration
+# Deletes local feature branch
+
+git push origin --delete feature/assistant-integration
+# Deletes remote feature branch
+
+
+# ============================================================
+# ✅ RESULT
+# ============================================================
+# main branch now contains:
+# ✔ Assistant UI
+# ✔ Railway backend integration
+# ✔ Production BASE_URL
+# ✔ Clean merge history
+# ============================================================

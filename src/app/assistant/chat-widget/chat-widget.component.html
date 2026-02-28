@@ -1,1 +1,42 @@
-<p>chat-widget works!</p>
+<!-- Floating Button -->
+<div class="chat-button" (click)="toggleChat()">
+  💬
+</div>
+
+<!-- Chat Window -->
+<div class="chat-window" *ngIf="isOpen">
+
+  <div class="chat-header">
+    AI Assistant
+    <span class="close-btn" (click)="toggleChat()">✖</span>
+  </div>
+
+  <div class="chat-body">
+
+    <div *ngFor="let msg of messages"
+         [ngClass]="{
+           'user-msg': msg.role === 'user',
+           'assistant-msg': msg.role === 'assistant'
+         }">
+
+      {{ msg.text }}
+
+    </div>
+
+    <div *ngIf="loading" class="assistant-msg">
+      Typing...
+    </div>
+
+  </div>
+
+  <div class="chat-input">
+    <input
+      type="text"
+      [(ngModel)]="inputMessage"
+      placeholder="Ask something..."
+      (keyup.enter)="sendMessage()"
+    />
+    <button (click)="sendMessage()">Send</button>
+  </div>
+
+</div>
