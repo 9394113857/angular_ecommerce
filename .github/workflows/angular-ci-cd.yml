@@ -17,56 +17,72 @@ jobs:
 
     steps:
 
-      # 1️⃣ Start Log
+      # ===============================
+      # 1️⃣ Pipeline Start Log
+      # ===============================
       - name: 🕒 Pipeline Start
         run: |
-          echo "======================================="
+          echo "========================================"
           echo "🚀 Angular CI/CD Pipeline Started"
-          echo "🌍 Target URL: https://angular-ecommerce-sitee.netlify.app/"
-          echo "🧾 Commit SHA: $GITHUB_SHA"
-          echo "⏰ Triggered At: $(date -u)"
-          echo "======================================="
+          echo "🌍 Target: https://angular-ecommerce-sitee.netlify.app/"
+          echo "🔐 Commit SHA: $GITHUB_SHA"
+          echo "⏰ Triggered At (UTC): $(date -u)"
+          echo "========================================"
 
+      # ===============================
       # 2️⃣ Checkout Code
+      # ===============================
       - name: 📥 Checkout Repository
         uses: actions/checkout@v4
 
+      # ===============================
       # 3️⃣ Setup Node
+      # ===============================
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
 
+      # ===============================
       # 4️⃣ Install Dependencies
+      # ===============================
       - name: 📦 Install Dependencies
         run: |
           echo "Installing dependencies..."
           npm ci
-          echo "Dependencies installed successfully ✅"
+          echo "Dependencies installed ✅"
 
-      # 5️⃣ Run Lint
+      # ===============================
+      # 5️⃣ Lint
+      # ===============================
       - name: 🔍 Run Lint
         run: |
-          echo "Running lint checks..."
+          echo "Running lint..."
           npm run lint || echo "Lint not configured"
-          echo "Lint step completed ✅"
+          echo "Lint completed ✅"
 
-      # 6️⃣ Run Headless Tests
-      - name: 🧪 Run Tests (Headless)
+      # ===============================
+      # 6️⃣ Run Tests
+      # ===============================
+      - name: 🧪 Run Headless Tests
         run: |
-          echo "Running unit tests..."
+          echo "Running tests..."
           npm run test:ci || echo "Tests not configured"
-          echo "Test step completed ✅"
+          echo "Tests completed ✅"
 
+      # ===============================
       # 7️⃣ Build Production
+      # ===============================
       - name: 🏗 Build Production
         run: |
-          echo "Building Angular production bundle..."
+          echo "Building Angular production..."
           npm run build:prod
-          echo "Build completed successfully ✅"
+          echo "Build completed ✅"
 
+      # ===============================
       # 8️⃣ Deploy to Netlify
+      # ===============================
       - name: 🚀 Deploy to Netlify
         uses: nwtgck/actions-netlify@v2
         with:
@@ -75,17 +91,67 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: |
             🚀 Production Deploy Successful
-            🌍 Live URL: https://angular-ecommerce-sitee.netlify.app/
+            🌍 https://angular-ecommerce-sitee.netlify.app/
             🔐 Commit: ${{ github.sha }}
-            ⏰ Deployed At: $(date -u)
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
-      # 9️⃣ End Log
-      - name: ✅ Pipeline Completed
+      # ===============================
+      # 9️⃣ Success Email (With CC)
+      # ===============================
+      - name: 📧 Send Success Email
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "✅ Angular Deployment Successful"
+          to: ${{ secrets.MAIL_TO }}
+          cc: ${{ secrets.MAIL_CC }}
+          from: ${{ secrets.MAIL_USERNAME }}
+          body: |
+            🚀 Deployment Completed Successfully
+
+            🌍 Live URL:
+            https://angular-ecommerce-sitee.netlify.app/
+
+            🔐 Commit:
+            ${{ github.sha }}
+
+            ⏰ Time:
+            $(date -u)
+
+      # ===============================
+      # 🔟 Failure Email (With CC)
+      # ===============================
+      - name: ❌ Send Failure Email
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "❌ Angular Deployment Failed"
+          to: ${{ secrets.MAIL_TO }}
+          cc: ${{ secrets.MAIL_CC }}
+          from: ${{ secrets.MAIL_USERNAME }}
+          body: |
+            ❌ Deployment Failed
+
+            🔐 Commit:
+            ${{ github.sha }}
+
+            Please check GitHub Actions logs.
+
+      # ===============================
+      # 1️⃣1️⃣ Pipeline End
+      # ===============================
+      - name: 🎉 Pipeline Completed
         run: |
-          echo "======================================="
-          echo "🎉 Angular CI/CD Pipeline Completed"
-          echo "🌍 Production URL: https://angular-ecommerce-sitee.netlify.app/"
-          echo "======================================="
+          echo "========================================"
+          echo "🎉 Pipeline Finished"
+          echo "========================================"
