@@ -1,4 +1,8 @@
-name: 🚀 Angular CI/CD – Netlify Production Deploy
+# ============================================================
+# 🚀 CI/CD – Angular Frontend (Netlify)
+# ============================================================
+
+name: 🚀 CI/CD – Angular Frontend (Netlify)
 
 on:
   push:
@@ -7,82 +11,63 @@ on:
 
   workflow_dispatch:
 
+  # Daily at 1:00 AM IST (7:30 PM UTC)
   schedule:
-    # Runs daily at 1:00 AM IST (7:30 PM UTC)
-    - cron: '30 19 * * *'
+    - cron: "30 19 * * *"
 
 jobs:
-  build-and-deploy:
+  ci-cd-angular:
     runs-on: ubuntu-latest
+
+    env:
+      LIVE_URL: https://angular-ecommerce-sitee.netlify.app/
 
     steps:
 
-      # ===============================
-      # 1️⃣ Pipeline Start Log
-      # ===============================
-      - name: 🕒 Pipeline Start
-        run: |
-          echo "========================================"
-          echo "🚀 Angular CI/CD Pipeline Started"
-          echo "🌍 Target: https://angular-ecommerce-sitee.netlify.app/"
-          echo "🔐 Commit SHA: $GITHUB_SHA"
-          echo "⏰ Triggered At (UTC): $(date -u)"
-          echo "========================================"
-
-      # ===============================
-      # 2️⃣ Checkout Code
-      # ===============================
-      - name: 📥 Checkout Repository
+      # =====================================================
+      # CHECKOUT
+      # =====================================================
+      - name: 🧾 Checkout source code
         uses: actions/checkout@v4
 
-      # ===============================
-      # 3️⃣ Setup Node
-      # ===============================
+      # =====================================================
+      # BUILD TIMESTAMPS (UTC + IST)
+      # =====================================================
+      - name: ⏱️ Generate build timestamps (UTC + IST)
+        run: |
+          echo "BUILD_TIME_UTC=$(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_ENV
+          echo "BUILD_TIME_IST=$(TZ=Asia/Kolkata date '+%Y-%m-%d %I:%M:%S %p IST')" >> $GITHUB_ENV
+
+      # =====================================================
+      # SETUP NODE
+      # =====================================================
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
 
-      # ===============================
-      # 4️⃣ Install Dependencies
-      # ===============================
+      # =====================================================
+      # INSTALL DEPENDENCIES
+      # =====================================================
       - name: 📦 Install Dependencies
-        run: |
-          echo "Installing dependencies..."
-          npm ci
-          echo "Dependencies installed ✅"
+        run: npm ci
 
-      # ===============================
-      # 5️⃣ Lint
-      # ===============================
-      - name: 🔍 Run Lint
-        run: |
-          echo "Running lint..."
-          npm run lint || echo "Lint not configured"
-          echo "Lint completed ✅"
-
-      # ===============================
-      # 6️⃣ Run Tests
-      # ===============================
+      # =====================================================
+      # RUN TESTS
+      # =====================================================
       - name: 🧪 Run Headless Tests
-        run: |
-          echo "Running tests..."
-          npm run test:ci || echo "Tests not configured"
-          echo "Tests completed ✅"
+        run: npm run test:ci || echo "Tests not configured"
 
-      # ===============================
-      # 7️⃣ Build Production
-      # ===============================
+      # =====================================================
+      # BUILD ANGULAR
+      # =====================================================
       - name: 🏗 Build Production
-        run: |
-          echo "Building Angular production..."
-          npm run build:prod
-          echo "Build completed ✅"
+        run: npm run build:prod
 
-      # ===============================
-      # 8️⃣ Deploy to Netlify
-      # ===============================
+      # =====================================================
+      # DEPLOY TO NETLIFY
+      # =====================================================
       - name: 🚀 Deploy to Netlify
         uses: nwtgck/actions-netlify@v2
         with:
@@ -90,68 +75,67 @@ jobs:
           production-deploy: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: |
-            🚀 Production Deploy Successful
-            🌍 https://angular-ecommerce-sitee.netlify.app/
+            🚀 Angular Production Deploy
+            🌍 ${{ env.LIVE_URL }}
             🔐 Commit: ${{ github.sha }}
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
-      # ===============================
-      # 9️⃣ Success Email (With CC)
-      # ===============================
-      - name: 📧 Send Success Email
+      # =====================================================
+      # EMAIL – SUCCESS (WITH CC WORKING)
+      # =====================================================
+      - name: 📧 Deployment Success Email
         if: success()
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 587
+          secure: false
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
-          subject: "✅ Angular Deployment Successful"
+          subject: "✅ Angular Deployment Success"
           to: ${{ secrets.MAIL_TO }}
           cc: ${{ secrets.MAIL_CC }}
           from: ${{ secrets.MAIL_USERNAME }}
-          body: |
-            🚀 Deployment Completed Successfully
+          html_body: |
+            <h2>🚀 Angular Frontend Deployed Successfully</h2>
+            <table border="1" cellpadding="8">
+              <tr><td><b>Application</b></td><td>Angular E-Commerce</td></tr>
+              <tr><td><b>Platform</b></td><td>Netlify</td></tr>
+              <tr><td><b>Live URL</b></td>
+                  <td><a href="${{ env.LIVE_URL }}">${{ env.LIVE_URL }}</a></td></tr>
+              <tr><td><b>Commit</b></td><td>${{ github.sha }}</td></tr>
+              <tr><td><b>UTC Time</b></td><td>${{ env.BUILD_TIME_UTC }}</td></tr>
+              <tr><td><b>IST Time</b></td><td>${{ env.BUILD_TIME_IST }}</td></tr>
+              <tr><td><b>Status</b></td>
+                  <td style="color:green;"><b>SUCCESS</b></td></tr>
+            </table>
 
-            🌍 Live URL:
-            https://angular-ecommerce-sitee.netlify.app/
-
-            🔐 Commit:
-            ${{ github.sha }}
-
-            ⏰ Time:
-            $(date -u)
-
-      # ===============================
-      # 🔟 Failure Email (With CC)
-      # ===============================
-      - name: ❌ Send Failure Email
+      # =====================================================
+      # EMAIL – FAILURE (WITH CC)
+      # =====================================================
+      - name: ❌ Deployment Failure Email
         if: failure()
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 587
+          secure: false
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: "❌ Angular Deployment Failed"
           to: ${{ secrets.MAIL_TO }}
           cc: ${{ secrets.MAIL_CC }}
           from: ${{ secrets.MAIL_USERNAME }}
-          body: |
-            ❌ Deployment Failed
-
-            🔐 Commit:
-            ${{ github.sha }}
-
-            Please check GitHub Actions logs.
-
-      # ===============================
-      # 1️⃣1️⃣ Pipeline End
-      # ===============================
-      - name: 🎉 Pipeline Completed
-        run: |
-          echo "========================================"
-          echo "🎉 Pipeline Finished"
-          echo "========================================"
+          html_body: |
+            <h2 style="color:red;">❌ Angular Deployment Failed</h2>
+            <table border="1" cellpadding="8">
+              <tr><td><b>Application</b></td><td>Angular E-Commerce</td></tr>
+              <tr><td><b>Live URL</b></td>
+                  <td><a href="${{ env.LIVE_URL }}">${{ env.LIVE_URL }}</a></td></tr>
+              <tr><td><b>UTC Time</b></td><td>${{ env.BUILD_TIME_UTC }}</td></tr>
+              <tr><td><b>IST Time</b></td><td>${{ env.BUILD_TIME_IST }}</td></tr>
+              <tr><td><b>Status</b></td>
+                  <td style="color:red;"><b>FAILED</b></td></tr>
+            </table>
