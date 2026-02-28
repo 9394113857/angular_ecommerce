@@ -7,40 +7,66 @@ on:
 
   workflow_dispatch:
 
+  schedule:
+    # Runs daily at 1:00 AM IST (7:30 PM UTC)
+    - cron: '30 19 * * *'
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
 
-      # 1️⃣ Checkout Repository
+      # 1️⃣ Start Log
+      - name: 🕒 Pipeline Start
+        run: |
+          echo "======================================="
+          echo "🚀 Angular CI/CD Pipeline Started"
+          echo "🌍 Target URL: https://angular-ecommerce-sitee.netlify.app/"
+          echo "🧾 Commit SHA: $GITHUB_SHA"
+          echo "⏰ Triggered At: $(date -u)"
+          echo "======================================="
+
+      # 2️⃣ Checkout Code
       - name: 📥 Checkout Repository
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup Node.js
+      # 3️⃣ Setup Node
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
 
-      # 3️⃣ Install Dependencies
+      # 4️⃣ Install Dependencies
       - name: 📦 Install Dependencies
-        run: npm ci
+        run: |
+          echo "Installing dependencies..."
+          npm ci
+          echo "Dependencies installed successfully ✅"
 
-      # 4️⃣ Run Lint
+      # 5️⃣ Run Lint
       - name: 🔍 Run Lint
-        run: npm run lint || echo "Lint not configured"
+        run: |
+          echo "Running lint checks..."
+          npm run lint || echo "Lint not configured"
+          echo "Lint step completed ✅"
 
-      # 5️⃣ Run Headless Tests
+      # 6️⃣ Run Headless Tests
       - name: 🧪 Run Tests (Headless)
-        run: npm run test:ci || echo "Tests not configured"
+        run: |
+          echo "Running unit tests..."
+          npm run test:ci || echo "Tests not configured"
+          echo "Test step completed ✅"
 
-      # 6️⃣ Build Production Angular App
+      # 7️⃣ Build Production
       - name: 🏗 Build Production
-        run: npm run build:prod
+        run: |
+          echo "Building Angular production bundle..."
+          npm run build:prod
+          echo "Build completed successfully ✅"
 
-      # 7️⃣ Deploy to Netlify
+      # 8️⃣ Deploy to Netlify
       - name: 🚀 Deploy to Netlify
         uses: nwtgck/actions-netlify@v2
         with:
@@ -51,6 +77,15 @@ jobs:
             🚀 Production Deploy Successful
             🌍 Live URL: https://angular-ecommerce-sitee.netlify.app/
             🔐 Commit: ${{ github.sha }}
+            ⏰ Deployed At: $(date -u)
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      # 9️⃣ End Log
+      - name: ✅ Pipeline Completed
+        run: |
+          echo "======================================="
+          echo "🎉 Angular CI/CD Pipeline Completed"
+          echo "🌍 Production URL: https://angular-ecommerce-sitee.netlify.app/"
+          echo "======================================="
