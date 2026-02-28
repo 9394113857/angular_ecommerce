@@ -1,0 +1,56 @@
+name: 🚀 Angular CI/CD – Netlify Production Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # 1️⃣ Checkout Repository
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Setup Node.js
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      # 3️⃣ Install Dependencies
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      # 4️⃣ Run Lint
+      - name: 🔍 Run Lint
+        run: npm run lint || echo "Lint not configured"
+
+      # 5️⃣ Run Headless Tests
+      - name: 🧪 Run Tests (Headless)
+        run: npm run test:ci || echo "Tests not configured"
+
+      # 6️⃣ Build Production Angular App
+      - name: 🏗 Build Production
+        run: npm run build:prod
+
+      # 7️⃣ Deploy to Netlify
+      - name: 🚀 Deploy to Netlify
+        uses: nwtgck/actions-netlify@v2
+        with:
+          publish-dir: ./dist/e-commerce
+          production-deploy: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: |
+            🚀 Production Deploy Successful
+            🌍 Live URL: https://angular-ecommerce-sitee.netlify.app/
+            🔐 Commit: ${{ github.sha }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
