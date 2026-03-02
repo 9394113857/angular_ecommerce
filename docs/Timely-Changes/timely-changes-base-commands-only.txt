@@ -1,0 +1,31 @@
+# Ensure 'docs' folder exists
+if (-not (Test-Path -Path "docs" -PathType Container)) {
+    New-Item -ItemType Directory -Path "docs" | Out-Null
+    Write-Host "Created folder: docs"
+} else {
+    Write-Host "Skipped: docs folder already exists"
+}
+
+# Ensure 'docs/Timely-Changes' subfolder exists
+if (-not (Test-Path -Path "docs/Timely-Changes" -PathType Container)) {
+    New-Item -ItemType Directory -Path "docs/Timely-Changes" | Out-Null
+    Write-Host "Created folder: docs/Timely-Changes"
+} else {
+    Write-Host "Skipped: docs/Timely-Changes folder already exists"
+}
+
+# Ensure 'timely-changes.txt' exists
+if (-not (Test-Path -Path "docs/Timely-Changes/timely-changes.txt" -PathType Leaf)) {
+    New-Item -ItemType File -Path "docs/Timely-Changes/timely-changes.txt" | Out-Null
+    Write-Host "Created file: timely-changes.txt"
+} else {
+    Write-Host "Skipped: timely-changes.txt already exists"
+}
+
+# Ensure 'feature-branch-migration-log.txt' exists
+if (-not (Test-Path -Path "docs/Timely-Changes/feature-branch-migration-log.txt" -PathType Leaf)) {
+    New-Item -ItemType File -Path "docs/Timely-Changes/feature-branch-migration-log.txt" | Out-Null
+    Write-Host "Created file: feature-branch-migration-log.txt"
+} else {
+    Write-Host "Skipped: feature-branch-migration-log.txt already exists"
+}

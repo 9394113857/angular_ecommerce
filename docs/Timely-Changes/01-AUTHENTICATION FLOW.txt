@@ -1,0 +1,116 @@
+===========================================================
+AUTHENTICATION FLOW – FINAL IMPLEMENTATION NOTES
+===========================================================
+
+1️⃣ REGISTRATION + EMAIL VERIFICATION FLOW
+------------------------------------------
+• User registers with email + password.
+• Backend validates strong password rules.
+• Backend ensures password is NOT reused from previous passwords.
+• Backend hashes password.
+• Backend saves user (is_verified = False).
+• Backend generates email verification JWT (with expiry).
+• Backend sends verification email with secure link.
+• User clicks verification link.
+• Backend verifies token.
+• Backend sets is_verified = True.
+• Backend redirects to Angular login page:
+    → /login?verified=true
+• Login page shows:
+    → "Your email has been successfully verified. Please login."
+
+• If user attempts login without verification:
+    → Show error: "Please verify your email before logging in."
+
+
+2️⃣ FORGOT PASSWORD FLOW (From Login Page)
+------------------------------------------
+• User clicks "Forgot Password?"
+• Redirect to /forgot-password.
+• User enters registered email.
+• Backend verifies email exists.
+• Backend generates reset JWT (short expiry, single-use).
+• Backend sends reset link to email.
+• User clicks reset link.
+• Angular opens reset password page with token.
+• User enters:
+    - New password
+    - Confirm password
+• Angular validates:
+    - Strong password rules
+    - Passwords match
+• Backend verifies token.
+• Backend checks:
+    - New password is NOT same as current password.
+    - New password is NOT in recent password history.
+• Backend hashes and updates password.
+• Backend invalidates reset token.
+• Redirect to login page:
+    → /login?reset=success
+• Login page shows:
+    → "Password updated successfully. Please login with new password."
+
+
+3️⃣ UPDATE PASSWORD (While Logged In – Profile Page)
+----------------------------------------------------
+• User logs in.
+• User goes to profile page.
+• Clicks "Change Password".
+• User enters:
+    - Current password
+    - New password
+    - Confirm new password
+• Backend verifies:
+    - Current password is correct.
+• Backend validates:
+    - Strong password rules.
+    - New password is NOT same as current password.
+    - New password is NOT in recent password history.
+• Backend updates password (hashed).
+• Backend invalidates current session / token.
+• User is logged out automatically.
+• Redirect to login page:
+    → /login?password=changed
+• Login page shows:
+    → "Password updated successfully. Please login again with new password."
+
+
+4️⃣ LOGIN PAGE CENTRAL BEHAVIOR
+--------------------------------
+• If ?verified=true
+    → Show email verified success message.
+• If ?reset=success
+    → Show reset success message.
+• If ?password=changed
+    → Show password changed + re-login message.
+• If old password reuse attempt
+    → Show error: "You cannot reuse an old password."
+• If weak password
+    → Show password strength error message.
+• If unverified account login
+    → Show verify email required message.
+
+
+5️⃣ SECURITY RULES (MANDATORY)
+------------------------------
+• Always hash passwords (bcrypt).
+• Maintain password history (last 3–5 passwords).
+• Prevent reuse of current or recent passwords.
+• JWT tokens must expire.
+• Reset tokens must be single-use.
+• Logout user after password change.
+• Never expose internal errors.
+• Enforce strong password validation on backend (frontend is only UX).
+
+
+6️⃣ COMPLETE USER LIFECYCLE
+---------------------------
+• Register → Verify Email → Login.
+• Forgot Password → Reset → Login.
+• Profile Password Change → Forced Logout → Login Again.
+• Old password reuse never allowed in any situation.
+• Login page acts as central authentication feedback screen.
+
+===========================================================
+END OF AUTH FLOW – FINAL VERSION
+===========================================================

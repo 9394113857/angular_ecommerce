@@ -1,0 +1,71 @@
+===========================================================
+GENERAL COMMIT MESSAGE TEMPLATE – AUTH FLOW
+Created On: 02-03-2026 17:55
+===========================================================
+
+Professional Commit Rules:
+-----------------------------------------------------------
+✅ Keep title under 72 characters.
+✅ Always leave one blank line after title.
+✅ Use bullet points in the body.
+✅ Date line optional (Git already stores timestamp internally).
+✅ Use conventional commit style (feat, fix, docs, refactor, etc.).
+
+
+===========================================================
+AUTHENTICATION FLOW – COMMIT FORMAT
+===========================================================
+
+
+If using Git Bash:
+
+git commit -m "feat(auth): implement complete authentication lifecycle flow
+
+✅ Registration with email verification
+✅ Forgot password with secure reset token
+✅ Profile password update with forced re-login
+✅ Prevent old password reuse in all cases
+
+Date: $(date)"
+
+
+-----------------------------------------------------------
+
+
+If using PowerShell (Windows):
+
+git commit -m "feat(auth): implement complete authentication lifecycle flow
+
+✅ Registration with email verification
+✅ Forgot password with secure reset token
+✅ Profile password update with forced re-login
+✅ Prevent old password reuse in all cases
+
+Date: $(Get-Date -Format 'dd-MM-yyyy HH:mm')"
+
+
+===========================================================
+NOTES
+===========================================================
+
+✅ First line = Commit title (shown in GitHub commit list).
+✅ Bullet points appear when opening full commit.
+✅ Git automatically stores commit timestamp internally.
+✅ Use this template for structured production commits.
+✅ Recommended for backend, frontend, ML, and microservices.
+
+
+===========================================================
+NEXT ENTRY TEMPLATE (REPEAT BELOW FOR FUTURE DATES)
+===========================================================
+
+Created On: DD-MM-YYYY HH:MM
+
+[Write new commit template updates here]
+
+-----------------------------------------------------------
+
+(Repeat this section for every new update date)
+===========================================================
+END OF GENERAL COMMIT TEMPLATE
+===========================================================

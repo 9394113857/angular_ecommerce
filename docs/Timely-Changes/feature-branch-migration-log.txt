@@ -1,0 +1,130 @@
+===========================================================
+FEATURE BRANCH → DB MIGRATION → TESTING → MAIN MERGE FLOW
+===========================================================
+
+
+STEP 1: Ensure you are on main and updated
+------------------------------------------------
+git checkout main
+git pull origin main
+
+
+STEP 2: Create New Feature Branch
+------------------------------------------------
+git checkout -b feature/<feature-name>
+
+# Example:
+# git checkout -b feature/add-order-status-column
+
+
+STEP 3: First Push (Set Upstream Tracking)
+------------------------------------------------
+git push --set-upstream origin feature/<feature-name>
+
+# After this, future pushes can use:
+# git push
+
+
+STEP 4: Make Code Changes
+------------------------------------------------
+# Modify backend models
+# Update schemas
+# Add migration logic
+# Update Angular frontend if required
+# Update ML service if required
+
+
+STEP 5: Generate Migration (LOCAL)
+------------------------------------------------
+# Set local database URL temporarily
+$env:DATABASE_URL="your_local_database_url"
+
+# Create migration file
+flask db migrate -m "describe your migration"
+
+# Apply migration locally
+flask db upgrade
+
+# Remove local DATABASE_URL immediately
+Remove-Item Env:DATABASE_URL
+
+
+STEP 6: Local Testing
+------------------------------------------------
+# Start backend
+flask run
+
+# Test via curl
+curl http://localhost:5000/api/endpoint
+
+# Angular testing (optional)
+ng serve
+
+# Angular E2E testing (optional)
+ng e2e
+
+
+STEP 7: Commit Feature Branch Changes
+------------------------------------------------
+git add .
+git commit -m "feature: add <feature-description> with migration"
+git push
+
+
+STEP 8: Merge to Main (Triggers CI/CD)
+------------------------------------------------
+git checkout main
+git pull origin main
+git merge feature/<feature-name>
+git push origin main
+
+
+STEP 9: Live Database Migration (PRODUCTION)
+------------------------------------------------
+# Set production DATABASE_URL temporarily
+$env:DATABASE_URL="your_live_database_url"
+
+# Apply migration to production DB
+flask db upgrade
+
+# IMPORTANT: Remove production DATABASE_URL immediately
+Remove-Item Env:DATABASE_URL
+
+
+STEP 10: Tag Stable Release
+------------------------------------------------
+# Use semantic versioning (vMAJOR.MINOR.PATCH)
+git tag vX.Y.Z
+git push origin vX.Y.Z
+
+
+STEP 11: Verify Deployment
+------------------------------------------------
+# Check GitHub Actions
+# Confirm production logs
+# Test live API
+# Test Angular production URL
+# Verify database schema updated
+
+
+STEP 12: Cleanup – Delete Feature Branch
+------------------------------------------------
+# Delete local feature branch
+git branch -d feature/<feature-name>
+
+# Delete remote feature branch
+git push origin --delete feature/<feature-name>
+
+
+===========================================================
+IMPORTANT NOTES
+===========================================================
+- First push requires --set-upstream.
+- After that, use simple "git push".
+- Never leave DATABASE_URL set in environment.
+- CI/CD auto deploys on push to main.
+- Always verify production before deleting branch.
+- Always tag stable releases.
+===========================================================
+END OF FLOW
+===========================================================
