@@ -1,3 +1,17 @@
 2-3-26:-
 01-AUTHENTICATION FLOW.txt
 
+3-3-26:-
+1. Can we implement like 404 not found if any like from our previos anguar projects like check once 
+    so just do all soem implementing okay.
+2. If possible show in header Digital not analog clock just display timer somewhere clear simpler display thats it make simple  okay and like if possible or not check and do implemnted okay.
+
+
+
+
+
+
+
+
+
+
