@@ -29,35 +29,34 @@ export class AuthenticationComponent implements OnInit {
     this.authService.notAllowedAuth();
   }
 
-  // ============================
-  // REGISTER USER
-  // ============================
+  // =========================================
+  // REGISTER
+  // =========================================
   registerFormhandle(form: NgForm) {
 
     const payload: SignUp = {
-      email: form.value.email,
-      password: form.value.password,
       first_name: form.value.first_name,
       last_name: form.value.last_name,
+      email: form.value.email,
+      password: form.value.password,
       role_type: form.value.role_type
     };
 
     this.isLoading = true;
 
-    this.eventTracking.trackEvent({
-      event_type: 'signup_success',
-      metadata: { role: payload.role_type }
-    });
-
     this.authService.userSignup(payload).subscribe({
-
       next: () => {
-        alert('Registration successful. Please verify your email before login.');
+
+        this.eventTracking.trackEvent({
+          event_type: 'signup_success',
+          metadata: { role: payload.role_type }
+        });
+
+        alert('Registration successful. Please verify your email.');
+
         this.router.navigate(['/login']);
       },
-
       error: () => alert('Registration failed'),
-
       complete: () => {
         this.isLoading = false;
         this.registerForm?.reset();
@@ -65,53 +64,37 @@ export class AuthenticationComponent implements OnInit {
     });
   }
 
-  // ============================
-  // LOGIN USER
-  // ============================
+  // =========================================
+  // LOGIN
+  // =========================================
   loginFormhandle(form: NgForm) {
 
     this.isLoading = true;
 
     this.authService.loginUser(form.value).subscribe({
-
       next: (res: any) => {
 
         localStorage.setItem('token', res.access_token);
 
         if (res.role === 'seller') {
-
           localStorage.setItem('sellerLoggedIn', res.userId);
           this.router.navigate(['seller-home']);
-
         } else {
-
           localStorage.setItem(
             'userLoggedIn',
             JSON.stringify({ id: res.userId })
           );
-
           this.router.navigate(['/']);
         }
-
       },
-
-      error: (err) => {
-
-        if (err.status === 403) {
-          this.loginFailed = 'Please verify your email before login';
-        } else {
-          this.loginFailed = 'Invalid credentials';
-        }
-
-        setTimeout(() => (this.loginFailed = ''), 3000);
-
+      error: () => {
+        this.loginFailed = 'Invalid credentials';
+        setTimeout(() => (this.loginFailed = ''), 2000);
       },
-
       complete: () => (this.isLoading = false)
     });
   }
 
-  // ============================
   openLogin() {
     this.showLogin = true;
   }
@@ -119,5 +102,4 @@ export class AuthenticationComponent implements OnInit {
   openSignUp() {
     this.showLogin = false;
   }
-
 }

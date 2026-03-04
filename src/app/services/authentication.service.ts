@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { Login, SignUp } from 'src/data.type';
@@ -10,21 +10,22 @@ import { Login, SignUp } from 'src/data.type';
 export class AuthenticationService {
 
   // =========================================
-  // 🌱 LOCAL BACKEND (COMMENTED)
+  // 🌱 LOCAL BACKEND (USE FOR LOCAL TESTING)
   // =========================================
   private readonly LOCAL_BASE_URL =
-  'http://127.0.0.1:5001/api/v1/auth';
+    'http://127.0.0.1:5000/api/v1/auth/angularUser';
 
   // =========================================
-  // 🚀 RAILWAY BACKEND (ACTIVE)
+  // 🚀 RAILWAY BACKEND (PRODUCTION)
   // =========================================
   // private readonly RAILWAY_BASE_URL =
-  // 'https://mellow-illumination-production.up.railway.app/api/v1/auth';
-
-  // ACTIVE BASE URL
-  private readonly baseUrl = this.LOCAL_BASE_URL;
+  //   'https://mellow-illumination-production.up.railway.app/api/v1/auth/angularUser';
 
   // =========================================
+  // ACTIVE BASE URL
+  // =========================================
+  private readonly baseUrl = this.LOCAL_BASE_URL;
+
   authState$ = new BehaviorSubject<'default' | 'user' | 'seller'>('default');
 
   constructor(
@@ -35,7 +36,7 @@ export class AuthenticationService {
   }
 
   // =========================================
-  // 🔐 INIT AUTH STATE
+  // INIT AUTH STATE
   // =========================================
   private initAuthState() {
     if (localStorage.getItem('sellerLoggedIn')) {
@@ -48,7 +49,7 @@ export class AuthenticationService {
   }
 
   // =========================================
-  // 🚫 BLOCK LOGIN / REGISTER
+  // BLOCK AUTH PAGE IF ALREADY LOGGED IN
   // =========================================
   notAllowedAuth() {
     if (
@@ -60,125 +61,81 @@ export class AuthenticationService {
   }
 
   // =========================================
-  // 📝 USER SIGNUP
+  // USER SIGNUP
   // =========================================
   userSignup(data: SignUp) {
-    return this.http.post(`${this.baseUrl}/angularUser/register`, {
-      email: data.email,
-      password: data.password,
+    return this.http.post(`${this.baseUrl}/register`, {
       first_name: data.first_name,
-      last_name: data.last_name
+      last_name: data.last_name,
+      email: data.email,
+      password: data.password
     });
   }
 
   // =========================================
-  // 🔑 LOGIN
+  // LOGIN
   // =========================================
   loginUser(data: Login) {
-    return this.http.post<any>(
-      `${this.baseUrl}/angularUser/login`,
-      data
-    );
+    return this.http.post<any>(`${this.baseUrl}/login`, data);
   }
 
   // =========================================
-  // 📧 VERIFY EMAIL
+  // VERIFY EMAIL
   // =========================================
   verifyEmail(token: string) {
     return this.http.get(`${this.baseUrl}/verify-email/${token}`);
   }
 
   // =========================================
-  // 🔁 FORGOT PASSWORD
+  // FORGOT PASSWORD
   // =========================================
   forgotPassword(email: string) {
-    return this.http.post(`${this.baseUrl}/forgot-password`, {
-      email: email
-    });
+    return this.http.post(`${this.baseUrl}/forgot-password`, { email });
   }
 
   // =========================================
-  // 🔐 RESET PASSWORD
+  // RESET PASSWORD
   // =========================================
   resetPassword(token: string, password: string) {
     return this.http.post(`${this.baseUrl}/reset-password/${token}`, {
-      password: password
+      password
     });
   }
 
   // =========================================
-  // 👤 GET PROFILE
+  // GET PROFILE
   // =========================================
   getProfile() {
-
-    const token = localStorage.getItem('token');
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-
-    return this.http.get(`${this.baseUrl}/profile`, { headers });
+    return this.http.get(`${this.baseUrl}/profile`);
   }
 
   // =========================================
-  // ✏️ UPDATE PROFILE
+  // UPDATE PROFILE
   // =========================================
   updateProfile(data: any) {
-
-    const token = localStorage.getItem('token');
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-
-    return this.http.put(`${this.baseUrl}/profile`, data, { headers });
+    return this.http.put(`${this.baseUrl}/profile`, data);
   }
 
   // =========================================
-  // 🔑 CHANGE PASSWORD
+  // CHANGE PASSWORD
   // =========================================
-  changePassword(oldPassword: string, newPassword: string) {
-
-    const token = localStorage.getItem('token');
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-
-    return this.http.post(
-      `${this.baseUrl}/change-password`,
-      {
-        old_password: oldPassword,
-        new_password: newPassword
-      },
-      { headers }
-    );
+  changePassword(data: any) {
+    return this.http.post(`${this.baseUrl}/change-password`, data);
   }
 
   // =========================================
-  // 🚪 LOGOUT
-  // =========================================
-  logout() {
-
-    const token = localStorage.getItem('token');
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-
-    this.http.post(`${this.baseUrl}/logout`, {}, { headers }).subscribe();
-
-    localStorage.clear();
-    this.authState$.next('default');
-
-    this.router.navigate(['/login']);
-  }
-
-  // =========================================
-  // 🔄 SET AUTH STATE
+  // AUTH STATE
   // =========================================
   setAuthState(role: 'user' | 'seller') {
     this.authState$.next(role);
   }
 
+  // =========================================
+  // LOGOUT
+  // =========================================
+  logout() {
+    localStorage.clear();
+    this.authState$.next('default');
+    this.router.navigate(['/login']);
+  }
 }

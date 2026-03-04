@@ -10,7 +10,8 @@ import { Router } from '@angular/router';
 export class ProfileComponent implements OnInit {
 
   profile: any = {};
-  message = '';
+  loading = false;
+  message = '';   // ✅ FIX ADDED
 
   constructor(
     private authService: AuthenticationService,
@@ -18,36 +19,71 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
-    this.authService.getProfile().subscribe((res: any) => {
-      this.profile = res;
-    });
-
+    this.loadProfile();
   }
 
+  // ================================
+  // LOAD PROFILE
+  // ================================
+  loadProfile() {
+    this.authService.getProfile().subscribe({
+      next: (res: any) => {
+        this.profile = res;
+      },
+      error: () => {
+        alert('Failed to load profile');
+      }
+    });
+  }
+
+  // ================================
+  // UPDATE PROFILE
+  // ================================
   updateProfile(form: NgForm) {
 
-    this.authService.updateProfile(form.value).subscribe(() => {
-      this.message = 'Profile updated successfully';
-    });
+    this.loading = true;
 
+    this.authService.updateProfile({
+      first_name: this.profile.first_name,
+      last_name: this.profile.last_name,
+      phone_number: this.profile.phone_number
+    })
+    .subscribe({
+      next: () => {
+        this.message = 'Profile updated successfully';
+      },
+      error: () => {
+        this.message = 'Profile update failed';
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
   }
 
+  // ================================
+  // CHANGE PASSWORD
+  // ================================
   changePassword(form: NgForm) {
 
     this.authService
-      .changePassword(form.value.old_password, form.value.new_password)
+      .changePassword({
+        old_password: form.value.old_password,
+        new_password: form.value.new_password
+      })
       .subscribe({
-
         next: () => {
 
-          alert('Password updated. Please login again.');
+          alert('Password updated successfully. Please login again.');
 
-          localStorage.clear();
+          this.authService.logout();
 
           this.router.navigate(['/login']);
-        }
 
+        },
+        error: () => {
+          alert('Password change failed');
+        }
       });
 
   }

@@ -1,0 +1,28 @@
+2️⃣ Angular – angular_ecommerce
+Run inside the Angular repo folder.
+
+# -------------------------------------------------------
+# Stage all changes
+# -------------------------------------------------------
+git add .
+
+# -------------------------------------------------------
+# Commit (Angular auth integration)
+# -------------------------------------------------------
+git commit -m "feat(auth-v2): Angular authentication integration (123)
+
+- signup with first_name and last_name
+- email verification page
+- forgot password flow
+- reset password page
+- profile page with password change
+- forced logout after password change
+- authentication service updated
+- routing for verify/reset/profile
+
+Date: $(date)"
+
+# -------------------------------------------------------
+# Push feature branch
+# -------------------------------------------------------
+git push origin feature/auth-v2-secure-profile
