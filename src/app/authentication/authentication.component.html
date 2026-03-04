@@ -1,21 +1,35 @@
 <!-- SIGN UP -->
 <div class="registerForm" *ngIf="!showLogin">
+
   <div class="text">
     <h1>Sign Up</h1>
   </div>
 
   <div class="signupform">
+
     <form #registerForm="ngForm" (ngSubmit)="registerFormhandle(registerForm)">
 
-      <label>Name:</label>
+      <!-- FIRST NAME -->
+      <label>First Name:</label>
       <input
         type="text"
-        name="name"
+        name="first_name"
         ngModel
         required
-        placeholder="Enter your name"
+        placeholder="Enter first name"
       />
 
+      <!-- LAST NAME -->
+      <label>Last Name:</label>
+      <input
+        type="text"
+        name="last_name"
+        ngModel
+        required
+        placeholder="Enter last name"
+      />
+
+      <!-- EMAIL -->
       <label>Email:</label>
       <input
         type="email"
@@ -25,6 +39,7 @@
         placeholder="Enter email"
       />
 
+      <!-- PASSWORD -->
       <label>Password:</label>
       <input
         type="password"
@@ -51,16 +66,21 @@
       </a>
 
     </form>
+
   </div>
+
 </div>
+
 
 <!-- LOGIN -->
 <div class="registerForm" *ngIf="showLogin">
+
   <div class="text">
     <h1>Login</h1>
   </div>
 
   <div class="signupform">
+
     <form #loginForm="ngForm" (ngSubmit)="loginFormhandle(loginForm)">
 
       <label>Email:</label>
@@ -92,5 +112,7 @@
       </a>
 
     </form>
+
   </div>
+
 </div>

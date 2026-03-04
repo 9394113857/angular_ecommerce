@@ -1,5 +1,7 @@
 // ================= AUTH =================
 export interface SignUp {
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
   role_type: 'user' | 'seller';
@@ -9,6 +11,7 @@ export interface Login {
   email: string;
   password: string;
 }
+
 
 // ================= PRODUCTS =================
 export interface ProductVariant {
@@ -27,9 +30,10 @@ export interface Product {
   variants: ProductVariant[];
 }
 
+
 // ================= CART =================
 
-// ✅ PAYLOAD SENT TO BACKEND
+// PAYLOAD SENT TO BACKEND
 export interface AddToCartPayload {
   productId: number;
   variantId: number;
@@ -39,7 +43,7 @@ export interface AddToCartPayload {
   quantity: number;
 }
 
-// ✅ CART ITEM RECEIVED FROM BACKEND
+// CART ITEM RECEIVED FROM BACKEND
 export interface CartItem {
   cart_item_id?: number;
   product_id: number;
@@ -56,6 +60,7 @@ export interface CheckoutPayload {
   contact: number;
   address: string;
 }
+
 
 // ================= ORDERS =================
 export interface Order {
