@@ -26,3 +26,37 @@ Date: $(date)"
 # Push feature branch
 # -------------------------------------------------------
 git push origin feature/auth-v2-secure-profile
+
+-------------------------------
+
+# Empty Commit:-
+# -------------------------------------------------------
+# Stage all changes
+# -------------------------------------------------------
+git add .
+
+# -------------------------------------------------------
+# Commit (Auth milestone checkpoint)
+# -------------------------------------------------------
+git commit -m "chore(auth-checkpoint): registration, email verification, login and logout working (123)
+
+Confirmed working:
+- user registration
+- verification email sent
+- email verification successful
+- login after verification
+- logout flow
+
+Pending testing:
+- forgot password
+- reset password
+- profile update
+- change password
+- forced logout after password change
+
+Date: $(date)"
+
+# -------------------------------------------------------
+# Push feature branch
+# -------------------------------------------------------
+git push origin feature/auth-v2-secure-profile
