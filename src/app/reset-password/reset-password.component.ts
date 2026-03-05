@@ -20,13 +20,22 @@ export class ResetPasswordComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
+    // Read token from URL
     this.token = this.route.snapshot.queryParamMap.get('token') || '';
+
+    if (!this.token) {
+      this.message = "Invalid reset link";
+    }
+
   }
 
   submit(form: NgForm) {
 
     if (form.invalid) return;
 
+    // Clear previous message
+    this.message = '';
     this.isLoading = true;
 
     this.authService
@@ -40,10 +49,19 @@ export class ResetPasswordComponent implements OnInit {
           setTimeout(() => {
             this.router.navigate(['/login']);
           }, 3000);
+
         },
 
-        error: () => {
-          this.message = 'Reset failed or link expired';
+        error: (err) => {
+
+          // Show backend error if available
+          if (err.error && err.error.error) {
+            this.message = err.error.error;
+          } else {
+            this.message = 'Reset failed or link expired';
+          }
+
+          this.isLoading = false;
         },
 
         complete: () => {
@@ -51,6 +69,7 @@ export class ResetPasswordComponent implements OnInit {
         }
 
       });
+
   }
 
 }

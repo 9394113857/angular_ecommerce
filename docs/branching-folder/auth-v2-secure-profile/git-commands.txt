@@ -148,4 +148,40 @@ Date: $(date)
 # Step 3 — Push feature branch
 # ---------------------------------------------------------
 git push origin feature/auth-v2-secure-profile
+-----------------------------------------------------------
+# =========================================================
+# AUTH V2 – Reset Password UX Improvements
+# Password history validation + proper error messaging
+# =========================================================
+
+# -------------------------------
+# Stage all changes
+# -------------------------------
+git add .
+
+# -------------------------------
+# Commit changes
+# -------------------------------
+git commit -m "fix(auth-v2): improve reset-password flow and UX (123)
+
+- enforce password history validation in reset password
+- prevent reuse of recent passwords
+- show backend error messages properly in Angular
+- improve reset password user feedback
+- add helper message for password reuse restriction
+- keep user on page when password reuse detected
+- improve overall forgot-password user experience
+
+Auth reset-password flow fully stabilized.
+
+Date: $(date)
+"
+
+# -------------------------------
+# Push feature branch
+# -------------------------------
+git push origin feature/auth-v2-secure-profile
+
+
+
 
