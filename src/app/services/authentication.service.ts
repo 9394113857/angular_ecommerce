@@ -30,13 +30,17 @@ export class AuthenticationService {
 
 
   // =====================================================
-  // ACTIVE BASE URL (CURRENTLY PRODUCTION)
+  // ACTIVE BASE URLs
   // =====================================================
   private readonly AUTH_BASE = this.RAILWAY_AUTH_BASE;
   private readonly USER_AUTH = this.RAILWAY_USER_AUTH;
 
 
+  // =====================================================
+  // AUTH STATE
+  // =====================================================
   authState$ = new BehaviorSubject<'default' | 'user' | 'seller'>('default');
+
 
   constructor(
     private http: HttpClient,
@@ -45,8 +49,9 @@ export class AuthenticationService {
     this.initAuthState();
   }
 
+
   // =====================================================
-  // INIT AUTH STATE
+  // INIT AUTH STATE (runs on app start)
   // =====================================================
   private initAuthState() {
 
@@ -66,7 +71,7 @@ export class AuthenticationService {
 
 
   // =====================================================
-  // BLOCK AUTH PAGE IF ALREADY LOGGED IN
+  // BLOCK AUTH PAGE IF USER ALREADY LOGGED IN
   // =====================================================
   notAllowedAuth() {
 
@@ -90,7 +95,10 @@ export class AuthenticationService {
       first_name: data.first_name,
       last_name: data.last_name,
       email: data.email,
-      password: data.password
+      password: data.password,
+
+      // 🔥 IMPORTANT FOR SELLER / USER ROLE
+      role_type: data.role_type
 
     });
 
@@ -133,9 +141,7 @@ export class AuthenticationService {
   resetPassword(token: string, password: string) {
 
     return this.http.post(`${this.AUTH_BASE}/reset-password/${token}`, {
-
       password
-
     });
 
   }
@@ -187,7 +193,9 @@ export class AuthenticationService {
   logout() {
 
     localStorage.clear();
+
     this.authState$.next('default');
+
     this.router.navigate(['/login']);
 
   }
