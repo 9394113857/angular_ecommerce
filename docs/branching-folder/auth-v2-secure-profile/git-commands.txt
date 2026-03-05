@@ -60,3 +60,50 @@ Date: $(date)"
 # Push feature branch
 # -------------------------------------------------------
 git push origin feature/auth-v2-secure-profile
+---------------------------------------------------------
+5-3-26:-
+----------------------------------------------------------
+# =========================================================
+# AUTH V2 CHECKPOINT COMMIT
+# Profile editing + password change flow completed
+# (Forgot password / reset password flows still pending)
+# Use this same commit for BOTH repositories
+# backend-auth-service
+# angular_ecommerce
+# =========================================================
+
+# ---------------------------------------------------------
+# Step 1 — Stage all changes
+# ---------------------------------------------------------
+git add .
+
+# ---------------------------------------------------------
+# Step 2 — Create commit
+# ---------------------------------------------------------
+git commit -m "feat(auth-v2): profile editing and password management working (123)
+
+Completed flows:
+- user registration
+- email verification
+- login
+- logout
+- profile page integration
+- profile data editing (first_name, last_name, phone)
+- profile update API working
+- change password flow implemented
+- password history validation
+- forced logout after password change
+- login again with updated password verified
+
+Pending flows:
+- forgot password email flow
+- reset password flow
+
+Date: $(date)
+"
+
+# ---------------------------------------------------------
+# Step 3 — Push feature branch
+# ---------------------------------------------------------
+git push origin feature/auth-v2-secure-profile
+

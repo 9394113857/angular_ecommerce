@@ -29,10 +29,16 @@
     <!-- MENU -->
     <div [ngSwitch]="menuType">
 
-      <!-- DEFAULT -->
+      <!-- DEFAULT MENU -->
       <ul class="menu defaultMenu" *ngSwitchCase="'default'">
-        <li><a routerLink="/login">Login</a></li>
-        <li><a routerLink="/auth">Signup</a></li>
+        <li>
+          <a routerLink="/login">Login</a>
+        </li>
+
+        <li>
+          <a routerLink="/auth">Signup</a>
+        </li>
+
         <li>
           <a routerLink="/cart">
             Cart <span>{{ cartItems }}</span>
@@ -40,31 +46,62 @@
         </li>
       </ul>
 
-      <!-- SELLER -->
+      <!-- SELLER MENU -->
       <ul class="menu sellerMenu" *ngSwitchCase="'seller'">
-        <li><a routerLink="/seller-add-product">Add Product</a></li>
-        <li><a routerLink="/seller-home">My Products</a></li>
-        <li><a (click)="sellerLogout()">Logout</a></li>
+        <li>
+          <a routerLink="/seller-add-product">Add Product</a>
+        </li>
+
+        <li>
+          <a routerLink="/seller-home">My Products</a>
+        </li>
+
+        <li>
+          <a (click)="sellerLogout()">Logout</a>
+        </li>
       </ul>
 
-      <!-- USER (AMAZON STYLE) -->
+      <!-- USER MENU -->
       <ul class="menu userMenu" *ngSwitchCase="'user'">
 
         <!-- ACCOUNT DROPDOWN -->
         <li class="account-dropdown" (click)="toggleDropdown()">
+
           <a>
             Hello, {{ username }} ▼
             <br />
             <small>Account & Lists</small>
           </a>
 
+          <!-- DROPDOWN -->
           <ul class="dropdown" *ngIf="showDropdown">
-            <li><a routerLink="/orders">Your Orders</a></li>
-            <li><a (click)="userLogout()">Logout</a></li>
+
+            <!-- PROFILE -->
+            <li>
+              <a routerLink="/profile">
+                Your Profile
+              </a>
+            </li>
+
+            <!-- ORDERS -->
+            <li>
+              <a routerLink="/orders">
+                Your Orders
+              </a>
+            </li>
+
+            <!-- LOGOUT -->
+            <li>
+              <a (click)="userLogout()">
+                Logout
+              </a>
+            </li>
+
           </ul>
+
         </li>
 
-        <!-- RETURNS & ORDERS (ALWAYS VISIBLE) -->
+        <!-- RETURNS & ORDERS -->
         <li>
           <a routerLink="/orders">
             Returns <br />
