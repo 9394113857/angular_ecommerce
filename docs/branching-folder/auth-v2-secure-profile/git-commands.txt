@@ -181,6 +181,38 @@ Date: $(date)
 # Push feature branch
 # -------------------------------
 git push origin feature/auth-v2-secure-profile
+------------
+# =========================================================
+# ANGULAR AUTH V2 FEATURE → MAIN MERGE
+# Railway production URL activation
+# =========================================================
+
+# 1️⃣ Stage all Angular changes
+git add .
+
+# 2️⃣ Commit Angular service update
+git commit -m "chore(auth): activate Railway API base URL and keep local backend commented"
+
+# 3️⃣ Push feature branch
+git push origin feature/auth-v2-secure-profile
+
+# 4️⃣ Switch to main
+git checkout main
+
+# 5️⃣ Pull latest main
+git pull origin main
+
+# 6️⃣ Merge feature branch
+git merge feature/auth-v2-secure-profile
+
+# 7️⃣ Push main (triggers frontend deployment)
+git push origin main
+
+# =========================================================
+# RESULT
+# Angular auth feature merged into main
+# CI/CD will deploy updated frontend
+# =========================================================
 
 
 

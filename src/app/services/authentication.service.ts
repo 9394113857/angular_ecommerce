@@ -9,17 +9,32 @@ import { Login, SignUp } from 'src/data.type';
 })
 export class AuthenticationService {
 
-  // =========================================
-  // BASE AUTH URL
-  // =========================================
-  private readonly AUTH_BASE =
-    'http://127.0.0.1:5000/api/v1/auth';
+  // =====================================================
+  // 🌱 LOCAL BACKEND (USE FOR LOCAL DEVELOPMENT)
+  // =====================================================
+  // private readonly LOCAL_AUTH_BASE =
+  //   'http://127.0.0.1:5000/api/v1/auth';
 
-  // =========================================
-  // ANGULAR USER AUTH ROUTES
-  // =========================================
-  private readonly USER_AUTH =
-    'http://127.0.0.1:5000/api/v1/auth/angularUser';
+  // private readonly LOCAL_USER_AUTH =
+  //   'http://127.0.0.1:5000/api/v1/auth/angularUser';
+
+
+  // =====================================================
+  // 🚀 RAILWAY BACKEND (PRODUCTION)
+  // =====================================================
+  private readonly RAILWAY_AUTH_BASE =
+    'https://mellow-illumination-production.up.railway.app/api/v1/auth';
+
+  private readonly RAILWAY_USER_AUTH =
+    'https://mellow-illumination-production.up.railway.app/api/v1/auth/angularUser';
+
+
+  // =====================================================
+  // ACTIVE BASE URL (CURRENTLY PRODUCTION)
+  // =====================================================
+  private readonly AUTH_BASE = this.RAILWAY_AUTH_BASE;
+  private readonly USER_AUTH = this.RAILWAY_USER_AUTH;
+
 
   authState$ = new BehaviorSubject<'default' | 'user' | 'seller'>('default');
 
@@ -30,9 +45,9 @@ export class AuthenticationService {
     this.initAuthState();
   }
 
-  // =========================================
+  // =====================================================
   // INIT AUTH STATE
-  // =========================================
+  // =====================================================
   private initAuthState() {
 
     if (localStorage.getItem('sellerLoggedIn')) {
@@ -49,9 +64,10 @@ export class AuthenticationService {
 
   }
 
-  // =========================================
+
+  // =====================================================
   // BLOCK AUTH PAGE IF ALREADY LOGGED IN
-  // =========================================
+  // =====================================================
   notAllowedAuth() {
 
     if (
@@ -63,9 +79,10 @@ export class AuthenticationService {
 
   }
 
-  // =========================================
+
+  // =====================================================
   // SIGNUP
-  // =========================================
+  // =====================================================
   userSignup(data: SignUp) {
 
     return this.http.post(`${this.USER_AUTH}/register`, {
@@ -79,36 +96,40 @@ export class AuthenticationService {
 
   }
 
-  // =========================================
+
+  // =====================================================
   // LOGIN
-  // =========================================
+  // =====================================================
   loginUser(data: Login) {
 
     return this.http.post<any>(`${this.USER_AUTH}/login`, data);
 
   }
 
-  // =========================================
+
+  // =====================================================
   // VERIFY EMAIL
-  // =========================================
+  // =====================================================
   verifyEmail(token: string) {
 
     return this.http.get(`${this.USER_AUTH}/verify-email/${token}`);
 
   }
 
-  // =========================================
+
+  // =====================================================
   // FORGOT PASSWORD
-  // =========================================
+  // =====================================================
   forgotPassword(email: string) {
 
     return this.http.post(`${this.AUTH_BASE}/forgot-password`, { email });
 
   }
 
-  // =========================================
+
+  // =====================================================
   // RESET PASSWORD
-  // =========================================
+  // =====================================================
   resetPassword(token: string, password: string) {
 
     return this.http.post(`${this.AUTH_BASE}/reset-password/${token}`, {
@@ -119,45 +140,50 @@ export class AuthenticationService {
 
   }
 
-  // =========================================
+
+  // =====================================================
   // GET PROFILE
-  // =========================================
+  // =====================================================
   getProfile() {
 
     return this.http.get(`${this.AUTH_BASE}/profile`);
 
   }
 
-  // =========================================
+
+  // =====================================================
   // UPDATE PROFILE
-  // =========================================
+  // =====================================================
   updateProfile(data: any) {
 
     return this.http.put(`${this.AUTH_BASE}/profile`, data);
 
   }
 
-  // =========================================
+
+  // =====================================================
   // CHANGE PASSWORD
-  // =========================================
+  // =====================================================
   changePassword(data: any) {
 
     return this.http.post(`${this.AUTH_BASE}/change-password`, data);
 
   }
 
-  // =========================================
+
+  // =====================================================
   // SET AUTH STATE
-  // =========================================
+  // =====================================================
   setAuthState(role: 'user' | 'seller') {
 
     this.authState$.next(role);
 
   }
 
-  // =========================================
+
+  // =====================================================
   // LOGOUT
-  // =========================================
+  // =====================================================
   logout() {
 
     localStorage.clear();
