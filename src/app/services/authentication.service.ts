@@ -1,3 +1,17 @@
+// =====================================================
+// AUTHENTICATION SERVICE
+// Handles:
+// - Signup
+// - Login
+// - Email verification
+// - Password reset
+// - Profile
+// - Auth state
+//
+// Local backend kept for development
+// Render backend used for production
+// =====================================================
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -10,7 +24,7 @@ import { Login, SignUp } from 'src/data.type';
 export class AuthenticationService {
 
   // =====================================================
-  // 🌱 LOCAL BACKEND (USE FOR LOCAL DEVELOPMENT)
+  // 🌱 LOCAL BACKEND (FOR LOCAL DEVELOPMENT)
   // =====================================================
   // private readonly LOCAL_AUTH_BASE =
   //   'http://127.0.0.1:5000/api/v1/auth';
@@ -19,27 +33,31 @@ export class AuthenticationService {
   //   'http://127.0.0.1:5000/api/v1/auth/angularUser';
 
 
-  // =====================================================
-  // 🚀 RAILWAY BACKEND (PRODUCTION)
-  // =====================================================
-  private readonly RAILWAY_AUTH_BASE =
-    'https://mellow-illumination-production.up.railway.app/api/v1/auth';
-
-  private readonly RAILWAY_USER_AUTH =
-    'https://mellow-illumination-production.up.railway.app/api/v1/auth/angularUser';
-
 
   // =====================================================
-  // ACTIVE BASE URLs
+  // 🚀 RENDER BACKEND (PRODUCTION)
   // =====================================================
-  private readonly AUTH_BASE = this.RAILWAY_AUTH_BASE;
-  private readonly USER_AUTH = this.RAILWAY_USER_AUTH;
+  private readonly RENDER_AUTH_BASE =
+    'https://backend-auth-service-project.onrender.com/api/v1/auth';
+
+  private readonly RENDER_USER_AUTH =
+    'https://backend-auth-service-project.onrender.com/api/v1/auth/angularUser';
+
+
+
+  // =====================================================
+  // ACTIVE BASE URLs (CURRENTLY PRODUCTION)
+  // =====================================================
+  private readonly AUTH_BASE = this.RENDER_AUTH_BASE;
+  private readonly USER_AUTH = this.RENDER_USER_AUTH;
+
 
 
   // =====================================================
   // AUTH STATE
   // =====================================================
   authState$ = new BehaviorSubject<'default' | 'user' | 'seller'>('default');
+
 
 
   constructor(
@@ -50,8 +68,10 @@ export class AuthenticationService {
   }
 
 
+
   // =====================================================
-  // INIT AUTH STATE (runs on app start)
+  // INIT AUTH STATE
+  // Runs when Angular app loads
   // =====================================================
   private initAuthState() {
 
@@ -70,8 +90,9 @@ export class AuthenticationService {
   }
 
 
+
   // =====================================================
-  // BLOCK AUTH PAGE IF USER ALREADY LOGGED IN
+  // PREVENT ACCESS TO LOGIN/SIGNUP IF ALREADY LOGGED IN
   // =====================================================
   notAllowedAuth() {
 
@@ -85,8 +106,9 @@ export class AuthenticationService {
   }
 
 
+
   // =====================================================
-  // SIGNUP
+  // USER SIGNUP
   // =====================================================
   userSignup(data: SignUp) {
 
@@ -97,7 +119,7 @@ export class AuthenticationService {
       email: data.email,
       password: data.password,
 
-      // 🔥 IMPORTANT FOR SELLER / USER ROLE
+      // Important for role-based dashboard
       role_type: data.role_type
 
     });
@@ -105,14 +127,16 @@ export class AuthenticationService {
   }
 
 
+
   // =====================================================
-  // LOGIN
+  // LOGIN USER
   // =====================================================
   loginUser(data: Login) {
 
     return this.http.post<any>(`${this.USER_AUTH}/login`, data);
 
   }
+
 
 
   // =====================================================
@@ -125,6 +149,7 @@ export class AuthenticationService {
   }
 
 
+
   // =====================================================
   // FORGOT PASSWORD
   // =====================================================
@@ -133,6 +158,7 @@ export class AuthenticationService {
     return this.http.post(`${this.AUTH_BASE}/forgot-password`, { email });
 
   }
+
 
 
   // =====================================================
@@ -147,14 +173,16 @@ export class AuthenticationService {
   }
 
 
+
   // =====================================================
-  // GET PROFILE
+  // GET USER PROFILE
   // =====================================================
   getProfile() {
 
     return this.http.get(`${this.AUTH_BASE}/profile`);
 
   }
+
 
 
   // =====================================================
@@ -167,6 +195,7 @@ export class AuthenticationService {
   }
 
 
+
   // =====================================================
   // CHANGE PASSWORD
   // =====================================================
@@ -175,6 +204,7 @@ export class AuthenticationService {
     return this.http.post(`${this.AUTH_BASE}/change-password`, data);
 
   }
+
 
 
   // =====================================================
@@ -187,8 +217,9 @@ export class AuthenticationService {
   }
 
 
+
   // =====================================================
-  // LOGOUT
+  // LOGOUT USER
   // =====================================================
   logout() {
 
