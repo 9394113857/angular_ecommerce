@@ -41,11 +41,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 /* SERVICES */
 import { SharedService } from './services/shared.service';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
-import { ChatWidgetComponent } from './assistant/chat-widget/chat-widget.component';
-import { VerifyEmailComponent } from './verify-email/verify-email.component';
-import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './reset-password/reset-password.component';
-import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -74,12 +69,7 @@ import { ProfileComponent } from './profile/profile.component';
     OrderDetailsComponent,
 
     UnauthorizedComponent,
-    PageNotFoundComponent,
-    ChatWidgetComponent,
-    VerifyEmailComponent,
-    ForgotPasswordComponent,
-    ResetPasswordComponent,
-    ProfileComponent
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,

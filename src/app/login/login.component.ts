@@ -28,99 +28,69 @@ export class LoginComponent implements OnInit {
     this.titleService.setTitle('E-Comm | Login');
   }
 
-  // ============================
-  // REDIRECT TO SIGNUP
-  // ============================
+  // ✅ REQUIRED BY TEMPLATE
   redirectToSignup(): void {
     this.router.navigate(['/auth']);
   }
 
-  // ============================
-  // LOGIN
-  // ============================
   loginFormhandle(form: NgForm): void {
-
     if (form.invalid) return;
 
-    this.isLoading = true;
+this.isLoading = true;
 
-    this.authService.loginUser(form.value).subscribe({
+this.authService.loginUser(form.value).subscribe({
+  next: (res) => {
+    localStorage.setItem('token', res.access_token);
 
-      next: (res: any) => {
-
-        localStorage.setItem('token', res.access_token);
-
-        this.eventTracking.trackEvent({
-          event_type: 'login_success',
-          metadata: { role: res.role }
-        });
+    this.eventTracking.trackEvent({
+      event_type: 'login_success',
+      metadata: { role: res.role }
+    });
 
         if (res.role === 'seller') {
-
           localStorage.setItem('sellerLoggedIn', res.userId);
           this.authService.setAuthState('seller');
           this.router.navigate(['/seller-home']);
-
         } else {
-
           localStorage.setItem(
             'userLoggedIn',
             JSON.stringify({ id: res.userId })
           );
-
           this.authService.setAuthState('user');
           this.syncLocalCart();
           this.router.navigate(['/']);
         }
-
-        this.isLoading = false;
-
       },
-
-      error: (err) => {
-
+      error: () => {
         this.eventTracking.trackEvent({
-          event_type: 'login_failed'
-        });
+  event_type: 'login_failed'
+});
 
-        if (err.status === 403) {
-          this.loginFailed = 'Please verify your email before login';
-        } else {
-          this.loginFailed = 'Invalid credentials';
-        }
-
-        setTimeout(() => (this.loginFailed = ''), 3000);
-
+        this.loginFailed = 'Invalid credentials';
         this.isLoading = false;
       }
     });
   }
 
-  // ============================
-  // SYNC LOCAL CART
-  // ============================
   syncLocalCart(): void {
+  const local = localStorage.getItem('localCart');
+  if (!local) return;
 
-    const local = localStorage.getItem('localCart');
+  const items: Product[] = JSON.parse(local);
 
-    if (!local) return;
+  items.forEach(p => {
+    this.cartService.addToCart({
+      product_id: p.id,
+      variant_id: 1,
+      name: p.name,
+      color: 'Black',
+      price: p.price,
+      quantity: 1
+    }).subscribe();
+  });
 
-    const items: Product[] = JSON.parse(local);
-
-    items.forEach(p => {
-
-      this.cartService.addToCart({
-        product_id: p.id,
-        variant_id: 1,
-        name: p.name,
-        color: 'Black',
-        price: p.price,
-        quantity: 1
-      }).subscribe();
-
-    });
-
-    localStorage.removeItem('localCart');
-  }
-
+  localStorage.removeItem('localCart');
 }
+
+
+}//End of LoginComponent class

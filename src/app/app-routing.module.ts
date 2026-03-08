@@ -6,7 +6,10 @@ import { SellerHomeComponent } from './seller-home/seller-home.component';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { SellerAddProductComponent } from './seller-add-product/seller-add-product.component';
 
+// import { SellerUpdateProductComponent } from './seller-update-product/seller-update-product.component';
+
 import { SellerAddStockComponent } from './seller-add-stock/seller-add-stock.component';
+// import { SearchComponent } from './search/search.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { LoginComponent } from './login/login.component';
 import { CartComponent } from './cart/cart.component';
@@ -19,21 +22,12 @@ import { OrderDetailsComponent } from './order-details/order-details.component';
 
 import { protectRouteGuard } from './protect-route.guard';
 
-// NEW AUTH COMPONENTS
-import { VerifyEmailComponent } from './verify-email/verify-email.component';
-import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './reset-password/reset-password.component';
-import { ProfileComponent } from './profile/profile.component';
-
 const routes: Routes = [
-
-  // ---------------- HOME ----------------
   {
     path: '',
     component: HomeComponent
   },
 
-  // ---------------- AUTH ----------------
   {
     path: 'auth',
     component: AuthenticationComponent
@@ -44,59 +38,43 @@ const routes: Routes = [
     component: LoginComponent
   },
 
-  {
-    path: 'verify-email',
-    component: VerifyEmailComponent
-  },
-
-  {
-    path: 'forgot-password',
-    component: ForgotPasswordComponent
-  },
-
-  {
-    path: 'reset-password',
-    component: ResetPasswordComponent
-  },
-
-  {
-    path: 'profile',
-    component: ProfileComponent,
-    canActivate: [protectRouteGuard]
-  },
-
   // ---------------- SELLER ----------------
   {
     path: 'seller-home',
     component: SellerHomeComponent,
     canActivate: [protectRouteGuard]
   },
-
   {
     path: 'seller-add-product',
     component: SellerAddProductComponent,
     canActivate: [protectRouteGuard]
   },
-
   {
     path: 'seller-add-stock/:id',
     component: SellerAddStockComponent,
     canActivate: [protectRouteGuard]
   },
+  // {
+  //   path: 'seller-update-product/:id',
+  //   component: SellerUpdateProductComponent,
+  //   canActivate: [protectRouteGuard]
+  // },
 
   // ---------------- PRODUCTS ----------------
+  // {
+  //   path: 'search/:query',
+  //   component: SearchComponent
+  // },
   {
     path: 'product/details/:productId',
     component: ProductDetailsComponent
   },
 
-  // ---------------- CART ----------------
+  // ---------------- CART & CHECKOUT ----------------
   {
     path: 'cart',
     component: CartComponent
   },
-
-  // ---------------- CHECKOUT ----------------
   {
     path: 'checkout',
     component: CheckoutComponent,
@@ -109,7 +87,6 @@ const routes: Routes = [
     component: OrdersComponent,
     canActivate: [protectRouteGuard]
   },
-
   {
     path: 'orders/:orderId',
     component: OrderDetailsComponent,
@@ -121,12 +98,10 @@ const routes: Routes = [
     path: 'unauthorized',
     component: UnauthorizedComponent
   },
-
   {
     path: '**',
     component: PageNotFoundComponent
   }
-
 ];
 
 @NgModule({
