@@ -1,0 +1,219 @@
+2️⃣ Angular – angular_ecommerce
+Run inside the Angular repo folder.
+
+# -------------------------------------------------------
+# Stage all changes
+# -------------------------------------------------------
+git add .
+
+# -------------------------------------------------------
+# Commit (Angular auth integration)
+# -------------------------------------------------------
+git commit -m "feat(auth-v2): Angular authentication integration (123)
+
+- signup with first_name and last_name
+- email verification page
+- forgot password flow
+- reset password page
+- profile page with password change
+- forced logout after password change
+- authentication service updated
+- routing for verify/reset/profile
+
+Date: $(date)"
+
+# -------------------------------------------------------
+# Push feature branch
+# -------------------------------------------------------
+git push origin feature/auth-v2-secure-profile
+
+-------------------------------
+
+# Empty Commit:-
+# -------------------------------------------------------
+# Stage all changes
+# -------------------------------------------------------
+git add .
+
+# -------------------------------------------------------
+# Commit (Auth milestone checkpoint)
+# -------------------------------------------------------
+git commit -m "chore(auth-checkpoint): registration, email verification, login and logout working (123)
+
+Confirmed working:
+- user registration
+- verification email sent
+- email verification successful
+- login after verification
+- logout flow
+
+Pending testing:
+- forgot password
+- reset password
+- profile update
+- change password
+- forced logout after password change
+
+Date: $(date)"
+
+# -------------------------------------------------------
+# Push feature branch
+# -------------------------------------------------------
+git push origin feature/auth-v2-secure-profile
+---------------------------------------------------------
+5-3-26:-
+----------------------------------------------------------
+# =========================================================
+# AUTH V2 CHECKPOINT COMMIT
+# Profile editing + password change flow completed
+# (Forgot password / reset password flows still pending)
+# Use this same commit for BOTH repositories
+# backend-auth-service
+# angular_ecommerce
+# =========================================================
+
+# ---------------------------------------------------------
+# Step 1 — Stage all changes
+# ---------------------------------------------------------
+git add .
+
+# ---------------------------------------------------------
+# Step 2 — Create commit
+# ---------------------------------------------------------
+git commit -m "feat(auth-v2): profile editing and password management working (123)
+
+Completed flows:
+- user registration
+- email verification
+- login
+- logout
+- profile page integration
+- profile data editing (first_name, last_name, phone)
+- profile update API working
+- change password flow implemented
+- password history validation
+- forced logout after password change
+- login again with updated password verified
+
+Pending flows:
+- forgot password email flow
+- reset password flow
+
+Date: $(date)
+"
+
+# ---------------------------------------------------------
+# Step 3 — Push feature branch
+# ---------------------------------------------------------
+git push origin feature/auth-v2-secure-profile
+-----------------------------------------------------------
+# =========================================================
+# AUTH V2 COMPLETION COMMIT
+# Full authentication system completed and verified
+# Includes registration, email verification, profile,
+# password change, forgot password and reset password
+# =========================================================
+
+# ---------------------------------------------------------
+# Step 1 — Stage all changes
+# ---------------------------------------------------------
+git add .
+
+# ---------------------------------------------------------
+# Step 2 — Create commit
+# ---------------------------------------------------------
+git commit -m "feat(auth-v2): full authentication system completed (123)
+
+Completed flows:
+- user registration
+- email verification via email link
+- login
+- logout
+- profile page integration
+- profile data editing (first_name, last_name, phone)
+- profile update API working
+- change password flow implemented
+- password history validation
+- forced logout after password change
+- login again with updated password verified
+- forgot password email flow implemented
+- password reset via secure email token
+
+Auth v2 module fully implemented and verified.
+
+Date: $(date)
+"
+
+# ---------------------------------------------------------
+# Step 3 — Push feature branch
+# ---------------------------------------------------------
+git push origin feature/auth-v2-secure-profile
+-----------------------------------------------------------
+# =========================================================
+# AUTH V2 – Reset Password UX Improvements
+# Password history validation + proper error messaging
+# =========================================================
+
+# -------------------------------
+# Stage all changes
+# -------------------------------
+git add .
+
+# -------------------------------
+# Commit changes
+# -------------------------------
+git commit -m "fix(auth-v2): improve reset-password flow and UX (123)
+
+- enforce password history validation in reset password
+- prevent reuse of recent passwords
+- show backend error messages properly in Angular
+- improve reset password user feedback
+- add helper message for password reuse restriction
+- keep user on page when password reuse detected
+- improve overall forgot-password user experience
+
+Auth reset-password flow fully stabilized.
+
+Date: $(date)
+"
+
+# -------------------------------
+# Push feature branch
+# -------------------------------
+git push origin feature/auth-v2-secure-profile
+------------
+# =========================================================
+# ANGULAR AUTH V2 FEATURE → MAIN MERGE
+# Railway production URL activation
+# =========================================================
+
+# 1️⃣ Stage all Angular changes
+git add .
+
+# 2️⃣ Commit Angular service update
+git commit -m "chore(auth): activate Railway API base URL and keep local backend commented"
+
+# 3️⃣ Push feature branch
+git push origin feature/auth-v2-secure-profile
+
+# 4️⃣ Switch to main
+git checkout main
+
+# 5️⃣ Pull latest main
+git pull origin main
+
+# 6️⃣ Merge feature branch
+git merge feature/auth-v2-secure-profile
+
+# 7️⃣ Push main (triggers frontend deployment)
+git push origin main
+
+# =========================================================
+# RESULT
+# Angular auth feature merged into main
+# CI/CD will deploy updated frontend
+# =========================================================
+
+
+
+

@@ -1,0 +1,98 @@
+/* ===============================
+PROFILE PAGE CONTAINER
+=============================== */
+
+.registerForm {
+  width: 420px;
+  margin: 40px auto;
+  padding: 30px;
+
+  background: #ffffff;
+  border-radius: 10px;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ===============================
+HEADINGS
+=============================== */
+
+.registerForm h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.registerForm h2 {
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+/* ===============================
+LABELS
+=============================== */
+
+.registerForm label {
+  display: block;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+/* ===============================
+INPUT FIELDS
+=============================== */
+
+.registerForm input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+
+  border-radius: 5px;
+  border: 1px solid #ccc;
+
+  font-size: 14px;
+}
+
+/* ===============================
+BUTTONS
+=============================== */
+
+.registerForm button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+
+  background-color: #ff9900;
+  border: none;
+  border-radius: 5px;
+
+  font-size: 15px;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.registerForm button:hover {
+  background-color: #e88a00;
+}
+
+/* ===============================
+MESSAGE TEXT
+=============================== */
+
+.registerForm p {
+  margin-top: 15px;
+  text-align: center;
+  color: green;
+  font-weight: bold;
+}
+
+/* ===============================
+DIVIDER
+=============================== */
+
+.registerForm hr {
+  margin-top: 30px;
+  margin-bottom: 20px;
+}

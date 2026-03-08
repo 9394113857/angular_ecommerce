@@ -1,3 +1,17 @@
+// =====================================================
+// AUTHENTICATION SERVICE
+// Handles:
+// - Signup
+// - Login
+// - Email verification
+// - Password reset
+// - Profile
+// - Auth state
+//
+// Local backend kept for development
+// Render backend used for production
+// =====================================================
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -9,22 +23,42 @@ import { Login, SignUp } from 'src/data.type';
 })
 export class AuthenticationService {
 
-  // ================================
-  // 🌱 LOCAL BACKEND (COMMENTED)
-  // ================================
-  // private readonly LOCAL_BASE_URL =
-  //   'http://127.0.0.1:5001/api/v1/auth/angularUser';
+  // =====================================================
+  // 🌱 LOCAL BACKEND (FOR LOCAL DEVELOPMENT)
+  // =====================================================
+  // private readonly LOCAL_AUTH_BASE =
+  //   'http://127.0.0.1:5000/api/v1/auth';
 
-  // ================================
-  // 🚀 RAILWAY BACKEND (ACTIVE NOW)
-  // ================================
-  private readonly RAILWAY_BASE_URL =
-    'https://mellow-illumination-production.up.railway.app/api/v1/auth/angularUser';
+  // private readonly LOCAL_USER_AUTH =
+  //   'http://127.0.0.1:5000/api/v1/auth/angularUser';
 
-  // ✅ CURRENT ACTIVE BASE URL
-  private readonly baseUrl = this.RAILWAY_BASE_URL;
-  // ================================
+
+
+  // =====================================================
+  // 🚀 RENDER BACKEND (PRODUCTION)
+  // =====================================================
+  private readonly RENDER_AUTH_BASE =
+    'https://backend-auth-service-project.onrender.com/api/v1/auth';
+
+  private readonly RENDER_USER_AUTH =
+    'https://backend-auth-service-project.onrender.com/api/v1/auth/angularUser';
+
+
+
+  // =====================================================
+  // ACTIVE BASE URLs (CURRENTLY PRODUCTION)
+  // =====================================================
+  private readonly AUTH_BASE = this.RENDER_AUTH_BASE;
+  private readonly USER_AUTH = this.RENDER_USER_AUTH;
+
+
+
+  // =====================================================
+  // AUTH STATE
+  // =====================================================
   authState$ = new BehaviorSubject<'default' | 'user' | 'seller'>('default');
+
+
 
   constructor(
     private http: HttpClient,
@@ -33,62 +67,168 @@ export class AuthenticationService {
     this.initAuthState();
   }
 
-  // ================================
-  // 🔐 INIT AUTH STATE
-  // ================================
+
+
+  // =====================================================
+  // INIT AUTH STATE
+  // Runs when Angular app loads
+  // =====================================================
   private initAuthState() {
+
     if (localStorage.getItem('sellerLoggedIn')) {
       this.authState$.next('seller');
-    } else if (localStorage.getItem('userLoggedIn')) {
+    }
+
+    else if (localStorage.getItem('userLoggedIn')) {
       this.authState$.next('user');
-    } else {
+    }
+
+    else {
       this.authState$.next('default');
     }
+
   }
 
-  // ================================
-  // 🚫 BLOCK LOGIN / REGISTER
-  // ================================
+
+
+  // =====================================================
+  // PREVENT ACCESS TO LOGIN/SIGNUP IF ALREADY LOGGED IN
+  // =====================================================
   notAllowedAuth() {
+
     if (
       localStorage.getItem('sellerLoggedIn') ||
       localStorage.getItem('userLoggedIn')
     ) {
       this.router.navigate(['/']);
     }
+
   }
 
-  // ================================
-  // 📝 USER SIGNUP
-  // ================================
+
+
+  // =====================================================
+  // USER SIGNUP
+  // =====================================================
   userSignup(data: SignUp) {
-    return this.http.post(`${this.baseUrl}/register`, {
+
+    return this.http.post(`${this.USER_AUTH}/register`, {
+
+      first_name: data.first_name,
+      last_name: data.last_name,
       email: data.email,
       password: data.password,
-      role: data.role_type
+
+      // Important for role-based dashboard
+      role_type: data.role_type
+
     });
+
   }
 
-  // ================================
-  // 🔑 LOGIN
-  // ================================
+
+
+  // =====================================================
+  // LOGIN USER
+  // =====================================================
   loginUser(data: Login) {
-    return this.http.post<any>(`${this.baseUrl}/login`, data);
+
+    return this.http.post<any>(`${this.USER_AUTH}/login`, data);
+
   }
 
-  // ================================
-  // 🔄 SET AUTH STATE
-  // ================================
+
+
+  // =====================================================
+  // VERIFY EMAIL
+  // =====================================================
+  verifyEmail(token: string) {
+
+    return this.http.get(`${this.USER_AUTH}/verify-email/${token}`);
+
+  }
+
+
+
+  // =====================================================
+  // FORGOT PASSWORD
+  // =====================================================
+  forgotPassword(email: string) {
+
+    return this.http.post(`${this.AUTH_BASE}/forgot-password`, { email });
+
+  }
+
+
+
+  // =====================================================
+  // RESET PASSWORD
+  // =====================================================
+  resetPassword(token: string, password: string) {
+
+    return this.http.post(`${this.AUTH_BASE}/reset-password/${token}`, {
+      password
+    });
+
+  }
+
+
+
+  // =====================================================
+  // GET USER PROFILE
+  // =====================================================
+  getProfile() {
+
+    return this.http.get(`${this.AUTH_BASE}/profile`);
+
+  }
+
+
+
+  // =====================================================
+  // UPDATE PROFILE
+  // =====================================================
+  updateProfile(data: any) {
+
+    return this.http.put(`${this.AUTH_BASE}/profile`, data);
+
+  }
+
+
+
+  // =====================================================
+  // CHANGE PASSWORD
+  // =====================================================
+  changePassword(data: any) {
+
+    return this.http.post(`${this.AUTH_BASE}/change-password`, data);
+
+  }
+
+
+
+  // =====================================================
+  // SET AUTH STATE
+  // =====================================================
   setAuthState(role: 'user' | 'seller') {
+
     this.authState$.next(role);
+
   }
 
-  // ================================
-  // 🚪 LOGOUT
-  // ================================
+
+
+  // =====================================================
+  // LOGOUT USER
+  // =====================================================
   logout() {
+
     localStorage.clear();
+
     this.authState$.next('default');
+
     this.router.navigate(['/login']);
+
   }
+
 }

@@ -1,0 +1,72 @@
+<div class="registerForm">
+
+  <!-- ================= PROFILE ================= -->
+  <h1>My Profile</h1>
+
+  <form #profileForm="ngForm" (ngSubmit)="updateProfile(profileForm)">
+
+    <label>First Name</label>
+    <input
+      type="text"
+      name="first_name"
+      [(ngModel)]="profile.first_name"
+      required
+    />
+
+    <label>Last Name</label>
+    <input
+      type="text"
+      name="last_name"
+      [(ngModel)]="profile.last_name"
+      required
+    />
+
+    <label>Phone Number</label>
+    <input
+      type="text"
+      name="phone_number"
+      [(ngModel)]="profile.phone_number"
+    />
+
+    <button type="submit">
+      {{ loading ? 'Updating...' : 'Update Profile' }}
+    </button>
+
+  </form>
+
+  <!-- DIVIDER -->
+  <hr>
+
+  <!-- ================= PASSWORD ================= -->
+  <h2>Change Password</h2>
+
+  <form #passwordForm="ngForm" (ngSubmit)="changePassword(passwordForm)">
+
+    <label>Old Password</label>
+    <input
+      type="password"
+      name="old_password"
+      ngModel
+      required
+    />
+
+    <label>New Password</label>
+    <input
+      type="password"
+      name="new_password"
+      ngModel
+      required
+    />
+
+    <button type="submit">
+      Change Password
+    </button>
+
+  </form>
+
+  <!-- MESSAGE -->
+  <p *ngIf="message">
+    {{ message }}
+  </p>
+
+</div>

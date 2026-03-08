@@ -1,0 +1,22 @@
+4-3-26:-
+ng generate component verify-email
+ng generate component forgot-password
+ng generate component reset-password
+ng generate component profile
+
+But a more professional UX is to show the Forgot Password inside the login page itself as a modal or toggle.
+
+Example flow used by many apps:
+
+Login Page
+ ├─ Email
+ ├─ Password
+ └─ Forgot Password?
+        ↓
+   small reset form opens
+        ↓
+   enter email
+        ↓
+   send reset link
+
+This avoids navigating to another page.

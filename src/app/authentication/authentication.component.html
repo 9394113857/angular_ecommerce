@@ -1,19 +1,30 @@
-<!-- SIGN UP -->
+<!-- ================= SIGNUP ================= -->
 <div class="registerForm" *ngIf="!showLogin">
+
   <div class="text">
     <h1>Sign Up</h1>
   </div>
 
   <div class="signupform">
+
     <form #registerForm="ngForm" (ngSubmit)="registerFormhandle(registerForm)">
 
-      <label>Name:</label>
+      <label>First Name:</label>
       <input
         type="text"
-        name="name"
+        name="first_name"
         ngModel
         required
-        placeholder="Enter your name"
+        placeholder="Enter first name"
+      />
+
+      <label>Last Name:</label>
+      <input
+        type="text"
+        name="last_name"
+        ngModel
+        required
+        placeholder="Enter last name"
       />
 
       <label>Email:</label>
@@ -51,16 +62,20 @@
       </a>
 
     </form>
+
   </div>
+
 </div>
 
-<!-- LOGIN -->
+<!-- ================= LOGIN ================= -->
 <div class="registerForm" *ngIf="showLogin">
+
   <div class="text">
     <h1>Login</h1>
   </div>
 
   <div class="signupform">
+
     <form #loginForm="ngForm" (ngSubmit)="loginFormhandle(loginForm)">
 
       <label>Email:</label>
@@ -92,5 +107,7 @@
       </a>
 
     </form>
+
   </div>
+
 </div>

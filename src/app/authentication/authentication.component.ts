@@ -29,8 +29,14 @@ export class AuthenticationComponent implements OnInit {
     this.authService.notAllowedAuth();
   }
 
+  // =========================================
+  // REGISTER
+  // =========================================
   registerFormhandle(form: NgForm) {
+
     const payload: SignUp = {
+      first_name: form.value.first_name,
+      last_name: form.value.last_name,
       email: form.value.email,
       password: form.value.password,
       role_type: form.value.role_type
@@ -38,16 +44,16 @@ export class AuthenticationComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.eventTracking.trackEvent({
-  event_type: 'signup_success',
-  metadata: { role: payload.role_type }
-});
-
-
     this.authService.userSignup(payload).subscribe({
-      
       next: () => {
-        alert('Registration successful');
+
+        this.eventTracking.trackEvent({
+          event_type: 'signup_success',
+          metadata: { role: payload.role_type }
+        });
+
+        alert('Registration successful. Please verify your email.');
+
         this.router.navigate(['/login']);
       },
       error: () => alert('Registration failed'),
@@ -58,11 +64,16 @@ export class AuthenticationComponent implements OnInit {
     });
   }
 
+  // =========================================
+  // LOGIN
+  // =========================================
   loginFormhandle(form: NgForm) {
+
     this.isLoading = true;
 
     this.authService.loginUser(form.value).subscribe({
       next: (res: any) => {
+
         localStorage.setItem('token', res.access_token);
 
         if (res.role === 'seller') {
@@ -84,6 +95,11 @@ export class AuthenticationComponent implements OnInit {
     });
   }
 
-  openLogin() { this.showLogin = true; }
-  openSignUp() { this.showLogin = false; }
+  openLogin() {
+    this.showLogin = true;
+  }
+
+  openSignUp() {
+    this.showLogin = false;
+  }
 }

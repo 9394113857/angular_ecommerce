@@ -28,69 +28,99 @@ export class LoginComponent implements OnInit {
     this.titleService.setTitle('E-Comm | Login');
   }
 
-  // ✅ REQUIRED BY TEMPLATE
+  // ============================
+  // REDIRECT TO SIGNUP
+  // ============================
   redirectToSignup(): void {
     this.router.navigate(['/auth']);
   }
 
+  // ============================
+  // LOGIN
+  // ============================
   loginFormhandle(form: NgForm): void {
+
     if (form.invalid) return;
 
-this.isLoading = true;
+    this.isLoading = true;
 
-this.authService.loginUser(form.value).subscribe({
-  next: (res) => {
-    localStorage.setItem('token', res.access_token);
+    this.authService.loginUser(form.value).subscribe({
 
-    this.eventTracking.trackEvent({
-      event_type: 'login_success',
-      metadata: { role: res.role }
-    });
+      next: (res: any) => {
+
+        localStorage.setItem('token', res.access_token);
+
+        this.eventTracking.trackEvent({
+          event_type: 'login_success',
+          metadata: { role: res.role }
+        });
 
         if (res.role === 'seller') {
+
           localStorage.setItem('sellerLoggedIn', res.userId);
           this.authService.setAuthState('seller');
           this.router.navigate(['/seller-home']);
+
         } else {
+
           localStorage.setItem(
             'userLoggedIn',
             JSON.stringify({ id: res.userId })
           );
+
           this.authService.setAuthState('user');
           this.syncLocalCart();
           this.router.navigate(['/']);
         }
-      },
-      error: () => {
-        this.eventTracking.trackEvent({
-  event_type: 'login_failed'
-});
 
-        this.loginFailed = 'Invalid credentials';
+        this.isLoading = false;
+
+      },
+
+      error: (err) => {
+
+        this.eventTracking.trackEvent({
+          event_type: 'login_failed'
+        });
+
+        if (err.status === 403) {
+          this.loginFailed = 'Please verify your email before login';
+        } else {
+          this.loginFailed = 'Invalid credentials';
+        }
+
+        setTimeout(() => (this.loginFailed = ''), 3000);
+
         this.isLoading = false;
       }
     });
   }
 
+  // ============================
+  // SYNC LOCAL CART
+  // ============================
   syncLocalCart(): void {
-  const local = localStorage.getItem('localCart');
-  if (!local) return;
 
-  const items: Product[] = JSON.parse(local);
+    const local = localStorage.getItem('localCart');
 
-  items.forEach(p => {
-    this.cartService.addToCart({
-      product_id: p.id,
-      variant_id: 1,
-      name: p.name,
-      color: 'Black',
-      price: p.price,
-      quantity: 1
-    }).subscribe();
-  });
+    if (!local) return;
 
-  localStorage.removeItem('localCart');
+    const items: Product[] = JSON.parse(local);
+
+    items.forEach(p => {
+
+      this.cartService.addToCart({
+        product_id: p.id,
+        variant_id: 1,
+        name: p.name,
+        color: 'Black',
+        price: p.price,
+        quantity: 1
+      }).subscribe();
+
+    });
+
+    localStorage.removeItem('localCart');
+  }
+
 }
-
-
-}//End of LoginComponent class
