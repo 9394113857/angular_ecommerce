@@ -1,8 +1,8 @@
 # ============================================================
-# 🚀 CI/CD – Angular Frontend (Netlify)
+# 🚀 CI/CD – Angular Frontend (Vercel)
 # ============================================================
 
-name: 🚀 CI/CD – Angular Frontend (Netlify)
+name: 🚀 CI/CD – Angular Frontend (Vercel)
 
 on:
   push:
@@ -11,7 +11,6 @@ on:
 
   workflow_dispatch:
 
-  # Daily at 1:00 AM IST (7:30 PM UTC)
   schedule:
     - cron: "30 19 * * *"
 
@@ -20,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      LIVE_URL: https://angular-ecommerce-sitee.netlify.app/
+      LIVE_URL: https://angular-ecommerce-sitee.vercel.app/
 
     steps:
 
@@ -31,9 +30,9 @@ jobs:
         uses: actions/checkout@v4
 
       # =====================================================
-      # BUILD TIMESTAMPS (UTC + IST)
+      # BUILD TIMESTAMPS
       # =====================================================
-      - name: ⏱️ Generate build timestamps (UTC + IST)
+      - name: ⏱️ Generate build timestamps
         run: |
           echo "BUILD_TIME_UTC=$(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_ENV
           echo "BUILD_TIME_IST=$(TZ=Asia/Kolkata date '+%Y-%m-%d %I:%M:%S %p IST')" >> $GITHUB_ENV
@@ -45,7 +44,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'npm'
+          cache: npm
 
       # =====================================================
       # INSTALL DEPENDENCIES
@@ -66,24 +65,25 @@ jobs:
         run: npm run build:prod
 
       # =====================================================
-      # DEPLOY TO NETLIFY
+      # INSTALL VERCEL CLI
       # =====================================================
-      - name: 🚀 Deploy to Netlify
-        uses: nwtgck/actions-netlify@v2
-        with:
-          publish-dir: ./dist/e-commerce
-          production-deploy: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: |
-            🚀 Angular Production Deploy
-            🌍 ${{ env.LIVE_URL }}
-            🔐 Commit: ${{ github.sha }}
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      - name: 📥 Install Vercel CLI
+        run: npm install --global vercel
 
       # =====================================================
-      # EMAIL – SUCCESS (WITH CC WORKING)
+      # DEPLOY TO VERCEL
+      # =====================================================
+      - name: 🚀 Deploy to Vercel
+        run: |
+          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      # =====================================================
+      # EMAIL SUCCESS
       # =====================================================
       - name: 📧 Deployment Success Email
         if: success()
@@ -102,7 +102,7 @@ jobs:
             <h2>🚀 Angular Frontend Deployed Successfully</h2>
             <table border="1" cellpadding="8">
               <tr><td><b>Application</b></td><td>Angular E-Commerce</td></tr>
-              <tr><td><b>Platform</b></td><td>Netlify</td></tr>
+              <tr><td><b>Platform</b></td><td>Vercel</td></tr>
               <tr><td><b>Live URL</b></td>
                   <td><a href="${{ env.LIVE_URL }}">${{ env.LIVE_URL }}</a></td></tr>
               <tr><td><b>Commit</b></td><td>${{ github.sha }}</td></tr>
@@ -113,7 +113,7 @@ jobs:
             </table>
 
       # =====================================================
-      # EMAIL – FAILURE (WITH CC)
+      # EMAIL FAILURE
       # =====================================================
       - name: ❌ Deployment Failure Email
         if: failure()
