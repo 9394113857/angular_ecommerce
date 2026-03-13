@@ -19,7 +19,7 @@ export class AuthenticationService {
   // 🚀 RAILWAY BACKEND (ACTIVE NOW)
   // ================================
   private readonly RAILWAY_BASE_URL =
-    'https://mellow-illumination-production.up.railway.app/api/v1/auth/angularUser';
+    'https://backend-auth-service-production-9024.up.railway.app/api/v1/auth/angularUser';
 
   // ✅ CURRENT ACTIVE BASE URL
   private readonly baseUrl = this.RAILWAY_BASE_URL;

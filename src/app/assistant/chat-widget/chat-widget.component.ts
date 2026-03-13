@@ -25,33 +25,47 @@ export class ChatWidgetComponent {
   }
 
   sendMessage() {
+
     if (!this.inputMessage.trim()) return;
 
     const userMessage = this.inputMessage;
 
-    this.messages.push({ role: 'user', text: userMessage });
+    // show user message in chat
+    this.messages.push({
+      role: 'user',
+      text: userMessage
+    });
 
     this.inputMessage = '';
     this.loading = true;
 
-    const userId = 1; // 🔥 Replace with logged-in user ID later
+    // ============================================
+    // Guest Mode (no login yet)
+    // ============================================
+    const userId: number | null = null;
 
     this.assistantService.sendMessage(userId, userMessage)
       .subscribe({
         next: (res) => {
+
           this.messages.push({
             role: 'assistant',
             text: res.response
           });
+
           this.loading = false;
         },
+
         error: () => {
+
           this.messages.push({
             role: 'assistant',
             text: 'Error connecting to assistant service.'
           });
+
           this.loading = false;
         }
       });
+
   }
 }

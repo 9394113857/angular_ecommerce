@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 
 export interface ChatResponse {
   response: string;
+  intent?: string;
+  confidence?: number;
+  model_version?: string;
 }
 
 @Injectable({
@@ -12,24 +15,31 @@ export interface ChatResponse {
 export class AssistantService {
 
   // ============================================
-  // 🌱 LOCAL BACKEND (COMMENTED FOR DEV)
+  // LOCAL BACKEND
   // ============================================
   // private BASE_URL = 'http://127.0.0.1:5000/api/v1/assistant';
 
   // ============================================
-  // 🚀 PRODUCTION BACKEND (RAILWAY)
+  // PRODUCTION BACKEND (UNCOMMENT WHEN DEPLOYED)
   // ============================================
   private BASE_URL = 'https://assistant-service-production-4c1b.up.railway.app/api/v1/assistant';
 
   constructor(private http: HttpClient) {}
 
-  sendMessage(userId: number, message: string): Observable<ChatResponse> {
+  sendMessage(userId: number | null, message: string): Observable<ChatResponse> {
+
+    const payload: any = {
+      message: message
+    };
+
+    // Only send user_id if user logged in
+    if (userId) {
+      payload.user_id = userId;
+    }
+
     return this.http.post<ChatResponse>(
       `${this.BASE_URL}/chat`,
-      {
-        user_id: userId,
-        message: message
-      }
+      payload
     );
   }
 }
