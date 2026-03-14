@@ -38,18 +38,13 @@ export class ChatWidgetComponent {
     this.inputMessage = '';
     this.loading = true;
 
-    // ============================================
-    // CHECK LOGIN STATUS
-    // ============================================
-
+    // ✅ CHECK LOGIN STATE
     let userId: number | null = null;
 
-    const token = localStorage.getItem('access_token');
+    const loggedIn = localStorage.getItem('userLoggedIn');
 
-    if (token) {
-      userId = 1; 
-      // For now assume logged-in user = 1
-      // Later we decode JWT to get actual user id
+    if (loggedIn) {
+      userId = 1; // simulate logged-in user
     }
 
     this.assistantService.sendMessage(userId, userMessage)
