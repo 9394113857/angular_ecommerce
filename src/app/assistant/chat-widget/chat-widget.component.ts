@@ -30,6 +30,7 @@ export class ChatWidgetComponent {
 
     const userMessage = this.inputMessage;
 
+    // Show user message
     this.messages.push({
       role: 'user',
       text: userMessage
@@ -38,17 +39,25 @@ export class ChatWidgetComponent {
     this.inputMessage = '';
     this.loading = true;
 
-    // ✅ CHECK LOGIN STATE
+    // ============================
+    // Detect login state
+    // ============================
+
     let userId: number | null = null;
 
-    const loggedIn = localStorage.getItem('userLoggedIn');
+    const userLoggedIn = localStorage.getItem('userLoggedIn');
 
-    if (loggedIn) {
+    if (userLoggedIn) {
       userId = 1; // simulate logged-in user
     }
 
+    // ============================
+    // Send message to assistant
+    // ============================
+
     this.assistantService.sendMessage(userId, userMessage)
       .subscribe({
+
         next: (res) => {
 
           this.messages.push({
@@ -68,7 +77,9 @@ export class ChatWidgetComponent {
 
           this.loading = false;
         }
+
       });
 
   }
+
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface ChatResponse {
@@ -14,6 +14,14 @@ export interface ChatResponse {
 })
 export class AssistantService {
 
+  // ============================================
+  // LOCAL BACKEND
+  // ============================================
+  // private BASE_URL = 'http://127.0.0.1:5000/api/v1/assistant';
+
+  // ============================================
+  // PRODUCTION BACKEND
+  // ============================================
   private BASE_URL =
     'https://assistant-service-production-4c1b.up.railway.app/api/v1/assistant';
 
@@ -21,17 +29,26 @@ export class AssistantService {
 
   sendMessage(userId: number | null, message: string): Observable<ChatResponse> {
 
+    const token = localStorage.getItem('access_token');
+
     const payload: any = {
       message: message
     };
 
-    if (userId !== null) {
+    if (userId) {
       payload.user_id = userId;
     }
 
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
     return this.http.post<ChatResponse>(
       `${this.BASE_URL}/chat`,
-      payload
+      payload,
+      { headers }
     );
+
   }
+
 }
