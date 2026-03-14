@@ -30,7 +30,6 @@ export class ChatWidgetComponent {
 
     const userMessage = this.inputMessage;
 
-    // show user message in chat
     this.messages.push({
       role: 'user',
       text: userMessage
@@ -40,9 +39,18 @@ export class ChatWidgetComponent {
     this.loading = true;
 
     // ============================================
-    // Guest Mode (no login yet)
+    // CHECK LOGIN STATUS
     // ============================================
-    const userId: number | null = null;
+
+    let userId: number | null = null;
+
+    const token = localStorage.getItem('access_token');
+
+    if (token) {
+      userId = 1; 
+      // For now assume logged-in user = 1
+      // Later we decode JWT to get actual user id
+    }
 
     this.assistantService.sendMessage(userId, userMessage)
       .subscribe({

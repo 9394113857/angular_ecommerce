@@ -14,15 +14,8 @@ export interface ChatResponse {
 })
 export class AssistantService {
 
-  // ============================================
-  // LOCAL BACKEND
-  // ============================================
-  // private BASE_URL = 'http://127.0.0.1:5000/api/v1/assistant';
-
-  // ============================================
-  // PRODUCTION BACKEND (UNCOMMENT WHEN DEPLOYED)
-  // ============================================
-  private BASE_URL = 'https://assistant-service-production-4c1b.up.railway.app/api/v1/assistant';
+  private BASE_URL =
+    'https://assistant-service-production-4c1b.up.railway.app/api/v1/assistant';
 
   constructor(private http: HttpClient) {}
 
@@ -32,8 +25,7 @@ export class AssistantService {
       message: message
     };
 
-    // Only send user_id if user logged in
-    if (userId) {
+    if (userId !== null) {
       payload.user_id = userId;
     }
 
