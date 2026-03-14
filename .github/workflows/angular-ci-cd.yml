@@ -2,7 +2,7 @@
 # 🚀 CI/CD – Angular Frontend (Vercel)
 # ============================================================
 
-name: 🚀 CI/CD – Angular Frontend (Vercel)
+name: 🚀 CI/CD – Angular Frontend (Vercel) 
 
 on:
   push:
