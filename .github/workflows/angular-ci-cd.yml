@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      LIVE_URL: https://angular-ecommerce-sitee.vercel.app/
+      LIVE_URL: https://angular-ecommerce-wheat.vercel.app/
 
     steps:
 
