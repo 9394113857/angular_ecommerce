@@ -1,0 +1,193 @@
+# Git Merge Conflict Resolution – Angular Project
+
+# File: git_merge_conflict_resolution_2026-03-14.txt
+
+# Date: 2026-03-14
+
+# Time: ~12:45 PM IST
+
+# Project: angular_ecommerce
+
+# Purpose: Fix local Git merge conflict and sync local main with stable remote main
+
+---
+
+## PROBLEM OBSERVED
+
+While pulling latest code from GitHub main branch:
+
+git pull origin main
+
+Git returned error:
+
+"Pulling is not possible because you have unmerged files."
+
+Terminal also showed:
+
+(main|MERGING)
+
+This means a merge operation had started earlier but was NOT completed.
+
+Git blocks further pull/push operations until the merge conflict is resolved or aborted.
+
+---
+
+## WHAT CAUSED THE ISSUE
+
+During git pull, Git tried to merge:
+
+Local main branch changes
+WITH
+Remote origin/main changes
+
+Both branches had modifications in the same files:
+
+.github/workflows/angular-ci-cd.yml
+src/app/services/authentication.service.ts
+
+Because both local and remote modified these files, Git could not automatically merge them.
+
+So Git created a MERGE CONFLICT and entered state:
+
+(main|MERGING)
+
+In this state:
+
+* pull is blocked
+* push is blocked
+* checkout is blocked
+
+Until conflict is resolved or merge is aborted.
+
+---
+
+## OUR REAL SITUATION
+
+Remote GitHub main branch was already:
+
+* Stable
+* Tagged release (v2.0.0)
+* Running on production server
+
+Therefore we DID NOT need local changes.
+
+Goal was simply:
+
+SYNC LOCAL REPOSITORY WITH REMOTE MAIN
+
+---
+
+## STEP 1 — ABORT THE BROKEN MERGE
+
+Command used:
+
+git merge --abort
+
+Purpose:
+Cancels the unfinished merge process and restores repository to previous clean state.
+
+After this step:
+
+(main|MERGING) → (main)
+
+---
+
+## STEP 2 — FETCH LATEST REMOTE DATA
+
+Command used:
+
+git fetch origin
+
+Purpose:
+Download latest commits and tags from GitHub without modifying local branch.
+
+Result observed:
+
+[new tag] v2.0.0 -> v2.0.0
+
+Meaning the new release tag was fetched.
+
+---
+
+## STEP 3 — FORCE LOCAL MAIN TO MATCH REMOTE MAIN
+
+Command used:
+
+git reset --hard origin/main
+
+Purpose:
+Move local main branch pointer to EXACT commit of remote origin/main.
+
+Effects:
+
+* Discards local changes
+* Removes merge conflicts
+* Makes local repo identical to GitHub
+
+Output observed:
+
+HEAD is now at 26f445e Update angular-ci-cd.yml
+
+Meaning local HEAD now points to same commit as remote.
+
+---
+
+## STEP 4 — VERIFY REPOSITORY STATE
+
+Command used:
+
+git status
+
+Output:
+
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+
+Meaning:
+
+Local main = Remote main
+Repository is clean
+No merge conflicts
+No pending commits
+
+---
+
+## FINAL STATE AFTER FIX
+
+Local main branch → synced with GitHub main
+
+Commit reference:
+
+26f445e Update angular-ci-cd.yml
+
+Repository status:
+
+Clean working tree
+No merge state
+Safe for development
+
+---
+
+## CONCLUSION / BEST PRACTICE
+
+If remote main is stable and local repo gets stuck in merge conflicts:
+
+Use the following recovery steps:
+
+git merge --abort
+git fetch origin
+git reset --hard origin/main
+
+This will:
+
+1. Cancel merge
+2. Fetch latest code
+3. Force local repo to match remote
+
+This is a common recovery method used by developers when local repo becomes inconsistent.
+
+---
+
+## END OF DOCUMENT
