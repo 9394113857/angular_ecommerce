@@ -1,0 +1,126 @@
+# =====================================================
+# 🟦 ANGULAR APP – TAGS & RELEASES DOCUMENTATION
+# =====================================================
+
+# =====================================================
+# 🔹 1. CURRENT VERSION HISTORY
+# =====================================================
+
+# Existing tags:
+
+# v1.0.0
+# → Initial Angular stable release
+# → Local build + basic integration
+
+# stable-angular-v1
+# → Intermediate stable checkpoint
+
+# v2.0.0
+# → Latest stable release
+# → Role-based auth
+# → AI assistant chatbot
+# → Product/Cart/Order flow
+# → Netlify CI/CD
+
+
+# =====================================================
+# 🔹 2. WHY CREATE NEW TAG NOW
+# =====================================================
+
+# Before making new Angular changes:
+# - We create a backup tag
+# - This ensures rollback safety
+# - Maintains production stability
+
+
+# =====================================================
+# 🔹 3. CREATE NEW TAG (NEXT VERSION)
+# =====================================================
+
+# Next version (example):
+git tag v2.1.0
+
+# Push tag to GitHub
+git push origin v2.1.0  
+
+
+# =====================================================
+# 🔹 4. CREATE RELEASE (GITHUB UI)
+# =====================================================
+
+# Go to:
+# GitHub → Angular Repo → Releases → Draft new release
+
+# Fill details:
+
+# Tag:
+v2.1.0
+
+# Title:
+Angular Ecommerce – Stable v2.1.0
+
+# Description:
+
+Angular Ecommerce – Stable v2.1.0
+
+✔ Backup release before new UI/API changes
+✔ Existing flows verified (Auth, Product, Cart, Orders)
+✔ Production build stable
+✔ Netlify deployment working
+✔ Tagged from main branch
+
+This release is created on top of tag v2.1.0.
+
+# Click: Publish Release
+
+
+# =====================================================
+# 🔹 5. AFTER THIS
+# =====================================================
+
+# Now safe to:
+# - Modify Angular code
+# - Update services (API integration)
+# - Add new UI features
+
+
+# =====================================================
+# 🔹 6. ROLLBACK (IF NEEDED)
+# =====================================================
+
+# Checkout stable version
+git checkout v2.1.0
+
+# OR reset main
+git checkout main
+git reset --hard v2.1.0
+git push origin main --force
+
+
+# =====================================================
+# 🔹 7. FUTURE VERSION FLOW
+# =====================================================
+
+# After new Angular changes:
+
+git add .
+git commit -m "angular improvements"
+git push origin main
+
+# Create next tag
+git tag v2.2.0
+git push origin v2.2.0
+
+# Then create release in GitHub UI
+
+
+# =====================================================
+# 🧠 SUMMARY
+# =====================================================
+
+# v1.0.0 → initial Angular release
+# stable-angular-v1 → checkpoint
+# v2.0.0 → major stable release
+# v2.1.0 → backup before next changes
+
+# This is standard frontend release workflow
