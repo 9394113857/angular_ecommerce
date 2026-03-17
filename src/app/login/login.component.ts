@@ -28,7 +28,6 @@ export class LoginComponent implements OnInit {
     this.titleService.setTitle('E-Comm | Login');
   }
 
-  // ✅ REQUIRED BY TEMPLATE
   redirectToSignup(): void {
     this.router.navigate(['/auth']);
   }
@@ -36,16 +35,16 @@ export class LoginComponent implements OnInit {
   loginFormhandle(form: NgForm): void {
     if (form.invalid) return;
 
-this.isLoading = true;
+    this.isLoading = true;
 
-this.authService.loginUser(form.value).subscribe({
-  next: (res) => {
-    localStorage.setItem('token', res.access_token);
+    this.authService.loginUser(form.value).subscribe({
+      next: (res) => {
+        localStorage.setItem('token', res.access_token);
 
-    this.eventTracking.trackEvent({
-      event_type: 'login_success',
-      metadata: { role: res.role }
-    });
+        this.eventTracking.trackEvent({
+          event_type: 'login_success',
+          metadata: { role: res.role }
+        });
 
         if (res.role === 'seller') {
           localStorage.setItem('sellerLoggedIn', res.userId);
@@ -63,34 +62,32 @@ this.authService.loginUser(form.value).subscribe({
       },
       error: () => {
         this.eventTracking.trackEvent({
-  event_type: 'login_failed'
-});
+          event_type: 'login_failed'
+        });
 
-        this.loginFailed = 'Invalid credentials';
+        this.loginFailed = 'Invalid email or password';
         this.isLoading = false;
       }
     });
   }
 
   syncLocalCart(): void {
-  const local = localStorage.getItem('localCart');
-  if (!local) return;
+    const local = localStorage.getItem('localCart');
+    if (!local) return;
 
-  const items: Product[] = JSON.parse(local);
+    const items: Product[] = JSON.parse(local);
 
-  items.forEach(p => {
-    this.cartService.addToCart({
-      product_id: p.id,
-      variant_id: 1,
-      name: p.name,
-      color: 'Black',
-      price: p.price,
-      quantity: 1
-    }).subscribe();
-  });
+    items.forEach(p => {
+      this.cartService.addToCart({
+        product_id: p.id,
+        variant_id: 1,
+        name: p.name,
+        color: 'Black',
+        price: p.price,
+        quantity: 1
+      }).subscribe();
+    });
 
-  localStorage.removeItem('localCart');
+    localStorage.removeItem('localCart');
+  }
 }
-
-
-}//End of LoginComponent class

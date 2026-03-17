@@ -29,6 +29,9 @@ export class AuthenticationComponent implements OnInit {
     this.authService.notAllowedAuth();
   }
 
+  // ================================
+  // REGISTER
+  // ================================
   registerFormhandle(form: NgForm) {
     const payload: SignUp = {
       email: form.value.email,
@@ -39,18 +42,22 @@ export class AuthenticationComponent implements OnInit {
     this.isLoading = true;
 
     this.eventTracking.trackEvent({
-  event_type: 'signup_success',
-  metadata: { role: payload.role_type }
-});
-
+      event_type: 'signup_success',
+      metadata: { role: payload.role_type }
+    });
 
     this.authService.userSignup(payload).subscribe({
-      
       next: () => {
         alert('Registration successful');
         this.router.navigate(['/login']);
       },
-      error: () => alert('Registration failed'),
+      error: (err) => {
+        if (err.status === 400) {
+          alert('User already exists');
+        } else {
+          alert('Registration failed');
+        }
+      },
       complete: () => {
         this.isLoading = false;
         this.registerForm?.reset();
@@ -58,6 +65,9 @@ export class AuthenticationComponent implements OnInit {
     });
   }
 
+  // ================================
+  // LOGIN
+  // ================================
   loginFormhandle(form: NgForm) {
     this.isLoading = true;
 
@@ -77,7 +87,7 @@ export class AuthenticationComponent implements OnInit {
         }
       },
       error: () => {
-        this.loginFailed = 'Invalid credentials';
+        this.loginFailed = 'Invalid email or password';
         setTimeout(() => (this.loginFailed = ''), 2000);
       },
       complete: () => (this.isLoading = false)

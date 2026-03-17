@@ -1,3 +1,7 @@
+// =====================================================
+// 🟦 AUTH SERVICE – ANGULAR (API + STATE MANAGEMENT)
+// =====================================================
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -16,14 +20,14 @@ export class AuthenticationService {
   //   'http://127.0.0.1:5001/api/v1/auth/angularUser';
 
   // ================================
-  // 🚀 RAILWAY BACKEND (ACTIVE NOW)
+  // 🚀 RAILWAY BACKEND (ACTIVE)
   // ================================
   private readonly RAILWAY_BASE_URL =
     'https://backend-auth-service-production-9024.up.railway.app/api/v1/auth/angularUser';
 
-  // ✅ CURRENT ACTIVE BASE URL
   private readonly baseUrl = this.RAILWAY_BASE_URL;
-  // ================================
+
+  // Auth state
   authState$ = new BehaviorSubject<'default' | 'user' | 'seller'>('default');
 
   constructor(
@@ -33,9 +37,7 @@ export class AuthenticationService {
     this.initAuthState();
   }
 
-  // ================================
-  // 🔐 INIT AUTH STATE
-  // ================================
+  // INIT AUTH STATE
   private initAuthState() {
     if (localStorage.getItem('sellerLoggedIn')) {
       this.authState$.next('seller');
@@ -46,9 +48,7 @@ export class AuthenticationService {
     }
   }
 
-  // ================================
-  // 🚫 BLOCK LOGIN / REGISTER
-  // ================================
+  // BLOCK AUTH IF LOGGED IN
   notAllowedAuth() {
     if (
       localStorage.getItem('sellerLoggedIn') ||
@@ -58,9 +58,7 @@ export class AuthenticationService {
     }
   }
 
-  // ================================
-  // 📝 USER SIGNUP
-  // ================================
+  // REGISTER
   userSignup(data: SignUp) {
     return this.http.post(`${this.baseUrl}/register`, {
       email: data.email,
@@ -69,23 +67,17 @@ export class AuthenticationService {
     });
   }
 
-  // ================================
-  // 🔑 LOGIN
-  // ================================
+  // LOGIN
   loginUser(data: Login) {
     return this.http.post<any>(`${this.baseUrl}/login`, data);
   }
 
-  // ================================
-  // 🔄 SET AUTH STATE
-  // ================================
+  // SET AUTH STATE
   setAuthState(role: 'user' | 'seller') {
     this.authState$.next(role);
   }
 
-  // ================================
-  // 🚪 LOGOUT
-  // ================================
+  // LOGOUT
   logout() {
     localStorage.clear();
     this.authState$.next('default');
