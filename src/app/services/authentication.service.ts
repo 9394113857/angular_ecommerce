@@ -23,7 +23,7 @@ export class AuthenticationService {
   // 🚀 RAILWAY BACKEND (ACTIVE)
   // ================================
   private readonly RAILWAY_BASE_URL =
-    'https://backend-auth-service-production-9024.up.railway.app/api/v1/auth/angularUser';
+    'https://backend-auth-service-production-7671.up.railway.app/api/v1/auth/angularUser';
 
   private readonly baseUrl = this.RAILWAY_BASE_URL;
 
