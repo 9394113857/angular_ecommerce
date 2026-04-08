@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
 
     // 🔐 1) Auth Service
     this.http.get(
-      'https://backend-auth-service-production-7671.up.railway.app'
+      'https://backend-auth-service-ks6f.onrender.com'
     ).subscribe({ error: () => {} });
 
     // 📦 2) Product Service
