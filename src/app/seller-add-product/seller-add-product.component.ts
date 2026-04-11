@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ProductService } from '../services/product.service';
-import { EventTrackingService } from '../services/event-tracking.service';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
@@ -16,24 +15,29 @@ export class SellerAddProductComponent {
   constructor(
     private productService: ProductService,
     private router: Router,
-    private titleService: Title,
-    private eventTracking: EventTrackingService
+    private titleService: Title
   ) {
     this.titleService.setTitle('E-Comm | Add Product');
   }
 
   submit(form: any): void {
+    // Simple validation check before submitting the form
+    if (!form.name || !form.price) {
+      alert('Name and price are required');
+      return;
+    }
+
+    // Start loading animation
     this.isLoading = true;
 
-    
-
-    
-
+    // Call the service to add the product
     this.productService.addProduct(form).subscribe({
       next: (res) => {
+        // Navigate to the next page to add stock
         this.router.navigate(['/seller-add-stock', res.id]);
       },
       error: () => {
+        // Handle error and stop loading animation
         alert('Failed to add product');
         this.isLoading = false;
       }
