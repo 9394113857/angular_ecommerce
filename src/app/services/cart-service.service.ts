@@ -33,7 +33,7 @@ export class CartServiceService {
   // 🚀 RAILWAY BACKEND (ACTIVE)
   // =====================================
   private readonly RAILWAY_BASE_URL =
-    'https://backend-cart-order-service-production.up.railway.app/api';
+    'https://backend-cart-order-service-q6qh.onrender.com/api';
 
   private readonly baseUrl = this.RAILWAY_BASE_URL;
 
