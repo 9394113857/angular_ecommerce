@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
     // 🛒 3) Cart / Order Service
     setTimeout(() => {
       this.http.get(
-        'https://backend-cart-order-service-production.up.railway.app'
+        'https://backend-cart-order-service-q6qh.onrender.com'
       ).subscribe({ error: () => {} });
     }, 1000);
 
