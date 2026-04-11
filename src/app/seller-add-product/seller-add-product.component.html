@@ -6,10 +6,19 @@
 
   <form #f="ngForm" (ngSubmit)="submit(f.value)">
 
+    <!-- Product Name (Required) -->
     <input name="name" ngModel placeholder="Product Name" required />
-    <input name="price" ngModel type="number" placeholder="Price" required />
+
+    <!-- Price (Required, Positive Number) -->
+    <input name="price" ngModel type="number" placeholder="Price" required min="0" />
+
+    <!-- Category (Optional) -->
     <input name="category" ngModel placeholder="Category" />
+
+    <!-- Image URL (Optional) -->
     <input name="image" ngModel placeholder="Image URL" />
+
+    <!-- Description (Optional) -->
     <textarea name="description" ngModel placeholder="Description"></textarea>
 
     <button type="submit">Next → Add Stock</button>
