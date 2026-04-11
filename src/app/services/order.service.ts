@@ -18,7 +18,7 @@ export class OrderService {
   // 🚀 RAILWAY BACKEND (ACTIVE)
   // =====================================
   private readonly RAILWAY_BASE_URL =
-    'https://backend-cart-order-service-production.up.railway.app/api/orders';
+    'https://backend-cart-order-service-q6qh.onrender.com/api/orders';
 
   private readonly baseUrl = this.RAILWAY_BASE_URL;
 
