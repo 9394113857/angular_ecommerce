@@ -18,17 +18,17 @@ export class ProductService {
   //   'http://127.0.0.1:5002/api/v1/products';
 
   // =====================================
-  // 🚀 RAILWAY BACKEND (ACTIVE)
+  // 🚀 RENDER BACKEND (ACTIVE)
   // =====================================
-  private readonly RAILWAY_BASE_URL =
+  private readonly RENDER_BASE_URL =
     'https://backend-product-service-ncl2.onrender.com/api/angularProduct';
 
-  private readonly RAILWAY_SELLER_URL =
+  private readonly RENDER_SELLER_URL =
     'https://backend-product-service-ncl2.onrender.com/api/v1/products';
 
   // ✅ ACTIVE URLS
-  private readonly baseUrl = this.RAILWAY_BASE_URL;
-  private readonly sellerUrl = this.RAILWAY_SELLER_URL;
+  private readonly baseUrl = this.RENDER_BASE_URL;
+  private readonly sellerUrl = this.RENDER_SELLER_URL;
 
   constructor(private http: HttpClient) {}
 
