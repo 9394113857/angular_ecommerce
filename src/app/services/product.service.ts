@@ -9,10 +9,13 @@ import { Product } from 'src/data.type';
 export class ProductService {
 
   // 🚀 RENDER BACKEND (ACTIVE URL)
-  private readonly RENDER_BASE_URL = 'https://backend-product-service-ncl2.onrender.com/api/angularProduct';
+  //  private readonly RENDER_BASE_URL = 'https://backend-product-service-ncl2.onrender.com/api/angularProduct';
+
+  // 🚀 LOCAL BACKEND (ACTIVE URL)
+  private readonly LOCAL_BASE_URL = 'http://127.0.0.1:5002/api/angularProduct';
 
   // Seller endpoint
-  private readonly sellerUrl = `${this.RENDER_BASE_URL}/v1/products`;
+  private readonly sellerUrl = `${this.LOCAL_BASE_URL}/v1/products`;
 
   constructor(private http: HttpClient) {}
 
@@ -20,14 +23,14 @@ export class ProductService {
   // 📦 GET ALL PRODUCTS
   // =========================
   getProductList(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.RENDER_BASE_URL}/get`);
+    return this.http.get<Product[]>(`${this.LOCAL_BASE_URL}/get`);
   }
 
   // =========================
   // 🔍 GET SINGLE PRODUCT
   // =========================
   getSingleProduct(id: string): Observable<Product> {
-    return this.http.get<Product>(`${this.RENDER_BASE_URL}/get/${id}`);
+    return this.http.get<Product>(`${this.LOCAL_BASE_URL}/get/${id}`);
   }
 
   // =========================
