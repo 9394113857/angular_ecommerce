@@ -1,0 +1,8 @@
+✅ STEP-BY-STEP (DO EXACTLY)
+🟢 STEP 1 — Checkout that commit locally
+git checkout 90068ac9c08679544f7f9be798a2d28879bfb1a9
+🟢 STEP 2 — Move main branch to this commit
+git checkout main
+git reset --hard 90068ac9c08679544f7f9be798a2d28879bfb1a9
+🟢 STEP 3 — FORCE PUSH (CRITICAL)
+git push --force origin main
