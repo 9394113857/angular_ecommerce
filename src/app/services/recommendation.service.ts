@@ -2,34 +2,34 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface Recommendation {
+  product_id: number;
+  score: number;
+  rank: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class RecommendationService {
 
-  // =====================================
-  // 🌱 LOCAL ML RECOMMENDATION SERVICE (COMMENTED)
-  // =====================================
-  // private readonly LOCAL_BASE_URL =
-  //   'http://127.0.0.1:5005/api';
-
-  // =====================================
-  // 🚀 PRODUCTION ML RECOMMENDATION SERVICE (RENDER)
-  // =====================================
-  private readonly RAILWAY_BASE_URL =
+  private readonly BASE_URL =
     'https://backend-ml-recommendation-service-huu6.onrender.com/api';
-
-  // ✅ ACTIVE BASE URL
-  private readonly baseUrl = this.RAILWAY_BASE_URL;
 
   constructor(private http: HttpClient) {}
 
-  // ==============================
-  // 🤖 GET RECOMMENDATIONS
-  // ==============================
-  getRecommendations(userId: number): Observable<any[]> {
-    return this.http.get<any[]>(
-      `${this.baseUrl}/recommendations/${userId}`
+  // =====================================================
+  // 🔥 GET RECOMMENDATIONS
+  // =====================================================
+  getRecommendations(): Observable<Recommendation[]> {
+
+    const user = localStorage.getItem('userLoggedIn');
+    if (!user) return new Observable();
+
+    const userId = JSON.parse(user).id;
+
+    return this.http.get<Recommendation[]>(
+      `${this.BASE_URL}/recommendations/${userId}`
     );
   }
 }
