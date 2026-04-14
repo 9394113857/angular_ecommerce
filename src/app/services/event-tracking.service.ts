@@ -1,3 +1,7 @@
+// =====================================================
+// 📦 EVENT TRACKING SERVICE (FINAL ML ALIGNED)
+// =====================================================
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -6,47 +10,51 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EventTrackingService {
 
-  // =====================================================
-  // 🌱 LOCAL DEVELOPMENT ML EVENTS SERVICE (COMMENTED)
-  // =====================================================
-  // private readonly LOCAL_BASE_URL =
-  //   'http://127.0.0.1:5004/api/events';
-
-  // =====================================================
-  // 🚀 PRODUCTION ML EVENTS SERVICE (RAILWAY) ✅ ACTIVE
-  // =====================================================
-  private readonly RAILWAY_BASE_URL =
+  // 🚀 ML EVENTS SERVICE (RENDER / RAILWAY)
+  private readonly BASE_URL =
     'https://backend-ml-events-service-production.up.railway.app/api/events';
-
-  // ✅ ACTIVE BASE URL
-  private readonly baseUrl = this.RAILWAY_BASE_URL;
 
   constructor(private http: HttpClient) {}
 
   // =====================================================
-  // 📊 TRACK EVENT (NON-BLOCKING)
+  // 📊 TRACK EVENT (STRICT + ML SAFE)
   // =====================================================
   trackEvent(event: {
-    event_type: string;
-    object_type?: string;
-    object_id?: string;
-    metadata?: any;
+    event_type: 'view_product' | 'add_to_cart' | 'checkout' | 'remove_from_cart';
+    object_id?: number;
+    event_metadata?: any;
   }) {
+
+    const userId = this.getUserId();
+
+    // 🔴 CRITICAL: Skip if no user
+    if (!userId) return;
+
     const payload = {
-      ...event,
+      user_id: userId,
       session_id: this.getSessionId(),
-      user_id: this.getUserId()
+
+      // 🔴 MUST MATCH PIPELINE
+      event_type: event.event_type,
+      object_type: 'product',
+
+      // 🔴 Ensure number
+      object_id: event.object_id,
+
+      // 🔴 Match backend field
+      event_metadata: event.event_metadata || {}
     };
 
-    // 🔥 Fire & forget (never block UI)
-    this.http.post(this.baseUrl, payload).subscribe({
-      error: () => {} // silent fail by design
+    // 🔥 Fire & forget
+    this.http.post(this.BASE_URL, payload).subscribe({
+      error: () => {} // silent fail
     });
   }
 
   // =====================================================
   // 🔧 HELPERS
   // =====================================================
+
   private getUserId(): number | null {
     const user = localStorage.getItem('userLoggedIn');
     return user ? JSON.parse(user).id : null;
@@ -54,10 +62,12 @@ export class EventTrackingService {
 
   private getSessionId(): string {
     let sessionId = localStorage.getItem('session_id');
+
     if (!sessionId) {
       sessionId = crypto.randomUUID();
       localStorage.setItem('session_id', sessionId);
     }
+
     return sessionId;
   }
 }
