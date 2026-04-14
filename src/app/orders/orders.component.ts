@@ -35,7 +35,7 @@ export class OrdersComponent implements OnInit {
     this.isLoading = true;
 
     this.orderService.getMyOrders().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.orders = data || [];
         this.isLoading = false;
       },
@@ -61,9 +61,9 @@ export class OrdersComponent implements OnInit {
   }
 
   // ==========================
-  // CANCEL ORDER (🔥 FINAL WORKING)
+  // CANCEL ORDER (🔥 FINAL FIX)
   // ==========================
-  cancelOrder(order: Order): void {
+  cancelOrder(order: any): void {
 
     if (!confirm('Are you sure you want to cancel this order?')) return;
 
@@ -71,13 +71,35 @@ export class OrdersComponent implements OnInit {
 
       next: () => {
 
-        console.log('🔥 Cancel success, sending ML event');
+        console.log('🔥 Cancel success, sending ML events');
 
-        // 🔥 ONLY THIS MATTERS
-        this.eventTracking.trackEvent({
-          event_type: 'order_cancelled',   // ✅ MUST MATCH PIPELINE
-          object_id: order.order_id        // ✅ simple + safe
-        });
+        // =====================================================
+        // 🔥 CRITICAL FIX: SEND PRODUCT LEVEL EVENTS
+        // =====================================================
+        if (order.items && order.items.length > 0) {
+
+          order.items.forEach((item: any) => {
+            this.eventTracking.trackEvent({
+              event_type: 'order_cancelled',
+              object_id: item.product_id,   // ✅ PRODUCT ID (VERY IMPORTANT)
+              object_type: 'product',
+              event_metadata: {
+                quantity: item.quantity,
+                price: item.price
+              }
+            });
+          });
+
+        } else {
+          // fallback (if items not present)
+          console.warn('⚠️ No items found, fallback event');
+
+          this.eventTracking.trackEvent({
+            event_type: 'order_cancelled',
+            object_id: order.order_id,   // fallback only
+            object_type: 'product'
+          });
+        }
 
         this.loadOrders();
       },
