@@ -23,7 +23,6 @@ export class OrdersComponent implements OnInit {
   ngOnInit(): void {
     this.loadOrders();
 
-    // optional UI tracking
     this.eventTracking.trackEvent({
       event_type: 'orders_page_view'
     });
@@ -62,7 +61,7 @@ export class OrdersComponent implements OnInit {
   }
 
   // ==========================
-  // CANCEL ORDER (FINAL SAFE VERSION)
+  // CANCEL ORDER (🔥 FINAL WORKING)
   // ==========================
   cancelOrder(order: Order): void {
 
@@ -72,19 +71,19 @@ export class OrdersComponent implements OnInit {
 
       next: () => {
 
-        // 🔥 ML EVENT (SAFE - NO STRUCTURE DEPENDENCY)
+        console.log('🔥 Cancel success, sending ML event');
+
+        // 🔥 ONLY THIS MATTERS
         this.eventTracking.trackEvent({
-          event_type: 'order_cancelled',
-          object_id: order.order_id,
-          event_metadata: {
-            total_price: (order as any).total_price || 0
-          }
+          event_type: 'order_cancelled',   // ✅ MUST MATCH PIPELINE
+          object_id: order.order_id        // ✅ simple + safe
         });
 
         this.loadOrders();
       },
 
-      error: () => {
+      error: (err) => {
+        console.error('Cancel failed', err);
         alert('Cancel failed');
       }
     });
