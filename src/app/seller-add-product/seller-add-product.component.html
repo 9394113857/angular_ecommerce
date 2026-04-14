@@ -1,27 +1,72 @@
+<!-- ===================================================== -->
+<!-- 🟦 LOADING COMPONENT -->
+<!-- ===================================================== -->
 <app-loading [isLoading]="isLoading"></app-loading>
 
+<!-- ===================================================== -->
+<!-- 🟩 FORM -->
+<!-- ===================================================== -->
 <div class="container" *ngIf="!isLoading">
 
   <h2>Add Product</h2>
 
   <form #f="ngForm" (ngSubmit)="submit(f.value)">
 
-    <!-- Product Name (Required) -->
-    <input name="name" ngModel placeholder="Product Name" required />
+    <!-- ========================= -->
+    <!-- 🟦 Product Name -->
+    <!-- ========================= -->
+    <input 
+      name="name" 
+      ngModel 
+      placeholder="Product Name" 
+      required 
+    />
 
-    <!-- Price (Required, Positive Number) -->
-    <input name="price" ngModel type="number" placeholder="Price" required min="0" />
+    <!-- ========================= -->
+    <!-- 🟩 Price -->
+    <!-- ========================= -->
+    <input 
+      name="price" 
+      ngModel 
+      type="number" 
+      placeholder="Price" 
+      required 
+      min="0" 
+    />
 
-    <!-- Category (Optional) -->
-    <input name="category" ngModel placeholder="Category" />
+    <!-- ========================= -->
+    <!-- 🟨 Category -->
+    <!-- ========================= -->
+    <input 
+      name="category" 
+      ngModel 
+      placeholder="Category" 
+    />
 
-    <!-- Image URL (Optional) -->
-    <input name="image" ngModel placeholder="Image URL" />
+    <!-- ========================= -->
+    <!-- 🟥 Image URL -->
+    <!-- ========================= -->
+    <input 
+      name="image" 
+      ngModel 
+      placeholder="Image URL (https://...)" 
+    />
 
-    <!-- Description (Optional) -->
-    <textarea name="description" ngModel placeholder="Description"></textarea>
+    <!-- ========================= -->
+    <!-- 🟪 Description -->
+    <!-- ========================= -->
+    <textarea 
+      name="description" 
+      ngModel 
+      placeholder="Description">
+    </textarea>
 
-    <button type="submit">Next → Add Stock</button>
+    <!-- ========================= -->
+    <!-- 🚀 SUBMIT BUTTON -->
+    <!-- ========================= -->
+    <button type="submit">
+      Next → Add Stock
+    </button>
 
   </form>
 
