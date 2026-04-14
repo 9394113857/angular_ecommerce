@@ -1,3 +1,7 @@
+// =====================================================
+// 🟦 SELLER ADD PRODUCT COMPONENT – FINAL VERSION
+// =====================================================
+
 import { Component } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import { Router } from '@angular/router';
@@ -20,24 +24,42 @@ export class SellerAddProductComponent {
     this.titleService.setTitle('E-Comm | Add Product');
   }
 
+  // =====================================================
+  // 🚀 SUBMIT FORM
+  // =====================================================
   submit(form: any): void {
-    // Simple validation check before submitting the form
+
+    console.log("📥 RAW FORM:", form);
+
+    // 🔥 Validation
     if (!form.name || !form.price) {
       alert('Name and price are required');
       return;
     }
 
-    // Start loading animation
+    // 🔥 Ensure correct payload structure
+    const payload = {
+      name: form.name,
+      price: Number(form.price), // ensure number
+      category: form.category || '',
+      description: form.description || '',
+      image: form.image || '' // 🔥 aligned with backend
+    };
+
+    console.log("📦 FINAL PAYLOAD:", payload);
+
     this.isLoading = true;
 
-    // Call the service to add the product
-    this.productService.addProduct(form).subscribe({
+    this.productService.addProduct(payload).subscribe({
       next: (res) => {
-        // Navigate to the next page to add stock
+        console.log("✅ PRODUCT CREATED:", res);
+
+        // Navigate to add stock page
         this.router.navigate(['/seller-add-stock', res.id]);
       },
-      error: () => {
-        // Handle error and stop loading animation
+      error: (err) => {
+        console.error("❌ ADD PRODUCT ERROR:", err);
+
         alert('Failed to add product');
         this.isLoading = false;
       }
