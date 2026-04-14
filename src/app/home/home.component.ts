@@ -110,7 +110,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             }
           });
         }
-      },
+      }, 
 
       error: (err) => {
         console.error('❌ Failed to load recommendations', err);
