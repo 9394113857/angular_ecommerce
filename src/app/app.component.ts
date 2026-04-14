@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
     // 🤖 5) ML Recommendation Service
     setTimeout(() => {
       this.http.get(
-        'https://backend-ml-recommendation-service-production.up.railway.app'
+        'https://backend-ml-recommendation-service-huu6.onrender.com'
       ).subscribe({ error: () => {} });
     }, 2000);
 
