@@ -1,5 +1,5 @@
 // =====================================================
-// 📦 EVENT TRACKING SERVICE (ULTIMATE STABLE VERSION)
+// 📦 EVENT TRACKING SERVICE (FINAL WORKING VERSION)
 // =====================================================
 
 import { Injectable } from '@angular/core';
@@ -10,13 +10,14 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EventTrackingService {
 
+  // ✅ FIXED: Correct API endpoint
   private readonly BASE_URL =
-    'https://backend-ml-events-service-ba9v.onrender.com';
+    'https://backend-ml-events-service-ba9v.onrender.com/api/events';
 
   constructor(private http: HttpClient) {}
 
   // =====================================================
-  // 📊 TRACK EVENT (FULLY FLEXIBLE - NO BUILD ERRORS)
+  // 📊 TRACK EVENT
   // =====================================================
   trackEvent(event: any) {
 
@@ -34,25 +35,27 @@ export class EventTrackingService {
       user_id: userId,
       session_id: this.getSessionId(),
 
-      // ✅ Accept any event type
       event_type: event.event_type || 'unknown',
 
-      // ✅ Only assign for ML events
       object_type: ML_EVENTS.includes(event.event_type)
         ? 'product'
         : null,
 
-      // ✅ Convert safely to number
       object_id: event.object_id
         ? Number(event.object_id)
         : null,
 
-      // ✅ Support BOTH metadata formats
       event_metadata: event.event_metadata || event.metadata || {}
     };
 
+    // 🔥 CORRECT API CALL
     this.http.post(this.BASE_URL, payload).subscribe({
-      error: () => {}
+      next: () => {
+        console.log('✅ Event sent:', payload); // optional debug
+      },
+      error: (err) => {
+        console.error('❌ Event error:', err); // temporary debug
+      }
     });
   }
 
