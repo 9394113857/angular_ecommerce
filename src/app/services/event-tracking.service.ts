@@ -1,5 +1,5 @@
 // =====================================================
-// 📦 EVENT TRACKING SERVICE (FINAL STABLE + ML READY)
+// 📦 EVENT TRACKING SERVICE (ULTIMATE STABLE VERSION)
 // =====================================================
 
 import { Injectable } from '@angular/core';
@@ -10,31 +10,19 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EventTrackingService {
 
-  // =====================================================
-  // 🚀 ML EVENTS SERVICE (RAILWAY / RENDER)
-  // =====================================================
   private readonly BASE_URL =
     'https://backend-ml-events-service-production.up.railway.app/api/events';
 
   constructor(private http: HttpClient) {}
 
   // =====================================================
-  // 📊 TRACK EVENT (FINAL VERSION)
+  // 📊 TRACK EVENT (FULLY FLEXIBLE - NO BUILD ERRORS)
   // =====================================================
-  trackEvent(event: {
-    event_type: string;          // ✅ allow ALL events (fix build errors)
-    object_id?: number;          // ✅ must be number (no toString)
-    event_metadata?: any;
-  }) {
+  trackEvent(event: any) {
 
     const userId = this.getUserId();
-
-    // 🔴 Skip if user not logged (required for ML)
     if (!userId) return;
 
-    // =====================================================
-    // 🎯 ONLY THESE EVENTS USED BY ML PIPELINE
-    // =====================================================
     const ML_EVENTS = [
       'view_product',
       'add_to_cart',
@@ -46,29 +34,30 @@ export class EventTrackingService {
       user_id: userId,
       session_id: this.getSessionId(),
 
-      // ✅ Allow any event (no Angular build break)
-      event_type: event.event_type,
+      // ✅ Accept any event type
+      event_type: event.event_type || 'unknown',
 
-      // ✅ Only ML events tagged for pipeline
+      // ✅ Only assign for ML events
       object_type: ML_EVENTS.includes(event.event_type)
         ? 'product'
         : null,
 
-      // ✅ Always number (IMPORTANT)
-      object_id: event.object_id,
+      // ✅ Convert safely to number
+      object_id: event.object_id
+        ? Number(event.object_id)
+        : null,
 
-      // ✅ Match backend field name
-      event_metadata: event.event_metadata || {}
+      // ✅ Support BOTH metadata formats
+      event_metadata: event.event_metadata || event.metadata || {}
     };
 
-    // 🔥 Fire & forget (non-blocking UI)
     this.http.post(this.BASE_URL, payload).subscribe({
       error: () => {}
     });
   }
 
   // =====================================================
-  // 🔧 HELPERS   
+  // 🔧 HELPERS
   // =====================================================
 
   private getUserId(): number | null {
