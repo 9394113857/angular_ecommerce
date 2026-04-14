@@ -23,7 +23,7 @@ export class OrdersComponent implements OnInit {
   ngOnInit(): void {
     this.loadOrders();
 
-    // 🔹 Non-ML event (just tracking UI)
+    // optional UI tracking
     this.eventTracking.trackEvent({
       event_type: 'orders_page_view'
     });
@@ -55,15 +55,14 @@ export class OrdersComponent implements OnInit {
       state: { order }
     });
 
-    // 🔹 Optional event (not used in ML)
     this.eventTracking.trackEvent({
       event_type: 'order_view',
-      object_id: order.order_id   // ✅ FIXED (no toString)
+      object_id: order.order_id
     });
   }
 
   // ==========================
-  // CANCEL ORDER (🔥 MAIN PART)
+  // CANCEL ORDER (FINAL FIX)
   // ==========================
   cancelOrder(order: Order): void {
 
@@ -73,19 +72,16 @@ export class OrdersComponent implements OnInit {
 
       next: () => {
 
-        // 🔥 ML EVENT TRACKING (CRITICAL)
-        order.items.forEach((item: any) => {
-          this.eventTracking.trackEvent({
-            event_type: 'order_cancelled',     // ✅ ML EVENT
-            object_id: item.product_id,        // ✅ product-level tracking
-            event_metadata: {
-              quantity: item.quantity,
-              price: item.price
-            }
-          });
+        // 🔥 ML EVENT (FINAL FIXED VERSION)
+        this.eventTracking.trackEvent({
+          event_type: 'order_cancelled',
+          object_id: order.product_id,   // ✅ FIX HERE
+          event_metadata: {
+            quantity: order.quantity,
+            price: order.price
+          }
         });
 
-        // reload updated orders
         this.loadOrders();
       },
 
