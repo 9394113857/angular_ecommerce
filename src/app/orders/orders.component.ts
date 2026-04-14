@@ -62,7 +62,7 @@ export class OrdersComponent implements OnInit {
   }
 
   // ==========================
-  // CANCEL ORDER (FINAL FIX)
+  // CANCEL ORDER (FINAL SAFE VERSION)
   // ==========================
   cancelOrder(order: Order): void {
 
@@ -72,13 +72,12 @@ export class OrdersComponent implements OnInit {
 
       next: () => {
 
-        // 🔥 ML EVENT (FINAL FIXED VERSION)
+        // 🔥 ML EVENT (SAFE - NO STRUCTURE DEPENDENCY)
         this.eventTracking.trackEvent({
           event_type: 'order_cancelled',
-          object_id: order.product_id,   // ✅ FIX HERE
+          object_id: order.order_id,
           event_metadata: {
-            quantity: order.quantity,
-            price: order.price
+            total_price: (order as any).total_price || 0
           }
         });
 
