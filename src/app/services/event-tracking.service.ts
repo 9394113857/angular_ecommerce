@@ -68,7 +68,7 @@ export class EventTrackingService {
   }
 
   // =====================================================
-  // 🔧 HELPERS
+  // 🔧 HELPERS   
   // =====================================================
 
   private getUserId(): number | null {
