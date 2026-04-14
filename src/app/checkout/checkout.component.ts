@@ -35,9 +35,6 @@ export class CheckoutComponent implements OnInit {
     this.loadCart();
   }
 
-  // ==========================
-  // LOAD CART
-  // ==========================
   loadCart(): void {
     this.isLoading = true;
 
@@ -56,9 +53,6 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
-  // ==========================
-  // PLACE ORDER
-  // ==========================
   placeOrder(): void {
 
     if (this.checkoutForm.invalid || this.cartItems.length === 0) return;
@@ -74,13 +68,11 @@ export class CheckoutComponent implements OnInit {
 
       next: () => {
 
-        // =====================================================
-        // 🔥 ML EVENT TRACKING (FINAL CORRECT LOGIC)
-        // =====================================================
+        // 🔥 ML EVENT TRACKING (FIXED)
         this.cartItems.forEach(item => {
           this.eventTracking.trackEvent({
             event_type: 'checkout',
-            object_id: item.productId,
+            object_id: item.product_id,  // ✅ FIX HERE
             event_metadata: {
               quantity: item.quantity,
               price: item.price
@@ -88,10 +80,7 @@ export class CheckoutComponent implements OnInit {
           });
         });
 
-        // cart cleared on backend
         this.cartService.cartChanged.emit(0);
-
-        // redirect to orders page
         this.router.navigate(['/orders']);
       },
 
