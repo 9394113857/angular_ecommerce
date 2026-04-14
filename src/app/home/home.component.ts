@@ -20,7 +20,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   recommendedProducts: Product[] = [];
   showRecommendations = false;
 
-  // SLIDER
   slidePosition = 0;
 
   popularProduct: string[] = [
@@ -46,13 +45,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.startAutoplay();
     this.loadProducts();
 
-  this.eventTracking.trackEvent({
-  event_type: 'home_page_view'
-});
-
-
-
-}
+    this.eventTracking.trackEvent({
+      event_type: 'home_page_view'
+    });
+  }
 
   ngOnDestroy(): void {
     clearInterval(this.autoplayInterval);
@@ -89,37 +85,36 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  // =====================================================
+  // 🔥 FINAL FIXED METHOD
+  // =====================================================
   loadRecommendations(): void {
-    const user = localStorage.getItem('userLoggedIn');
-    if (!user) return;
 
-    const userId = JSON.parse(user).id;
+    this.recoService.getRecommendations().subscribe({
+      next: (recos) => {
 
-    this.recoService.getRecommendations(userId).subscribe(recos => {
-      this.eventTracking.trackEvent({
-  event_type: 'recommendations_loaded'
-});
+        console.log('🔥 RECOMMENDATIONS API:', recos);
 
-      this.recommendedProducts = this.productData.filter(p =>
-        recos.some((r: any) => r.product_id === p.id)
-      );
+        this.recommendedProducts = this.productData.filter(p =>
+          recos.some((r: any) => r.product_id === p.id)
+        );
 
-      this.showRecommendations = this.recommendedProducts.length > 0;
+        this.showRecommendations = this.recommendedProducts.length > 0;
 
-      if (this.showRecommendations) {
-        // 🔥 ML EVENT — RECOMMENDATIONS SHOWN
-        this.eventTracking.trackEvent({
-          event_type: 'recommendations_shown',
-          object_type: 'product',
-          metadata: {
-            recommended_count: this.recommendedProducts.length
-          }
-        });
+        if (this.showRecommendations) {
+          this.eventTracking.trackEvent({
+            event_type: 'recommendations_shown',
+            object_type: 'product',
+            metadata: {
+              recommended_count: this.recommendedProducts.length
+            }
+          });
+        }
+      },
+
+      error: (err) => {
+        console.error('❌ Failed to load recommendations', err);
       }
     });
-
-    
-
-
-  }// laodRecommendations
+  }
 }
