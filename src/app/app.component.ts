@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
     // 📊 4) ML Events Service
     setTimeout(() => {
       this.http.get(
-        'https://backend-ml-events-service-production.up.railway.app'
+        'https://backend-ml-events-service-ba9v.onrender.com'
       ).subscribe({ error: () => {} });
     }, 1500);
 
