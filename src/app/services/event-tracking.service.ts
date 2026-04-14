@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
 export class EventTrackingService {
 
   private readonly BASE_URL =
-    'https://backend-ml-events-service-production.up.railway.app/api/events';
+    'https://backend-ml-events-service-ba9v.onrender.com';
 
   constructor(private http: HttpClient) {}
 
