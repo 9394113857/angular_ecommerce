@@ -60,13 +60,8 @@ export class CheckoutComponent implements OnInit {
   // PLACE ORDER
   // ==========================
   placeOrder(): void {
+
     if (this.checkoutForm.invalid || this.cartItems.length === 0) return;
-
-    this.eventTracking.trackEvent({
-  event_type: 'order_placed_attempt',
-  metadata: { total_price: this.totalPrice }
-});
-
 
     const payload: CheckoutPayload = {
       contact: this.contact,
@@ -76,18 +71,30 @@ export class CheckoutComponent implements OnInit {
     this.isLoading = true;
 
     this.cartService.checkout(payload).subscribe({
-      
+
       next: () => {
-        this.eventTracking.trackEvent({
-  event_type: 'order_placed_success'
-});
+
+        // =====================================================
+        // 🔥 ML EVENT TRACKING (FINAL CORRECT LOGIC)
+        // =====================================================
+        this.cartItems.forEach(item => {
+          this.eventTracking.trackEvent({
+            event_type: 'checkout',
+            object_id: item.productId,
+            event_metadata: {
+              quantity: item.quantity,
+              price: item.price
+            }
+          });
+        });
 
         // cart cleared on backend
         this.cartService.cartChanged.emit(0);
 
-        // redirect to orders
+        // redirect to orders page
         this.router.navigate(['/orders']);
       },
+
       error: () => {
         alert('Checkout failed. Please try again.');
         this.isLoading = false;
