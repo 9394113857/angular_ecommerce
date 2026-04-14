@@ -12,7 +12,7 @@ export class EventTrackingService {
 
   // 🚀 ML EVENTS SERVICE (RENDER / RAILWAY)
   private readonly BASE_URL =
-    'https://backend-ml-events-service-production.up.railway.app/api/events';
+    'https://backend-ml-events-service-ba9v.onrender.com/api/events';
 
   constructor(private http: HttpClient) {}
 
