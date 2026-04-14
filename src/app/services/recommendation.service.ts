@@ -18,9 +18,6 @@ export class RecommendationService {
 
   constructor(private http: HttpClient) {}
 
-  // =====================================================
-  // 🔥 GET RECOMMENDATIONS
-  // =====================================================
   getRecommendations(): Observable<Recommendation[]> {
 
     const user = localStorage.getItem('userLoggedIn');
