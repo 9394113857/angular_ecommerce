@@ -22,12 +22,16 @@ export class OrdersComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadOrders();
-    this.eventTracking.trackEvent({
-  event_type: 'orders_page_view'
-});
 
+    // 🔹 Non-ML event (just tracking UI)
+    this.eventTracking.trackEvent({
+      event_type: 'orders_page_view'
+    });
   }
 
+  // ==========================
+  // LOAD ORDERS
+  // ==========================
   loadOrders(): void {
     this.isLoading = true;
 
@@ -42,15 +46,52 @@ export class OrdersComponent implements OnInit {
     });
   }
 
+  // ==========================
+  // VIEW ORDER
+  // ==========================
   viewOrder(order: Order): void {
+
     this.router.navigate(['/orders', order.order_id], {
       state: { order }
     });
-    this.eventTracking.trackEvent({
-  event_type: 'order_view',
-  object_type: 'order',
-  object_id: order.order_id.toString()
-});
 
+    // 🔹 Optional event (not used in ML)
+    this.eventTracking.trackEvent({
+      event_type: 'order_view',
+      object_id: order.order_id   // ✅ FIXED (no toString)
+    });
+  }
+
+  // ==========================
+  // CANCEL ORDER (🔥 MAIN PART)
+  // ==========================
+  cancelOrder(order: Order): void {
+
+    if (!confirm('Are you sure you want to cancel this order?')) return;
+
+    this.orderService.cancelOrder(order.order_id).subscribe({
+
+      next: () => {
+
+        // 🔥 ML EVENT TRACKING (CRITICAL)
+        order.items.forEach((item: any) => {
+          this.eventTracking.trackEvent({
+            event_type: 'order_cancelled',     // ✅ ML EVENT
+            object_id: item.product_id,        // ✅ product-level tracking
+            event_metadata: {
+              quantity: item.quantity,
+              price: item.price
+            }
+          });
+        });
+
+        // reload updated orders
+        this.loadOrders();
+      },
+
+      error: () => {
+        alert('Cancel failed');
+      }
+    });
   }
 }
