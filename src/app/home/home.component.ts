@@ -1,8 +1,12 @@
+// =========================
+// Cell 2: Home Component (FINAL)
+// =========================
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { Title } from '@angular/platform-browser';
 import { ProductService } from '../services/product.service';
-import { RecommendationService } from '../services/recommendation.service';
+import { RecommendationService, Recommendation } from '../services/recommendation.service';
 import { EventTrackingService } from '../services/event-tracking.service';
 import { Product } from 'src/data.type';
 
@@ -77,26 +81,43 @@ export class HomeComponent implements OnInit, OnDestroy {
   loadProducts(): void {
     this.isLoading = true;
 
-    this.productService.getProductList().subscribe(data => {
-      this.productData = data;
-      this.isLoading = false;
+    this.productService.getProductList().subscribe({
+      next: (data) => {
+        this.productData = data;
+        this.isLoading = false;
 
-      this.loadRecommendations();
+        this.loadRecommendations();
+      },
+      error: () => {
+        this.isLoading = false;
+      }
     });
   }
 
   // =====================================================
-  // 🔥 FINAL FIXED METHOD
+  // 🔥 FINAL OPTIMIZED METHOD
   // =====================================================
   loadRecommendations(): void {
 
     this.recoService.getRecommendations().subscribe({
-      next: (recos) => {
+      next: (recos: Recommendation[]) => {
 
         console.log('🔥 RECOMMENDATIONS API:', recos);
 
+        if (!recos || recos.length === 0) {
+          this.showRecommendations = false;
+          return;
+        }
+
+        // ✅ Sort by rank
+        recos.sort((a, b) => a.rank - b.rank);
+
+        // ✅ Use Set for faster lookup
+        const recoIds = new Set(recos.map(r => r.product_id));
+
+        // ✅ Filter products
         this.recommendedProducts = this.productData.filter(p =>
-          recos.some((r: any) => r.product_id === p.id)
+          recoIds.has(p.id)
         );
 
         this.showRecommendations = this.recommendedProducts.length > 0;
@@ -110,10 +131,11 @@ export class HomeComponent implements OnInit, OnDestroy {
             }
           });
         }
-      }, 
+      },
 
       error: (err) => {
         console.error('❌ Failed to load recommendations', err);
+        this.showRecommendations = false;
       }
     });
   }
