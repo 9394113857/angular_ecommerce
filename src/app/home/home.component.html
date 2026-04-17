@@ -1,6 +1,4 @@
-<!-- ========================= -->
 <!-- HERO SLIDER -->
-<!-- ========================= -->
 <div class="home_main_container_slider">
   <div
     class="home_slider_container"
@@ -21,17 +19,13 @@
   </div>
 </div>
 
-<!-- ========================= -->
 <!-- LOADER -->
-<!-- ========================= -->
 <app-loading
   [isLoading]="isLoading"
   [loadingText]="loadingText">
 </app-loading>
 
-<!-- ========================= -->
-<!-- ML RECOMMENDATIONS -->
-<!-- ========================= -->
+<!-- RECOMMENDATIONS -->
 <div *ngIf="showRecommendations && !isLoading">
   <h1 class="trendyHead">Recommended For You</h1>
 
@@ -42,13 +36,29 @@
   </div>
 </div>
 
-<!-- ========================= -->
-<!-- TRENDING PRODUCTS -->
-<!-- ========================= -->
+<!-- PRODUCTS -->
 <h1 class="trendyHead" *ngIf="!isLoading">Trendy Products</h1>
 
 <div class="show-trends-product" *ngIf="!isLoading">
   <ng-container *ngFor="let product of productData">
     <app-product-card [productData]="product"></app-product-card>
   </ng-container>
+</div>
+
+<!-- 🔥 BOTTOM STATUS -->
+<div class="simple-status">
+
+  <div
+    class="dot"
+    [ngClass]="{
+      'red-blink': appStatus === 'checking',
+      'yellow-blink': appStatus === 'almost',
+      'green-blink': appStatus === 'finalizing',
+      'green': appStatus === 'ready'
+    }"
+  ></div>
+
+  <span *ngIf="appStatus === 'ready'">All Systems Ready</span>
+  <span *ngIf="appStatus !== 'ready'">Starting...</span>
+
 </div>

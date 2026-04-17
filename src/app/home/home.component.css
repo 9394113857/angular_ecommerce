@@ -1,3 +1,49 @@
+/* STATUS BOTTOM */
+.simple-status {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #111;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 20px;
+  z-index: 999;
+  font-size: 12px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.red-blink {
+  background: red;
+  animation: blink 1s infinite;
+}
+
+.yellow-blink {
+  background: yellow;
+  animation: blink 1s infinite;
+}
+
+.green-blink {
+  background: lime;
+  animation: blink 1s infinite;
+}
+
+.green {
+  background: lime;
+}
+
+@keyframes blink {
+  50% { opacity: 0.2; }
+}
+
+/* EXISTING UI */
 .home_main_container_slider {
   width: 100%;
   margin: auto;
@@ -10,7 +56,6 @@
 .home_slider_container {
   display: flex;
   transition: transform 0.5s ease-in-out;
-
 }
 
 .home_slider_container img {
@@ -32,51 +77,19 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
-  outline: none;
   font-size: 20px;
-  color: #000;
   background-color: cadetblue;
-  font-family: Arial, sans-serif;
   padding: 40px 10px;
-  transition: background-color 0.3s ease-in-out;
-
 }
 
-.carousel_controls button:first-child {
-  border-radius: 4px 0px 0px 4px;
-}
-
-.carousel_controls button:last-child {
-  border-radius: 0px 4px 4px 0px;
-}
-
-.carousel_controls button:hover {
-  color: #333;
-  background-color: steelblue;
-}
-
-.carousel_controls .prev_btn {
-  transform: rotate(180deg);
-}
-
-.carousel_controls .next_btn {
-  transform: rotate(-180deg);
-}
-
-
-/* product card */
 .show-trends-product {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
-  width: 100%;
 }
-
 
 .trendyHead {
   font-size: 26px;
-  margin-bottom: 20px;
+  margin: 20px 0;
   margin-left: 90px;
-  font-family: sans-serif;
 }

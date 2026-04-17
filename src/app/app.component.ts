@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { SimpleStatusService } from './services/simple-status.service';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,10 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private status: SimpleStatusService
+  ) {}
 
   ngOnInit(): void {
     this.warmUpBackends();
@@ -16,53 +20,60 @@ export class AppComponent implements OnInit {
 
   /**
    * =====================================================
-   * 🚀 Railway Cold-Start Warmup (BASE URLs ONLY)
+   * 🚀 SIMPLE STATUS + WARMUP (FINAL)
    * =====================================================
-   * Purpose:
-   * - Wake Railway containers on app load
-   * - Ignore responses & errors
-   * - Just trigger the containers
    */
   warmUpBackends(): void {
 
-    // 🔐 1) Auth Service
-    this.http.get(
-      'https://backend-auth-service-ks6f.onrender.com'
-    ).subscribe({ error: () => {} });
+    // 🔴 Step 1: Checking
+    this.status.setStatus('checking');
 
-    // 📦 2) Product Service
-    setTimeout(() => {
-      this.http.get(
-        'https://backend-product-service-ncl2.onrender.com'
-      ).subscribe({ error: () => {} });
-    }, 500);
+    const urls = [
+      'https://backend-auth-service-ks6f.onrender.com',
+      'https://backend-product-service-ncl2.onrender.com',
+      'https://backend-cart-order-service-q6qh.onrender.com',
+      'https://backend-ml-events-service-ba9v.onrender.com',
+      'https://backend-ml-recommendation-service-huu6.onrender.com',
+      'https://assistant-service-production-4c1b.up.railway.app/'
+    ];
 
-    // 🛒 3) Cart / Order Service
-    setTimeout(() => {
-      this.http.get(
-        'https://backend-cart-order-service-q6qh.onrender.com'
-      ).subscribe({ error: () => {} });
-    }, 1000);
+    let completed = 0;
 
-    // 📊 4) ML Events Service
-    setTimeout(() => {
-      this.http.get(
-        'https://backend-ml-events-service-ba9v.onrender.com'
-      ).subscribe({ error: () => {} });
-    }, 1500);
+    urls.forEach((url, index) => {
 
-    // 🤖 5) ML Recommendation Service
-    setTimeout(() => {
-      this.http.get(
-        'https://backend-ml-recommendation-service-huu6.onrender.com'
-      ).subscribe({ error: () => {} });
-    }, 2000);
+      setTimeout(() => {
+        this.http.get(url).subscribe({
+          next: () => {
+            completed++;
 
-    // 🧠 6) Assistant Service (NEW)
-    setTimeout(() => {
-      this.http.get(
-        'https://assistant-service-production-4c1b.up.railway.app/'
-      ).subscribe({ error: () => {} });
-    }, 2500);
+            // 🟡 Half done
+            if (completed >= urls.length / 2) {
+              this.status.setStatus('almost');
+            }
+
+            // 🟢 Final stage
+            if (completed === urls.length) {
+              this.status.setStatus('finalizing');
+
+              setTimeout(() => {
+                this.status.setStatus('ready'); // 🟢 DONE
+              }, 800);
+            }
+          },
+          error: () => {
+            completed++;
+
+            if (completed >= urls.length / 2) {
+              this.status.setStatus('almost');
+            }
+
+            if (completed === urls.length) {
+              this.status.setStatus('ready');
+            }
+          }
+        });
+      }, index * 400);
+
+    });
   }
 }

@@ -1,7 +1,3 @@
-// =========================
-// Cell 2: Home Component (FINAL)
-// =========================
-
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { Title } from '@angular/platform-browser';
@@ -9,6 +5,7 @@ import { ProductService } from '../services/product.service';
 import { RecommendationService, Recommendation } from '../services/recommendation.service';
 import { EventTrackingService } from '../services/event-tracking.service';
 import { Product } from 'src/data.type';
+import { SimpleStatusService, AppStatus } from '../services/simple-status.service';
 
 @Component({
   selector: 'app-home',
@@ -26,6 +23,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   slidePosition = 0;
 
+  appStatus: AppStatus = 'checking';
+
   popularProduct: string[] = [
     'https://my-shoping-frontend.vercel.app/static/media/slider-1.2.87b6e70aa5f62e364f8d.jpg',
     'https://my-shoping-frontend.vercel.app/static/media/slider-1.1.e60d4fc52cc2a1d111a7.jpg',
@@ -41,11 +40,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     private productService: ProductService,
     private recoService: RecommendationService,
     private eventTracking: EventTrackingService,
-    private titleService: Title
+    private titleService: Title,
+    private statusService: SimpleStatusService
   ) {}
 
   ngOnInit(): void {
     this.titleService.setTitle('E-Comm | Home');
+
+    // ✅ Only subscribe (no forcing state)
+    this.statusService.status$.subscribe(s => {
+      this.appStatus = s;
+    });
+
     this.startAutoplay();
     this.loadProducts();
 
@@ -83,6 +89,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.productService.getProductList().subscribe({
       next: (data) => {
+        console.log("🔥 PRODUCTS:", data); // debug
+
         this.productData = data;
         this.isLoading = false;
 
@@ -94,47 +102,26 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  // =====================================================
-  // 🔥 FINAL OPTIMIZED METHOD
-  // =====================================================
   loadRecommendations(): void {
-
     this.recoService.getRecommendations().subscribe({
       next: (recos: Recommendation[]) => {
-
-        console.log('🔥 RECOMMENDATIONS API:', recos);
 
         if (!recos || recos.length === 0) {
           this.showRecommendations = false;
           return;
         }
 
-        // ✅ Sort by rank
         recos.sort((a, b) => a.rank - b.rank);
 
-        // ✅ Use Set for faster lookup
         const recoIds = new Set(recos.map(r => r.product_id));
 
-        // ✅ Filter products
         this.recommendedProducts = this.productData.filter(p =>
           recoIds.has(p.id)
         );
 
         this.showRecommendations = this.recommendedProducts.length > 0;
-
-        if (this.showRecommendations) {
-          this.eventTracking.trackEvent({
-            event_type: 'recommendations_shown',
-            object_type: 'product',
-            metadata: {
-              recommended_count: this.recommendedProducts.length
-            }
-          });
-        }
       },
-
-      error: (err) => {
-        console.error('❌ Failed to load recommendations', err);
+      error: () => {
         this.showRecommendations = false;
       }
     });
