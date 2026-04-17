@@ -1,0 +1,115 @@
+# ============================================================
+# 🚀 CD – Angular Frontend (Vercel Deploy)
+# ============================================================
+
+name: 🚀 Angular CD – Vercel Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  deploy-angular:
+    runs-on: ubuntu-latest
+
+    env:
+      LIVE_URL: https://angular-ecommerce-wheat.vercel.app/
+
+    steps:
+
+      # =====================================================
+      # CHECKOUT
+      # =====================================================
+      - name: 🧾 Checkout source code
+        uses: actions/checkout@v4
+
+      # =====================================================
+      # BUILD TIMESTAMP
+      # =====================================================
+      - name: ⏱️ Generate timestamps
+        run: |
+          echo "BUILD_TIME_UTC=$(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_ENV
+          echo "BUILD_TIME_IST=$(TZ=Asia/Kolkata date '+%Y-%m-%d %I:%M:%S %p IST')" >> $GITHUB_ENV
+
+      # =====================================================
+      # SETUP NODE
+      # =====================================================
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      # =====================================================
+      # INSTALL
+      # =====================================================
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      # =====================================================
+      # BUILD
+      # =====================================================
+      - name: 🏗 Build Angular
+        run: npm run build:prod
+
+      # =====================================================
+      # INSTALL VERCEL CLI
+      # =====================================================
+      - name: 📥 Install Vercel CLI
+        run: npm install --global vercel
+
+      # =====================================================
+      # DEPLOY
+      # =====================================================
+      - name: 🚀 Deploy to Vercel
+        run: |
+          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      # =====================================================
+      # SUCCESS EMAIL (ONLY CC)
+      # =====================================================
+      - name: 📧 Success Email
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          secure: false
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "✅ Angular Vercel Deployment Success"
+          to: ${{ secrets.MAIL_CC }}
+          from: ${{ secrets.MAIL_USERNAME }}
+          html_body: |
+            <h2>🚀 Deployment Successful</h2>
+            <p><b>Live URL:</b> <a href="${{ env.LIVE_URL }}">${{ env.LIVE_URL }}</a></p>
+            <p><b>Commit:</b> ${{ github.sha }}</p>
+            <p><b>Time (UTC):</b> ${{ env.BUILD_TIME_UTC }}</p>
+            <p><b>Time (IST):</b> ${{ env.BUILD_TIME_IST }}</p>
+
+      # =====================================================
+      # FAILURE EMAIL (ONLY CC)
+      # =====================================================
+      - name: ❌ Failure Email
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          secure: false
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "❌ Angular Vercel Deployment Failed"
+          to: ${{ secrets.MAIL_CC }}
+          from: ${{ secrets.MAIL_USERNAME }}
+          html_body: |
+            <h2 style="color:red;">❌ Deployment Failed</h2>
+            <p>Check GitHub Actions logs</p>
