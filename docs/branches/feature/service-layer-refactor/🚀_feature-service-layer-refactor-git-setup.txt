@@ -1,0 +1,15 @@
+# ============================================================
+# 🚀 ANGULAR FEATURE BRANCH SETUP
+# ============================================================
+
+# Go to main branch
+git checkout main
+
+# Pull latest code
+git pull
+
+# Create same feature branch (keep naming consistent with backend)
+git checkout -b feature/service-layer-refactor
+
+# First push (sets upstream tracking)
+git push -u origin feature/service-layer-refactor 
