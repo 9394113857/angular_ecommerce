@@ -2,14 +2,36 @@
 # 🚀 ANGULAR FEATURE BRANCH SETUP
 # ============================================================
 
-# Go to main branch
+# 🔹 Step 1: Switch to main
 git checkout main
 
-# Pull latest code
+# 🔹 Step 2: Pull latest
 git pull
 
-# Create same feature branch (keep naming consistent with backend)
+# 🔹 Step 3: Create feature branch (same as backend)
 git checkout -b feature/service-layer-refactor
 
-# First push (sets upstream tracking)
-git push -u origin feature/service-layer-refactor 
+# 🔹 Step 4: Push branch
+git push -u origin feature/service-layer-refactor
+
+
+# ============================================================
+# 📌 NOTES
+# ============================================================
+
+# - No Angular code changes yet
+# - Backend refactor only (service layer)
+# - APIs remain same → Angular unaffected
+
+
+# ============================================================
+# 🚀 NEXT STEPS
+# ============================================================
+
+# 1. Run Angular app (ng serve)
+# 2. Connect to updated backend
+# 3. Test:
+#    - Add to cart
+#    - Checkout
+#    - Orders
+# 4. Verify everything works without UI changes
