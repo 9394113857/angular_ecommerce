@@ -1,6 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment'; // ✅ IMPORTANT
 
 export interface CartItemPayload {
   product_id: number;
@@ -24,26 +25,17 @@ export class CartServiceService {
   cartChanged = new EventEmitter<number>();
 
   // =====================================
-  // 🌱 LOCAL BACKEND (COMMENTED)
+  // 🔥 BASE URL FROM ENV (AUTO SWITCH)
   // =====================================
-  // private readonly LOCAL_BASE_URL =
-  //   'http://127.0.0.1:5003/api';
-
-  // =====================================
-  // 🚀 RAILWAY BACKEND (ACTIVE)
-  // =====================================
-  private readonly RAILWAY_BASE_URL =
-    'https://backend-cart-order-service-q6qh.onrender.com/api';
-
-  private readonly baseUrl = this.RAILWAY_BASE_URL;
+  private readonly baseUrl = environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
 
   // ==============================
-  // 🔐 AUTH HEADERS (FIXED)
+  // 🔐 AUTH HEADERS
   // ==============================
   private headers(): HttpHeaders {
-    const token = localStorage.getItem('access_token'); // ✅ FIX
+    const token = localStorage.getItem('access_token');
     return new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
