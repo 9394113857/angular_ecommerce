@@ -35,3 +35,86 @@ git push -u origin feature/service-layer-refactor
 #    - Checkout
 #    - Orders
 # 4. Verify everything works without UI changes
+
+===================================================
+
+# ============================================================
+# 🚀 FINAL SAFE GIT FLOW (REBASE + PUSH + VERIFY)
+# ============================================================
+
+# 🔹 Step 1: Check current status (IMPORTANT)
+git status
+# 👉 If "nothing to commit" → skip add/commit
+# 👉 If files changed → follow Step 2
+
+# ============================================================
+# 🔹 Step 2: (ONLY IF CHANGES EXIST)
+# ============================================================
+
+# Stage changes
+git add .
+
+# Commit changes
+git commit -m "Refactor: service layer + Angular env setup"
+
+# ============================================================
+# 🔹 Step 3: ALWAYS SYNC WITH REMOTE (SAFE REBASE)
+# ============================================================
+
+git pull --rebase origin feature/service-layer-refactor
+# 👉 Brings latest remote changes and reapplies your commits on top
+
+# ============================================================
+# 🔹 Step 4: PUSH TO REMOTE
+# ============================================================
+
+git push
+
+# ============================================================
+# 🔍 Step 5: VERIFY
+# ============================================================
+
+git status
+# 👉 Should show: "nothing to commit, working tree clean"
+
+# ============================================================
+# 🚀 NEXT: RUN & TEST
+# ============================================================
+
+# Start Angular
+ng serve
+
+# Start Backend (separate terminal)
+flask run
+
+# ============================================================
+# 🧪 TEST FLOW
+# ============================================================
+
+# ✔ Add to cart
+# ✔ Get cart
+# ✔ Checkout
+# ✔ Orders
+# ✔ Cancel order
+
+# ============================================================
+# 🎯 READY FOR MERGE
+# ============================================================
+
+# If all tests pass:
+# → Create PR
+# → Merge feature → main
+# → Deploy (Render + Vercel)
+
+# ============================================================
+# ⚠️ FINAL CHECKS
+# ============================================================
+
+# ✔ .env NOT committed
+# ✔ environment.prod.ts has correct backend URL
+# ✔ No console errors
+# ✔ API responses correct
+
+# ============================================================
+# 🚀 DONE
+# ============================================================
