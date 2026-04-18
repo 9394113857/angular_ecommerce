@@ -1,8 +1,9 @@
-/* STATUS BOTTOM */
+/* STATUS BOTTOM LEFT */
 .simple-status {
   position: fixed;
   bottom: 15px;
-  right: 15px;
+  left: 15px;        /* ✅ moved to left */
+  right: auto;       /* ✅ override right */
   display: flex;
   align-items: center;
   gap: 8px;
