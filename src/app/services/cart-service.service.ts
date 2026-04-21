@@ -26,16 +26,16 @@ export class CartServiceService {
   // =====================================
   // 🌱 LOCAL BACKEND (COMMENTED)
   // =====================================
-  // private readonly LOCAL_BASE_URL =
-  //   'http://127.0.0.1:5003/api';
+  private readonly LOCAL_BASE_URL =
+    'http://127.0.0.1:5003/api';
 
   // =====================================
   // 🚀 RAILWAY BACKEND (ACTIVE)
   // =====================================
-  private readonly RAILWAY_BASE_URL =
-    'https://backend-cart-order-service-q6qh.onrender.com/api';
+  // private readonly RAILWAY_BASE_URL =
+  //   'https://backend-cart-order-service-q6qh.onrender.com/api';
 
-  private readonly baseUrl = this.RAILWAY_BASE_URL;
+  private readonly baseUrl = this.LOCAL_BASE_URL;
 
   constructor(private http: HttpClient) {}
 

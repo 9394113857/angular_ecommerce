@@ -1,0 +1,8 @@
+ALl Services are changed to local base urls for this feature/ecommerce-production-2026-✅ Branch
+
+Anguar local and 3 local and all sueprbas e3 db coonecte dcode wise locally with all with tyhe:-
+
+feature/ecommerce-production-2026-✅ Branch   so 4 lcoal branhe sand b live coonecting all good noww
+
+with .env files accordinglly pushed from all 4 repos feature branches now.
+

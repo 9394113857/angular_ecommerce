@@ -15,7 +15,11 @@ export class ProductService {
   // =====================================================
   // 🟦 BASE BACKEND URL (RENDER)
   // =====================================================
-  private readonly BASE_URL = 'https://backend-product-service-ncl2.onrender.com';
+  // private readonly BASE_URL = 'https://backend-product-service-ncl2.onrender.com';
+
+
+  private readonly BASE_URL = 'http://127.0.0.1:5002';
+
 
   // =====================================================
   // 🟩 ANGULAR READ APIs (PUBLIC)

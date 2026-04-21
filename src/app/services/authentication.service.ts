@@ -16,16 +16,16 @@ export class AuthenticationService {
   // ================================
   // 🌱 LOCAL BACKEND (COMMENTED)
   // ================================
-  // private readonly LOCAL_BASE_URL =
-  //   'http://127.0.0.1:5001/api/v1/auth/angularUser';
+  private readonly LOCAL_BASE_URL =
+    'http://127.0.0.1:5001/api/v1/auth/angularUser';
 
   // ================================
   // 🚀 RAILWAY BACKEND (ACTIVE)
   // ================================
-  private readonly RAILWAY_BASE_URL =
-    'https://backend-auth-service-ks6f.onrender.com/api/v1/auth/angularUser';
+  // private readonly RAILWAY_BASE_URL =
+  //   'https://backend-auth-service-ks6f.onrender.com/api/v1/auth/angularUser';
 
-  private readonly baseUrl = this.RAILWAY_BASE_URL;
+  private readonly baseUrl = this.LOCAL_BASE_URL;
 
   // Auth state
   authState$ = new BehaviorSubject<'default' | 'user' | 'seller'>('default');

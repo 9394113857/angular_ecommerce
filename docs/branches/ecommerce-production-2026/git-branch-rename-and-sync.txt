@@ -1,0 +1,43 @@
+# =====================================
+
+# GIT BRANCH FINAL SYNC (FEATURE FLOW)
+
+# =====================================
+
+# 1. Checkout branch
+
+git checkout feature/ecommerce-production-2026
+
+# 2. Push latest commits
+
+git push origin feature/ecommerce-production-2026
+
+# 3. Set upstream (IMPORTANT)
+
+git push -u origin feature/ecommerce-production-2026
+
+# =====================================
+
+# OPTIONAL (ONLY IF RENAMING BRANCH)
+
+# =====================================
+
+# Rename locally
+
+git branch -m feature/ecommerce-production-2026 feature/ecommerce-production-2026-✅
+
+# Delete old branch from remote
+
+git push origin --delete feature/ecommerce-production-2026
+
+git push origin "feature/ecommerce-production-2026-✅"
+git push -u origin "feature/ecommerce-production-2026-✅"
+
+# =====================================
+
+# VERIFY
+
+# =====================================
+
+git branch -vv
+git branch -a
