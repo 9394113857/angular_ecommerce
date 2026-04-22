@@ -22,7 +22,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   showRecommendations = false;
 
   slidePosition = 0;
-
   appStatus: AppStatus = 'checking';
 
   popularProduct: string[] = [
@@ -63,6 +62,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     clearInterval(this.autoplayInterval);
   }
 
+  startAutoplay(): void {
+    this.autoplayInterval = setInterval(() => {
+      this.nextSlide();
+    }, 3000);
+  }
+
   previousSlide(): void {
     this.slidePosition =
       this.slidePosition === 0
@@ -77,12 +82,9 @@ export class HomeComponent implements OnInit, OnDestroy {
         : this.slidePosition - 100;
   }
 
-  startAutoplay(): void {
-    this.autoplayInterval = setInterval(() => {
-      this.nextSlide();
-    }, 3000);
-  }
-
+  // =========================
+  // LOAD PRODUCTS FIRST
+  // =========================
   loadProducts(): void {
     this.isLoading = true;
 
@@ -93,6 +95,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.productData = data;
         this.isLoading = false;
 
+        // AFTER PRODUCTS → LOAD RECOMMENDATIONS
         this.loadRecommendations();
       },
       error: () => {
@@ -101,6 +104,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  // =========================
+  // LOAD RECOMMENDATIONS
+  // =========================
   loadRecommendations(): void {
     this.recoService.getRecommendations().subscribe({
       next: (recos: Recommendation[]) => {
@@ -112,17 +118,23 @@ export class HomeComponent implements OnInit, OnDestroy {
           return;
         }
 
-        // ✅ SORT
+        // SORT BY RANK
         recos.sort((a, b) => a.rank - b.rank);
 
-        // 🔥 FINAL FIX (TYPE SAFE)
-        const recoIds = new Set(recos.map(r => Number(r.product_id)));
+        // 🔥 FINAL FIX (NO FILTER BUG)
+        this.recommendedProducts = [];
 
-        this.recommendedProducts = this.productData.filter(p =>
-          recoIds.has(Number(p.id))
-        );
+        recos.forEach(r => {
+          const match = this.productData.find(
+            p => Number(p.id) === Number(r.product_id)
+          );
 
-        console.log("🔥 FILTERED PRODUCTS:", this.recommendedProducts);
+          if (match) {
+            this.recommendedProducts.push(match);
+          }
+        });
+
+        console.log("🔥 FINAL RECOMMENDED:", this.recommendedProducts);
 
         this.showRecommendations = this.recommendedProducts.length > 0;
       },
