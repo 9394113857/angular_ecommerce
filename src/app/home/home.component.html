@@ -1,134 +1,64 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { Title } from '@angular/platform-browser';
-import { ProductService } from '../services/product.service';
-import { RecommendationService, Recommendation } from '../services/recommendation.service';
-import { EventTrackingService } from '../services/event-tracking.service';
-import { Product } from 'src/data.type';
-import { SimpleStatusService, AppStatus } from '../services/simple-status.service';
+<!-- HERO SLIDER -->
+<div class="home_main_container_slider">
+  <div
+    class="home_slider_container"
+    [style.width.%]="popularProduct.length * 100"
+    [ngStyle]="{ 'transform': 'translateX(' + slidePosition + '%)' }"
+  >
+    <img *ngFor="let item of popularProduct" [src]="item" alt="Image slider" />
+  </div>
 
-@Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
-})
-export class HomeComponent implements OnInit, OnDestroy {
+  <div class="carousel_controls">
+    <button class="prev_btn" (click)="previousSlide()">
+      <fa-icon [icon]="prevFonticon"></fa-icon>
+    </button>
 
-  isLoading = false;
-  loadingText = 'Loading products...';
+    <button class="next_btn" (click)="nextSlide()">
+      <fa-icon [icon]="nextFontIcon"></fa-icon>
+    </button>
+  </div>
+</div>
 
-  productData: Product[] = [];
-  recommendedProducts: Product[] = [];
-  showRecommendations = false;
+<!-- LOADER -->
+<app-loading
+  [isLoading]="isLoading"
+  [loadingText]="loadingText">
+</app-loading>
 
-  slidePosition = 0;
+<!-- ✅ RECOMMENDATIONS -->
+<div *ngIf="showRecommendations && !isLoading">
+  <h1 class="trendyHead">Recommended For You</h1>
 
-  appStatus: AppStatus = 'checking';
+  <div class="show-trends-product">
+    <ng-container *ngFor="let product of recommendedProducts">
+      <app-product-card [productData]="product"></app-product-card>
+    </ng-container>
+  </div>
+</div>
 
-  popularProduct: string[] = [
-    'https://my-shoping-frontend.vercel.app/static/media/slider-1.2.87b6e70aa5f62e364f8d.jpg',
-    'https://my-shoping-frontend.vercel.app/static/media/slider-1.1.e60d4fc52cc2a1d111a7.jpg',
-    'https://my-shoping-frontend.vercel.app/static/media/slider-2.1.9aa725195d5160024a1c.jpg'
-  ];
+<!-- PRODUCTS -->
+<h1 class="trendyHead" *ngIf="!isLoading">Trendy Products</h1>
 
-  nextFontIcon = faChevronRight;
-  prevFonticon = faChevronLeft;
+<div class="show-trends-product" *ngIf="!isLoading">
+  <ng-container *ngFor="let product of productData">
+    <app-product-card [productData]="product"></app-product-card>
+  </ng-container>
+</div>
 
-  private autoplayInterval: any;
+<!-- STATUS -->
+<div class="simple-status">
 
-  constructor(
-    private productService: ProductService,
-    private recoService: RecommendationService,
-    private eventTracking: EventTrackingService,
-    private titleService: Title,
-    private statusService: SimpleStatusService
-  ) {}
+  <div
+    class="dot"
+    [ngClass]="{
+      'red-blink': appStatus === 'checking',
+      'yellow-blink': appStatus === 'almost',
+      'green-blink': appStatus === 'finalizing',
+      'green': appStatus === 'ready'
+    }"
+  ></div>
 
-  ngOnInit(): void {
-    this.titleService.setTitle('E-Comm | Home');
+  <span *ngIf="appStatus === 'ready'">All Systems Ready</span>
+  <span *ngIf="appStatus !== 'ready'">Starting...</span>
 
-    this.statusService.status$.subscribe(s => {
-      this.appStatus = s;
-    });
-
-    this.startAutoplay();
-    this.loadProducts();
-
-    this.eventTracking.trackEvent({
-      event_type: 'home_page_view'
-    });
-  }
-
-  ngOnDestroy(): void {
-    clearInterval(this.autoplayInterval);
-  }
-
-  previousSlide(): void {
-    this.slidePosition =
-      this.slidePosition === 0
-        ? (this.popularProduct.length - 1) * -100
-        : this.slidePosition + 100;
-  }
-
-  nextSlide(): void {
-    this.slidePosition =
-      this.slidePosition === (this.popularProduct.length - 1) * -100
-        ? 0
-        : this.slidePosition - 100;
-  }
-
-  startAutoplay(): void {
-    this.autoplayInterval = setInterval(() => {
-      this.nextSlide();
-    }, 3000);
-  }
-
-  loadProducts(): void {
-    this.isLoading = true;
-
-    this.productService.getProductList().subscribe({
-      next: (data) => {
-        console.log("🔥 PRODUCTS:", data);
-
-        this.productData = data;
-        this.isLoading = false;
-
-        this.loadRecommendations();
-      },
-      error: () => {
-        this.isLoading = false;
-      }
-    });
-  }
-
-  loadRecommendations(): void {
-    this.recoService.getRecommendations().subscribe({
-      next: (recos: Recommendation[]) => {
-
-        console.log("🔥 RECOS:", recos);
-
-        if (!recos || recos.length === 0) {
-          this.showRecommendations = false;
-          return;
-        }
-
-        // ✅ SORT
-        recos.sort((a, b) => a.rank - b.rank);
-
-        // 🔥 FINAL FIX (TYPE SAFE)
-        const recoIds = new Set(recos.map(r => Number(r.product_id)));
-
-        this.recommendedProducts = this.productData.filter(p =>
-          recoIds.has(Number(p.id))
-        );
-
-        console.log("🔥 FILTERED PRODUCTS:", this.recommendedProducts);
-
-        this.showRecommendations = this.recommendedProducts.length > 0;
-      },
-      error: () => {
-        this.showRecommendations = false;
-      }
-    });
-  }
-}
+</div>
