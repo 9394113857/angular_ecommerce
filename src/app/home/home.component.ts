@@ -47,7 +47,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.titleService.setTitle('E-Comm | Home');
 
-    // ✅ Only subscribe (no forcing state)
     this.statusService.status$.subscribe(s => {
       this.appStatus = s;
     });
@@ -89,7 +88,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.productService.getProductList().subscribe({
       next: (data) => {
-        console.log("🔥 PRODUCTS:", data); // debug
+        console.log("🔥 PRODUCTS:", data);
 
         this.productData = data;
         this.isLoading = false;
@@ -106,18 +105,24 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.recoService.getRecommendations().subscribe({
       next: (recos: Recommendation[]) => {
 
+        console.log("🔥 RECOS:", recos);
+
         if (!recos || recos.length === 0) {
           this.showRecommendations = false;
           return;
         }
 
+        // ✅ SORT
         recos.sort((a, b) => a.rank - b.rank);
 
-        const recoIds = new Set(recos.map(r => r.product_id));
+        // 🔥 FINAL FIX (TYPE SAFE)
+        const recoIds = new Set(recos.map(r => Number(r.product_id)));
 
         this.recommendedProducts = this.productData.filter(p =>
-          recoIds.has(p.id)
+          recoIds.has(Number(p.id))
         );
+
+        console.log("🔥 FILTERED PRODUCTS:", this.recommendedProducts);
 
         this.showRecommendations = this.recommendedProducts.length > 0;
       },
