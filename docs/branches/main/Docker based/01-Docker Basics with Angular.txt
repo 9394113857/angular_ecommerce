@@ -1,0 +1,88 @@
+Alright — let’s do this clean from scratch (step-by-step) so you can create and run your Angular Docker setup without confusion.
+________________________________________
+🚀 STEP 1 — Angular Build (ONE TIME)
+Go to your Angular project folder:
+cd your-angular-project
+Run:
+ng build --configuration production
+✅ Based on your config, this creates:
+dist/e-commerce/
+________________________________________
+🚀 STEP 2 — Create Dockerfile
+In your Angular root folder (same place as angular.json), create a file named:
+Dockerfile
+Paste this:
+# =========================
+# BUILD STAGE
+# =========================
+FROM node:18 AS build
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+RUN npm run build -- --configuration production
+
+
+# =========================
+# SERVE STAGE (NGINX)
+# =========================
+FROM nginx:alpine
+
+# ⚠️ IMPORTANT: your project name = e-commerce
+COPY --from=build /app/dist/e-commerce /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
+________________________________________
+🚀 STEP 3 — Build Docker Image
+Run this in same folder:
+docker build -t ecommerce-ui .
+👉 This creates your reusable image
+(You do this only when code changes)
+________________________________________
+🚀 STEP 4 — Run Container (ANYTIME)
+docker run -d -p 4200:80 ecommerce-ui
+________________________________________
+🌐 STEP 5 — Open App
+Go to browser:
+http://localhost:4200
+________________________________________
+🔥 DAILY USAGE (Your Goal)
+Now you DON’T need:
+ng serve ❌
+Instead:
+docker run -d -p 4200:80 ecommerce-ui
+________________________________________
+⚠️ IMPORTANT REALITY (Don’t miss this)
+❌ This will NOT work:
+•	proxy.conf.json 
+•	localhost API calls 
+✅ You MUST use:
+environment.prod.ts
+Example:
+export const environment = {
+  production: true,
+  apiUrl: 'http://localhost:5000'
+};
+________________________________________
+🧠 SIMPLE UNDERSTANDING
+Step	What happens
+ng build	creates static files
+Docker build	packs app into image
+docker run	runs app anytime
+________________________________________
+⚡ SUPER SHORT VERSION
+ng build --configuration production
+docker build -t ecommerce-ui .
+docker run -d -p 4200:80 ecommerce-ui
+________________________________________
+If next you want:
+👉 run Angular + Flask (auth/product/cart) together
+👉 single command start everything
+Say: “next docker-compose” and I’ll give production-level setup 💯
+

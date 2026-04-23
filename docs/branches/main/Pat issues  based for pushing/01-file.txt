@@ -1,0 +1,68 @@
+This means Git is still using old/wrong cached credentials, not your PAT.
+So even if you type correctly, it won’t work ❌
+Let’s fix it properly in 2 minutes 👇
+________________________________________
+🔥 STEP 1 — Clear WRONG saved credentials (Windows)
+Open Windows Credential Manager:
+👉 Press Windows + R → type:
+control keymgr.dll
+Now:
+•	Go to Windows Credentials 
+•	Find entries like: 
+o	git:https://github.com 
+•	Delete them 
+👉 This is the MAIN reason your PAT is not being used
+________________________________________
+🔁 STEP 2 — Push again (IMPORTANT)
+git push origin main
+Now it WILL ask:
+Username:
+Password:
+Enter:
+•	Username → 9394113857 
+•	Password → 👉 PASTE YOUR PAT TOKEN 
+________________________________________
+⚠️ VERY IMPORTANT CHECK
+Make sure your PAT has permissions:
+•	✅ repo (FULL access) 
+If not → create new token in GitHub with:
+•	repo 
+•	workflow (optional) 
+________________________________________
+🚀 STEP 3 — Save credentials (so no repeat)
+Run:
+git config --global credential.helper manager
+👉 Now PAT will be saved
+________________________________________
+🧠 WHY YOUR ERROR HAPPENED
+Even though you have PAT:
+👉 Git was silently using old password stored in system
+So:
+wrong cached password → auto fail ❌
+________________________________________
+⚡ QUICK ALTERNATIVE (If still fails)
+Force reset remote URL:
+git remote set-url origin https://github.com/9394113857/angular_ecommerce.git
+Then push again.
+________________________________________
+🚀 BEST LONG TERM (Recommended)
+Switch to SSH (no PAT needed ever):
+•	No login 
+•	No token expiry 
+•	One-time setup 
+________________________________________
+✅ FINAL QUICK FIX
+Do this EXACTLY:
+1.	Delete credentials (Windows Credential Manager) 
+2.	Run:
+git push origin main
+3.	Enter: 
+o	Username → 9394113857 
+o	Password → PAT 
+________________________________________
+If still failing, send:
+git remote -v
+I’ll debug instantly 👍
+ 
+
+
