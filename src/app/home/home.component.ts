@@ -105,7 +105,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   // =========================
-  // LOAD RECOMMENDATIONS
+  // LOAD RECOMMENDATIONS (OPTIMIZED 🚀)
   // =========================
   loadRecommendations(): void {
     this.recoService.getRecommendations().subscribe({
@@ -114,6 +114,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         console.log("🔥 RECOS:", recos);
 
         if (!recos || recos.length === 0) {
+          this.recommendedProducts = [];
           this.showRecommendations = false;
           return;
         }
@@ -121,24 +122,24 @@ export class HomeComponent implements OnInit, OnDestroy {
         // SORT BY RANK
         recos.sort((a, b) => a.rank - b.rank);
 
-        // 🔥 FINAL FIX (NO FILTER BUG)
-        this.recommendedProducts = [];
+        // 🔥 FAST LOOKUP (MAP)
+        const productMap = new Map(
+          this.productData.map(p => [Number(p.id), p])
+        );
 
-        recos.forEach(r => {
-          const match = this.productData.find(
-            p => Number(p.id) === Number(r.product_id)
-          );
+        this.recommendedProducts = recos
+          .map(r => productMap.get(Number(r.product_id)))
+          .filter(p => !!p) as Product[];
 
-          if (match) {
-            this.recommendedProducts.push(match);
-          }
-        });
+        // OPTIONAL: LIMIT TOP 5
+        this.recommendedProducts = this.recommendedProducts.slice(0, 5);
 
         console.log("🔥 FINAL RECOMMENDED:", this.recommendedProducts);
 
         this.showRecommendations = this.recommendedProducts.length > 0;
       },
       error: () => {
+        this.recommendedProducts = [];
         this.showRecommendations = false;
       }
     });
