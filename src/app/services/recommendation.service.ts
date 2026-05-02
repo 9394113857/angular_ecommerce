@@ -1,16 +1,17 @@
 // =========================
-// Cell 1: Recommendation Service (FINAL)
+// Cell 1: Recommendation Service (FINAL - FIXED ✅)
 // =========================
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, map } from 'rxjs';
 
 export interface Recommendation {
   user_id: number;
   product_id: number;
   score: number;
   rank: number;
+  created_at?: string;
 }
 
 @Injectable({
@@ -33,13 +34,15 @@ export class RecommendationService {
 
     if (!user) {
       console.warn('⚠️ No user found in localStorage');
-      return of([]); // ✅ safe fallback
+      return of([]);
     }
 
     const userId = JSON.parse(user).id;
 
-    return this.http.get<Recommendation[]>(
-      `${this.BASE_URL}/recommendations/${userId}`
-    );
+    return this.http
+      .get<any>(`${this.BASE_URL}/recommendations/${userId}`)
+      .pipe(
+        map(response => response.recommendations || [])
+      );
   }
 }
