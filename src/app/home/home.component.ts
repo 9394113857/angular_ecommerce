@@ -1,9 +1,12 @@
+// =========================
+// Cell 1: Home Component (FINAL - NO EVENT TRACKING ✅)
+// =========================
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { Title } from '@angular/platform-browser';
 import { ProductService } from '../services/product.service';
 import { RecommendationService, Recommendation } from '../services/recommendation.service';
-import { EventTrackingService } from '../services/event-tracking.service';
 import { Product } from 'src/data.type';
 import { SimpleStatusService, AppStatus } from '../services/simple-status.service';
 
@@ -14,6 +17,9 @@ import { SimpleStatusService, AppStatus } from '../services/simple-status.servic
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
+  // =========================
+  // UI STATE
+  // =========================
   isLoading = false;
   loadingText = 'Loading products...';
 
@@ -24,6 +30,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   slidePosition = 0;
   appStatus: AppStatus = 'checking';
 
+  // =========================
+  // SLIDER IMAGES
+  // =========================
   popularProduct: string[] = [
     'https://my-shoping-frontend.vercel.app/static/media/slider-1.2.87b6e70aa5f62e364f8d.jpg',
     'https://my-shoping-frontend.vercel.app/static/media/slider-1.1.e60d4fc52cc2a1d111a7.jpg',
@@ -38,14 +47,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private productService: ProductService,
     private recoService: RecommendationService,
-    private eventTracking: EventTrackingService,
     private titleService: Title,
     private statusService: SimpleStatusService
   ) {}
 
+  // =========================
+  // INIT
+  // =========================
   ngOnInit(): void {
     this.titleService.setTitle('E-Comm | Home');
 
+    // App status indicator
     this.statusService.status$.subscribe(s => {
       this.appStatus = s;
     });
@@ -53,15 +65,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.startAutoplay();
     this.loadProducts();
 
-    this.eventTracking.trackEvent({
-      event_type: 'home_page_view'
-    });
+    // ❌ REMOVED ML EVENT TRACKING (INTENTIONAL)
   }
 
   ngOnDestroy(): void {
     clearInterval(this.autoplayInterval);
   }
 
+  // =========================
+  // SLIDER LOGIC
+  // =========================
   startAutoplay(): void {
     this.autoplayInterval = setInterval(() => {
       this.nextSlide();
@@ -105,7 +118,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   // =========================
-  // LOAD RECOMMENDATIONS (OPTIMIZED 🚀)
+  // LOAD RECOMMENDATIONS
   // =========================
   loadRecommendations(): void {
     this.recoService.getRecommendations().subscribe({
@@ -122,7 +135,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         // SORT BY RANK
         recos.sort((a, b) => a.rank - b.rank);
 
-        // 🔥 FAST LOOKUP (MAP)
+        // FAST LOOKUP USING MAP
         const productMap = new Map(
           this.productData.map(p => [Number(p.id), p])
         );
@@ -131,7 +144,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           .map(r => productMap.get(Number(r.product_id)))
           .filter(p => !!p) as Product[];
 
-        // OPTIONAL: LIMIT TOP 5
+        // LIMIT TOP 5 (OPTIONAL UI CONTROL)
         this.recommendedProducts = this.recommendedProducts.slice(0, 5);
 
         console.log("🔥 FINAL RECOMMENDED:", this.recommendedProducts);
