@@ -35,7 +35,7 @@ export class CartComponent implements OnInit {
   ) {}
 
   // =========================
-  // INIT
+  // INIT        
   // =========================
   ngOnInit(): void {
     this.titleService.setTitle('E-Comm | Cart');
