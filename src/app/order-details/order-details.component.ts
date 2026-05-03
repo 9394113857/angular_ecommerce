@@ -1,3 +1,7 @@
+// =========================
+// Cell 1: Order Details Component (FINAL - ML EVENTS CLEAN ✅)
+// =========================
+
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from '../services/order.service';
@@ -20,6 +24,9 @@ export class OrderDetailsComponent implements OnInit {
     private eventTracking: EventTrackingService
   ) {}
 
+  // =========================
+  // INIT
+  // =========================
   ngOnInit(): void {
     const orderId = Number(this.route.snapshot.paramMap.get('orderId'));
 
@@ -31,18 +38,20 @@ export class OrderDetailsComponent implements OnInit {
     this.loadOrder(orderId);
   }
 
-  // ==========================
+  // =========================
   // LOAD ORDER DETAILS
-  // ==========================
+  // =========================
   loadOrder(orderId: number): void {
     this.isLoading = true;
 
+    // 🔥 EVENT: ORDER DETAILS VIEW
     this.eventTracking.trackEvent({
-  event_type: 'order_details_view',
-  object_type: 'order',
-  object_id: orderId.toString()
-});
-
+      event_type: 'order_details_view',
+      object_id: orderId,
+      event_metadata: {
+        source: 'order_details_page'
+      }
+    });
 
     this.orderService.getOrderDetails(orderId).subscribe({
       next: (data) => {
@@ -50,28 +59,30 @@ export class OrderDetailsComponent implements OnInit {
         this.isLoading = false;
       },
       error: () => {
-        // invalid order / unauthorized
         this.router.navigate(['/orders']);
       }
     });
   }
 
-  // ==========================
+  // =========================
   // CANCEL ORDER
-  // ==========================
+  // =========================
   cancelOrder(): void {
+
     if (!confirm('Are you sure you want to cancel this order?')) {
       return;
     }
 
     this.isLoading = true;
 
+    // 🔥 EVENT: ORDER CANCEL ATTEMPT
     this.eventTracking.trackEvent({
-  event_type: 'order_cancel_attempt',
-  object_type: 'order',
-  object_id: this.order.order_id.toString()
-});
-
+      event_type: 'order_cancel_attempt',
+      object_id: this.order.order_id,
+      event_metadata: {
+        status_before: this.order.status
+      }
+    });
 
     this.orderService.cancelOrder(this.order.order_id).subscribe({
       next: () => {
@@ -85,9 +96,9 @@ export class OrderDetailsComponent implements OnInit {
     });
   }
 
-  // ==========================
+  // =========================
   // BACK TO ORDERS
-  // ==========================
+  // =========================
   goBack(): void {
     this.router.navigate(['/orders']);
   }
