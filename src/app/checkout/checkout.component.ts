@@ -35,7 +35,7 @@ export class CheckoutComponent implements OnInit {
   ) {}
 
   // =========================
-  // INIT
+  // INIT           
   // =========================
   ngOnInit(): void {
     this.titleService.setTitle('E-Comm | Checkout');
