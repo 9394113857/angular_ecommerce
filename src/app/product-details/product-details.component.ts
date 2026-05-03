@@ -36,7 +36,7 @@ export class ProductDetailsComponent implements OnInit {
   ) {}
 
   // =========================
-  // INIT
+  // INIT        
   // =========================
   ngOnInit(): void {
     this.isSeller = !!localStorage.getItem('sellerLoggedIn');
