@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
       'https://backend-auth-service-ks6f.onrender.com',
       'https://backend-product-service-ncl2.onrender.com',
       'https://backend-cart-order-service-q6qh.onrender.com',
-      'https://backend-ml-events-service-ba9v.onrender.com',
+      'https://backend-ml-events-service-ohhr.onrender.com',
       'https://backend-ml-recommendation-service-huu6.onrender.com',
       'https://assistant-service-production-4c1b.up.railway.app/'
     ];
