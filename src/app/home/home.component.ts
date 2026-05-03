@@ -1,5 +1,5 @@
 // =========================
-// Cell 1: Home Component (FINAL - NO EVENT TRACKING ✅)
+// Cell 1: Home Component (FINAL - NO EVENT TRACKING ✅)   
 // =========================
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
