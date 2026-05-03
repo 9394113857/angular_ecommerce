@@ -1,3 +1,7 @@
+// =========================
+// Cell 1: Checkout Component (FINAL - ML EVENTS CLEAN ✅)
+// =========================
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
@@ -30,21 +34,29 @@ export class CheckoutComponent implements OnInit {
     private eventTracking: EventTrackingService
   ) {}
 
+  // =========================
+  // INIT
+  // =========================
   ngOnInit(): void {
     this.titleService.setTitle('E-Comm | Checkout');
     this.loadCart();
   }
 
+  // =========================
+  // LOAD CART
+  // =========================
   loadCart(): void {
     this.isLoading = true;
 
     this.cartService.getCart().subscribe({
       next: (items) => {
         this.cartItems = items || [];
+
         this.totalPrice = this.cartItems.reduce(
           (sum, item) => sum + item.price * item.quantity,
           0
         );
+
         this.isLoading = false;
       },
       error: () => {
@@ -53,6 +65,9 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
+  // =========================
+  // PLACE ORDER
+  // =========================
   placeOrder(): void {
 
     if (this.checkoutForm.invalid || this.cartItems.length === 0) return;
@@ -68,19 +83,23 @@ export class CheckoutComponent implements OnInit {
 
       next: () => {
 
-        // 🔥 ML EVENT TRACKING (FIXED)
+        // 🔥 EVENT: CHECKOUT COMPLETED (STRONGEST ML SIGNAL)
         this.cartItems.forEach(item => {
           this.eventTracking.trackEvent({
-            event_type: 'checkout',
-            object_id: item.product_id,  // ✅ FIX HERE
+            event_type: 'checkout_completed',
+            object_id: item.product_id,
             event_metadata: {
               quantity: item.quantity,
-              price: item.price
+              price: item.price,
+              total_order_value: this.totalPrice
             }
           });
         });
 
+        // Reset cart count
         this.cartService.cartChanged.emit(0);
+
+        // Navigate to orders page
         this.router.navigate(['/orders']);
       },
 
