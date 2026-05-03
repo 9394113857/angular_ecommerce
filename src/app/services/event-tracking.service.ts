@@ -1,5 +1,5 @@
 // =========================
-// Event Tracking Service (FINAL - WORKING + DEBUG ✅)
+// Event Tracking Service (FINAL - PRODUCTION READY ✅)
 // =========================
 
 import { Injectable } from '@angular/core';
@@ -10,57 +10,35 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EventTrackingService {
 
-  // 🔥 FIXED ENDPOINT (IMPORTANT)
+  // ✅ FINAL CLEAN BACKEND API
   private readonly BASE_URL =
-    'https://backend-ml-events-service-ohhr.onrender.com/events';
+    'https://backend-ml-events-service-ohhr.onrender.com/api/v1/events';
 
   constructor(private http: HttpClient) {}
 
   // =========================
   // TRACK EVENT
   // =========================
-  trackEvent(event: any) {
+  trackEvent(event: any): void {
 
     const userId = this.getUserId();
-
-    if (!userId) {
-      console.warn("⚠️ No user logged in → event skipped");
-      return;
-    }
+    if (!userId) return;
 
     const payload = {
       user_id: userId,
       session_id: this.getSessionId(),
-
       event_type: event.event_type,
-
-      // backend expects this
       object_type: 'product',
-
-      object_id: event.object_id
-        ? Number(event.object_id)
-        : null,
-
+      object_id: event.object_id ? Number(event.object_id) : null,
       event_metadata: event.event_metadata || {}
     };
 
-    // 🔥 DEBUG LOG
-    console.log("📡 Sending event:", payload);
-
-    this.http.post(this.BASE_URL, payload).subscribe({
-      next: (res) => {
-        console.log("✅ Event sent successfully:", res);
-      },
-      error: (err) => {
-        console.error("❌ Event failed:", err);
-      }
-    });
+    this.http.post(this.BASE_URL, payload).subscribe();
   }
 
   // =========================
   // HELPERS
   // =========================
-
   private getUserId(): number | null {
     const user = localStorage.getItem('userLoggedIn');
     return user ? JSON.parse(user).id : null;
