@@ -1,3 +1,7 @@
+// =========================
+// Cell 1: Product Details Component (FINAL - ML EVENTS CLEAN ✅)
+// =========================
+
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../services/product.service';
@@ -29,9 +33,11 @@ export class ProductDetailsComponent implements OnInit {
     private router: Router,
     private titleService: Title,
     private eventTracking: EventTrackingService
-
   ) {}
 
+  // =========================
+  // INIT
+  // =========================
   ngOnInit(): void {
     this.isSeller = !!localStorage.getItem('sellerLoggedIn');
 
@@ -45,27 +51,27 @@ export class ProductDetailsComponent implements OnInit {
       next: (data) => {
         this.product = data;
 
+        // 🔥 EVENT: VIEW PRODUCT
         this.eventTracking.trackEvent({
-    event_type: 'view_product',
-    object_type: 'product',
-    object_id: data.id.toString()
-  });
+          event_type: 'view_product',
+          object_id: data.id
+        });
 
-        // default variant
+        // Default variant
         if (this.product.variants?.length) {
           this.onVariantChange(this.product.variants[0]);
         }
 
         this.titleService.setTitle(`E-Comm | ${data.name}`);
         this.isLoading = false;
-      }, //next
+      },
       error: () => (this.isLoading = false)
     });
   }
 
-  // ==========================
+  // =========================
   // VARIANT CHANGE
-  // ==========================
+  // =========================
   onVariantChange(variant: ProductVariant): void {
     this.selectedVariant = variant;
     this.selectedStock = variant.stock;
@@ -73,18 +79,20 @@ export class ProductDetailsComponent implements OnInit {
     if (this.quantity > this.selectedStock) {
       this.quantity = this.selectedStock || 1;
     }
+
+    // 🔥 EVENT: VARIANT SELECTED
     this.eventTracking.trackEvent({
-  event_type: 'variant_selected',
-  object_type: 'variant',
-  object_id: variant.variant_id.toString(),
-  metadata: { color: variant.color }
-});
+      event_type: 'variant_selected',
+      object_id: variant.variant_id,
+      event_metadata: {
+        color: variant.color
+      }
+    });
+  }
 
-  }// onVariantChange
-
-  // ==========================
+  // =========================
   // QUANTITY CONTROLS
-  // ==========================
+  // =========================
   increaseQty(): void {
     if (this.quantity < this.selectedStock) {
       this.quantity++;
@@ -97,22 +105,21 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  // ==========================
+  // =========================
   // ADD TO CART
-  // ==========================
+  // =========================
   addToCart(): void {
     if (this.selectedStock === 0) return;
 
+    // 🔥 EVENT: ADD TO CART
     this.eventTracking.trackEvent({
-  event_type: 'add_to_cart',
-  object_type: 'product',
-  object_id: this.product.id.toString(),
-  metadata: {
-    variant_id: this.selectedVariant.variant_id,
-    quantity: this.quantity
-  }
-});
-
+      event_type: 'add_to_cart',
+      object_id: this.product.id,
+      event_metadata: {
+        variant_id: this.selectedVariant.variant_id,
+        quantity: this.quantity
+      }
+    });
 
     if (!localStorage.getItem('userLoggedIn')) {
       this.router.navigate(['/login']);
@@ -133,9 +140,9 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 
-  // ==========================
-  // SELLER
-  // ==========================
+  // =========================
+  // SELLER EDIT
+  // =========================
   editProduct(): void {
     this.router.navigate([`/seller-update-product/${this.product.id}`]);
   }
