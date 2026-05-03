@@ -1,3 +1,7 @@
+// =========================
+// Cell 1: Cart Component (FINAL - ML EVENTS CLEAN ✅)
+// =========================
+
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -16,7 +20,9 @@ export class CartComponent implements OnInit {
   isLoading = true;
   isUserLoggedIn = false;
 
-  // price summary
+  // =========================
+  // PRICE SUMMARY
+  // =========================
   subtotal = 0;
   deliveryCharge = 100;
   total = 0;
@@ -28,6 +34,9 @@ export class CartComponent implements OnInit {
     private eventTracking: EventTrackingService
   ) {}
 
+  // =========================
+  // INIT
+  // =========================
   ngOnInit(): void {
     this.titleService.setTitle('E-Comm | Cart');
 
@@ -41,21 +50,22 @@ export class CartComponent implements OnInit {
     this.loadCart();
   }
 
-  // ==========================
+  // =========================
   // LOAD CART
-  // ==========================
+  // =========================
   loadCart(): void {
     this.isLoading = true;
 
+    // 🔥 EVENT: CART VIEW
     this.eventTracking.trackEvent({
-  event_type: 'cart_view'
-});
-
+      event_type: 'cart_view'
+    });
 
     this.cartService.getCart().subscribe({
       next: (items) => {
         this.cartItems = items || [];
         this.calculateTotals();
+
         this.cartService.cartChanged.emit(this.cartItems.length);
         this.isLoading = false;
       },
@@ -65,9 +75,9 @@ export class CartComponent implements OnInit {
     });
   }
 
-  // ==========================
+  // =========================
   // CALCULATE TOTALS
-  // ==========================
+  // =========================
   calculateTotals(): void {
     this.subtotal = this.cartItems.reduce(
       (sum, item) => sum + item.price * item.quantity,
@@ -77,13 +87,19 @@ export class CartComponent implements OnInit {
     this.total = this.subtotal + this.deliveryCharge;
   }
 
-  // ==========================
+  // =========================
   // CHECKOUT
-  // ==========================
+  // =========================
   goToCheckout(): void {
+
+    // 🔥 EVENT: CHECKOUT STARTED
     this.eventTracking.trackEvent({
-  event_type: 'checkout_started'
-});
+      event_type: 'checkout_started',
+      event_metadata: {
+        cart_size: this.cartItems.length,
+        cart_value: this.total
+      }
+    });
 
     this.router.navigate(['/checkout']);
   }
