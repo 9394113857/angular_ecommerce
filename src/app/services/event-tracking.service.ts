@@ -1,6 +1,6 @@
-// =====================================================
-// 📦 EVENT TRACKING SERVICE (FINAL FIXED)
-// =====================================================
+// =========================
+// Event Tracking Service (FINAL DEBUG + FIXED ✅)
+// =========================
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -10,44 +10,43 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EventTrackingService {
 
+  // 🔥 FIX: TRY /events INSTEAD OF /api/events
   private readonly BASE_URL =
-    'https://backend-ml-events-service-ohhr.onrender.com/api/events';
+    'https://backend-ml-events-service-ohhr.onrender.com/events';
 
   constructor(private http: HttpClient) {}
 
-  // =====================================================
-  // 📊 TRACK EVENT (FINAL FIX)
-  // =====================================================
+  // =========================
+  // TRACK EVENT
+  // =========================
   trackEvent(event: any) {
 
     const userId = this.getUserId();
-    if (!userId) return;
+    if (!userId) {
+      console.warn("⚠️ No user found, skipping event");
+      return;
+    }
 
     const payload = {
       user_id: userId,
       session_id: this.getSessionId(),
-
       event_type: event.event_type,
-
-      // 🔥 FIX: ALWAYS SEND product
       object_type: 'product',
-
-      object_id: event.object_id
-        ? Number(event.object_id)
-        : null,
-
-      event_metadata: event.event_metadata || event.metadata || {}
+      object_id: event.object_id ? Number(event.object_id) : null,
+      event_metadata: event.event_metadata || {}
     };
 
+    console.log("📡 Sending event:", payload);
+
     this.http.post(this.BASE_URL, payload).subscribe({
-      error: () => {}
+      next: (res) => console.log("✅ Event sent successfully", res),
+      error: (err) => console.error("❌ Event failed", err)
     });
   }
 
-  // =====================================================
-  // 🔧 HELPERS
-  // =====================================================
-
+  // =========================
+  // HELPERS
+  // =========================
   private getUserId(): number | null {
     const user = localStorage.getItem('userLoggedIn');
     return user ? JSON.parse(user).id : null;
