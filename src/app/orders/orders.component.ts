@@ -1,5 +1,5 @@
 // =========================
-// Cell 1: Orders Component (FINAL - ML EVENTS CLEAN ✅)
+// Orders Component (FINAL FIXED - BUILD SAFE ✅)
 // =========================
 
 import { Component, OnInit } from '@angular/core';
@@ -25,7 +25,7 @@ export class OrdersComponent implements OnInit {
   ) {}
 
   // =========================
-  // INIT         
+  // INIT
   // =========================
   ngOnInit(): void {
     this.loadOrders();
@@ -62,12 +62,12 @@ export class OrdersComponent implements OnInit {
       state: { order }
     });
 
-    // 🔥 EVENT: ORDER VIEW
+    // 🔥 EVENT: ORDER VIEW (FIXED ✅)
     this.eventTracking.trackEvent({
       event_type: 'order_view',
       object_id: order.order_id,
       event_metadata: {
-        total_items: order.items?.length || 0
+        order_id: order.order_id
       }
     });
   }
@@ -85,31 +85,14 @@ export class OrdersComponent implements OnInit {
 
         console.log('🔥 Cancel success, sending ML events');
 
-        // 🔥 EVENT: ORDER CANCELLED (PRODUCT LEVEL)
-        if (order.items && order.items.length > 0) {
-
-          order.items.forEach((item: any) => {
-            this.eventTracking.trackEvent({
-              event_type: 'order_cancelled',
-              object_id: item.product_id,
-              event_metadata: {
-                quantity: item.quantity,
-                price: item.price
-              }
-            });
-          });
-
-        } else {
-
-          // fallback if items missing
-          this.eventTracking.trackEvent({
-            event_type: 'order_cancelled',
-            object_id: order.order_id,
-            event_metadata: {
-              fallback: true
-            }
-          });
-        }
+        // 🔥 EVENT: ORDER CANCELLED
+        this.eventTracking.trackEvent({
+          event_type: 'order_cancelled',
+          object_id: order.order_id,
+          event_metadata: {
+            order_id: order.order_id
+          }
+        });
 
         this.loadOrders();
       },
