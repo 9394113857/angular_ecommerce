@@ -52,7 +52,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {}
 
   // =========================
-  // INIT
+  // INIT             
   // =========================
   ngOnInit(): void {
     this.titleService.setTitle('E-Comm | Home');
