@@ -1,94 +1,58 @@
-/* product card */
-
-
 .product-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 250px;
+  flex: 1 1 250px;
+  max-width: 300px;
   padding: 10px;
-  margin: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f9f9f9;
-  height: 280px;
+  min-height: 280px;
 }
 
 .image-container {
   width: 100%;
-  text-align: center;
-  margin-bottom: 10px;
-  height: 100px;
+  aspect-ratio: 1 / 1;
 }
 
 .image-container img {
-  max-width: 100%;
+  width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
-.product-details {
+.productData-details {
   text-align: center;
-  margin-bottom: 5px;
+  margin: 5px 0;
 }
-
-
 
 .button-container {
   display: flex;
-  justify-content: space-between;
   width: 100%;
+  gap: 5px;
 }
 
 .button-container button {
+  flex: 1;
   border: none;
   border-radius: 5px;
   background-color: #4caf50;
   color: white;
   cursor: pointer;
-  width: 50%;
   padding: 8px;
 }
 
-
 .button-container button:first-child {
   background-color: blue;
-  color: white;
-
-}
-
-.button-container button:last-child {
-  margin-left: 25px;
-}
-
-.button-container button:first-child:hover {
-  background-color: rgb(52, 52, 150);
-
 }
 
 .button-container button:hover {
   background-color: #45a049;
 }
 
-.button-container fa-icon {
-  margin-right: 5px;
-}
-
-.onlyViewDetailsbtn{
-  width: 250px !important;
+.onlyViewDetailsbtn {
+  width: 100% !important;
   padding: 10px !important;
   margin-left: 0px !important;
-}
-
-
-
-@media (max-width: 768px) {
-  .trendyHead {
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 576px) {
-  .trendyHead {
-    font-size: 14px;
-  }
 }
