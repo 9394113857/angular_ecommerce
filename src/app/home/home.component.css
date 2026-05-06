@@ -1,35 +1,157 @@
-.show-trends-product {
+/* STATUS */
+
+.simple-status {
+  position: fixed;
+
+  bottom: 15px;
+  left: 15px;
+
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
+
+  background: rgba(17, 17, 17, 0.9);
+
+  color: white;
+
+  padding: 8px 12px;
+
+  border-radius: 30px;
+
+  font-size: 12px;
+
+  z-index: 999;
+
+  backdrop-filter: blur(4px);
 }
 
-.trendyHead {
-  font-size: 24px;
-  margin: 20px 10px;
-  text-align: center;
+.dot {
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
 }
 
-/* Slider */
+.red-blink {
+  background: red;
+  animation: blink 1s infinite;
+}
+
+.yellow-blink {
+  background: yellow;
+  animation: blink 1s infinite;
+}
+
+.green-blink {
+  background: lime;
+  animation: blink 1s infinite;
+}
+
+.green {
+  background: lime;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+/* SLIDER */
+
 .home_main_container_slider {
   width: 100%;
-  margin: auto;
+
   overflow: hidden;
+
   position: relative;
+
+  border-radius: 12px;
+
+  margin-bottom: 20px;
 }
 
 .home_slider_container {
   display: flex;
+
   transition: transform 0.5s ease-in-out;
 }
 
 .home_slider_container img {
   width: 100%;
   height: auto;
+
+  object-fit: cover;
+}
+
+.carousel_controls {
+  position: absolute;
+
+  top: 50%;
+  left: 0;
+
+  width: 100%;
+
+  transform: translateY(-50%);
+
+  display: flex;
+  justify-content: space-between;
 }
 
 .carousel_controls button {
+  border: none;
+
+  background: rgba(0, 0, 0, 0.5);
+
+  color: white;
+
+  padding: 14px 10px;
+
+  cursor: pointer;
+
+  font-size: 18px;
+
+  transition: background 0.2s ease;
+}
+
+.carousel_controls button:hover {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+/* PRODUCTS */
+
+.show-trends-product {
+  display: flex;
+  flex-wrap: wrap;
+
+  justify-content: center;
+
+  gap: 14px;
+
   padding: 10px;
-  font-size: 16px;
+}
+
+.trendyHead {
+  text-align: center;
+
+  font-size: 28px;
+
+  margin: 25px 0 15px;
+
+  color: #222;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+  .trendyHead {
+    font-size: 22px;
+  }
+
+  .carousel_controls button {
+    padding: 10px 6px;
+    font-size: 15px;
+  }
+
 }

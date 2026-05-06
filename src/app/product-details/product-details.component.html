@@ -2,76 +2,92 @@
   <p>Loading product...</p>
 </div>
 
-<div *ngIf="!isLoading && product" class="product-details">
+<div *ngIf="!isLoading && product" class="product-container">
 
-  <h1>{{ product.name }}</h1>
+  <div class="image-container">
+    <img
+      class="product-img"
+      [src]="product.image || 'https://via.placeholder.com/400'"
+      alt="Product image"
+    />
+  </div>
 
-  <img
-    [src]="product.image || 'https://via.placeholder.com/400'"
-    alt="Product image"
-  />
+  <div class="product-details">
 
-  <p class="price">₹ {{ product.price }}</p>
+    <h1>{{ product.name }}</h1>
 
-  <p *ngIf="product.description">
-    {{ product.description }}
-  </p>
+    <p class="price">₹ {{ product.price }}</p>
 
-  <!-- ==========================
-       VARIANT DROPDOWN
-  =========================== -->
-  <div *ngIf="!isSeller && product.variants?.length">
-    <label><b>Color:</b></label>
+    <p *ngIf="product.description">
+      {{ product.description }}
+    </p>
 
-    <select
-      [(ngModel)]="selectedVariant"
-      (ngModelChange)="onVariantChange($event)"
-    >
-      <option
-        *ngFor="let v of product.variants"
-        [ngValue]="v"
+    <!-- ==========================
+         VARIANT DROPDOWN
+    =========================== -->
+    <div *ngIf="!isSeller && product.variants?.length">
+      <label><b>Color:</b></label>
+
+      <select
+        [(ngModel)]="selectedVariant"
+        (ngModelChange)="onVariantChange($event)"
       >
-        {{ v.color }} ({{ v.stock }} left)
-      </option>
-    </select>
-  </div>
+        <option
+          *ngFor="let v of product.variants"
+          [ngValue]="v"
+        >
+          {{ v.color }} ({{ v.stock }} left)
+        </option>
+      </select>
+    </div>
 
-  <!-- ==========================
-       STOCK DISPLAY
-  =========================== -->
-  <p *ngIf="!isSeller">
-    <b>Stock:</b>
-    <span [style.color]="selectedStock === 0 ? 'red' : 'green'">
-      {{ selectedStock > 0 ? selectedStock + ' available' : 'Out of stock' }}
-    </span>
-  </p>
+    <!-- ==========================
+         STOCK DISPLAY
+    =========================== -->
+    <p *ngIf="!isSeller">
+      <b>Stock:</b>
 
-  <!-- ==========================
-       QUANTITY
-  =========================== -->
-  <div *ngIf="!isSeller" class="quantity-controls">
-    <button (click)="decreaseQty()">-</button>
-    <span>{{ quantity }}</span>
-    <button (click)="increaseQty()">+</button>
-  </div>
+      <span [style.color]="selectedStock === 0 ? 'red' : 'green'">
+        {{ selectedStock > 0 ? selectedStock + ' available' : 'Out of stock' }}
+      </span>
+    </p>
 
-  <!-- ==========================
-       ACTIONS
-  =========================== -->
-  <div *ngIf="!isSeller">
-    <button
-      class="form-button"
-      (click)="addToCart()"
-      [disabled]="selectedStock === 0"
-    >
-      Add to Cart
-    </button>
-  </div>
+    <!-- ==========================
+         QUANTITY CONTROLS
+    =========================== -->
+    <div *ngIf="!isSeller" class="quantity-group">
 
-  <div *ngIf="isSeller">
-    <button class="form-button" (click)="editProduct()">
-      Edit Product
-    </button>
+      <button (click)="decreaseQty()">-</button>
+
+      <span>{{ quantity }}</span>
+
+      <button (click)="increaseQty()">+</button>
+
+    </div>
+
+    <!-- ==========================
+         ACTION BUTTONS
+    =========================== -->
+
+    <div *ngIf="!isSeller">
+      <button
+        class="form-button"
+        (click)="addToCart()"
+        [disabled]="selectedStock === 0"
+      >
+        Add to Cart
+      </button>
+    </div>
+
+    <div *ngIf="isSeller">
+      <button
+        class="form-button Editbtn"
+        (click)="editProduct()"
+      >
+        Edit Product
+      </button>
+    </div>
+
   </div>
 
 </div>

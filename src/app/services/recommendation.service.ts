@@ -22,7 +22,7 @@ export class RecommendationService {
   // LOCAL (commented)
   // private readonly BASE_URL = 'http://127.0.0.1:5000/api';
 
-  // RENDER (LIVE)
+  // RENDER (LIVE) 
   private readonly BASE_URL =
     'https://backend-ml-recommendation-service-huu6.onrender.com/api';
 
