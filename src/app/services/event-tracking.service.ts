@@ -1,6 +1,6 @@
-// =====================================================
-// 📦 EVENT TRACKING SERVICE (FINAL FIXED)
-// =====================================================
+// =========================
+// Event Tracking Service (FINAL - PRODUCTION READY ✅)
+// =========================
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -10,15 +10,16 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EventTrackingService {
 
+  // ✅ FINAL CLEAN BACKEND API
   private readonly BASE_URL =
-    'https://backend-ml-events-service-ba9v.onrender.com/api/events';
+    'https://backend-ml-events-service-ohhr.onrender.com/api/v1/events';
 
   constructor(private http: HttpClient) {}
 
-  // =====================================================
-  // 📊 TRACK EVENT (FINAL FIX)
-  // =====================================================
-  trackEvent(event: any) {
+  // =========================
+  // TRACK EVENT
+  // =========================
+  trackEvent(event: any): void {
 
     const userId = this.getUserId();
     if (!userId) return;
@@ -26,28 +27,18 @@ export class EventTrackingService {
     const payload = {
       user_id: userId,
       session_id: this.getSessionId(),
-
       event_type: event.event_type,
-
-      // 🔥 FIX: ALWAYS SEND product
       object_type: 'product',
-
-      object_id: event.object_id
-        ? Number(event.object_id)
-        : null,
-
-      event_metadata: event.event_metadata || event.metadata || {}
+      object_id: event.object_id ? Number(event.object_id) : null,
+      event_metadata: event.event_metadata || {}
     };
 
-    this.http.post(this.BASE_URL, payload).subscribe({
-      error: () => {}
-    });
+    this.http.post(this.BASE_URL, payload).subscribe();
   }
 
-  // =====================================================
-  // 🔧 HELPERS
-  // =====================================================
-
+  // =========================
+  // HELPERS
+  // =========================
   private getUserId(): number | null {
     const user = localStorage.getItem('userLoggedIn');
     return user ? JSON.parse(user).id : null;

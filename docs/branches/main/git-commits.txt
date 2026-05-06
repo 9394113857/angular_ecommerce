@@ -1,0 +1,10 @@
+git add .
+git commit -m "🚀 Responsive UI upgrade
+
+✔ Mobile → clean vertical layout
+✔ Tablet → balanced grid
+✔ Desktop → multi-column layout
+✔ Removed fixed widths/heights
+✔ Improved product cards, header, and layout responsiveness
+✔ No overflow issues"
+git push origin main

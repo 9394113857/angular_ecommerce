@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
       'https://backend-cart-order-service-q6qh.onrender.com',
       'https://backend-ml-events-service-ba9v.onrender.com',
       'https://backend-ml-recommendation-service-huu6.onrender.com',
-      'https://assistant-service-production-4c1b.up.railway.app/'
+      // 'https://assistant-service-production-4c1b.up.railway.app/'
     ];
 
     let completed = 0;

@@ -9,6 +9,13 @@ html, body {
     box-sizing: border-box;
 }
 
+/* Make all elements use border-box for easier sizing on all pages */
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 /* VERY IMPORTANT:
    Push routed pages BELOW sticky header */
 router-outlet + * {

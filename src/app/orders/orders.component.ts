@@ -1,3 +1,7 @@
+// =========================
+// Orders Component (FINAL FIXED - BUILD SAFE ✅)
+// =========================
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { OrderService } from '../services/order.service';
@@ -20,17 +24,21 @@ export class OrdersComponent implements OnInit {
     private eventTracking: EventTrackingService
   ) {}
 
+  // =========================
+  // INIT    
+  // =========================
   ngOnInit(): void {
     this.loadOrders();
 
+    // 🔥 EVENT: ORDERS PAGE VIEW
     this.eventTracking.trackEvent({
       event_type: 'orders_page_view'
     });
   }
 
-  // ==========================
+  // =========================
   // LOAD ORDERS
-  // ==========================
+  // =========================
   loadOrders(): void {
     this.isLoading = true;
 
@@ -45,24 +53,28 @@ export class OrdersComponent implements OnInit {
     });
   }
 
-  // ==========================
+  // =========================
   // VIEW ORDER
-  // ==========================
+  // =========================
   viewOrder(order: Order): void {
 
     this.router.navigate(['/orders', order.order_id], {
       state: { order }
     });
 
+    // 🔥 EVENT: ORDER VIEW (FIXED ✅)
     this.eventTracking.trackEvent({
       event_type: 'order_view',
-      object_id: order.order_id
+      object_id: order.order_id,
+      event_metadata: {
+        order_id: order.order_id
+      }
     });
   }
 
-  // ==========================
-  // CANCEL ORDER (🔥 FINAL FIX)
-  // ==========================
+  // =========================
+  // CANCEL ORDER
+  // =========================
   cancelOrder(order: any): void {
 
     if (!confirm('Are you sure you want to cancel this order?')) return;
@@ -73,33 +85,14 @@ export class OrdersComponent implements OnInit {
 
         console.log('🔥 Cancel success, sending ML events');
 
-        // =====================================================
-        // 🔥 CRITICAL FIX: SEND PRODUCT LEVEL EVENTS
-        // =====================================================
-        if (order.items && order.items.length > 0) {
-
-          order.items.forEach((item: any) => {
-            this.eventTracking.trackEvent({
-              event_type: 'order_cancelled',
-              object_id: item.product_id,   // ✅ PRODUCT ID (VERY IMPORTANT)
-              object_type: 'product',
-              event_metadata: {
-                quantity: item.quantity,
-                price: item.price
-              }
-            });
-          });
-
-        } else {
-          // fallback (if items not present)
-          console.warn('⚠️ No items found, fallback event');
-
-          this.eventTracking.trackEvent({
-            event_type: 'order_cancelled',
-            object_id: order.order_id,   // fallback only
-            object_type: 'product'
-          });
-        }
+        // 🔥 EVENT: ORDER CANCELLED
+        this.eventTracking.trackEvent({
+          event_type: 'order_cancelled',
+          object_id: order.order_id,
+          event_metadata: {
+            order_id: order.order_id
+          }
+        });
 
         this.loadOrders();
       },
