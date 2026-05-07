@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import {
   HttpClientModule,
   HTTP_INTERCEPTORS
@@ -82,7 +83,8 @@ import { ContactUsComponent } from './pages/contact-us/contact-us.component';
     FormsModule,
     HttpClientModule,
     FontAwesomeModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule
   ],
   providers: [
     SharedService,

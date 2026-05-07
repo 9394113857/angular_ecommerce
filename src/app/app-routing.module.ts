@@ -20,6 +20,9 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { OrdersComponent } from './orders/orders.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
 
+import { ContactUsComponent }
+from './pages/contact-us/contact-us.component';
+
 import { protectRouteGuard } from './protect-route.guard';
 
 const routes: Routes = [
@@ -27,6 +30,12 @@ const routes: Routes = [
     path: '',
     component: HomeComponent
   },
+
+  // This route is for testing purpose, it can be removed later
+  {
+    path: 'contact-us',
+    component: ContactUsComponent
+   },
 
   {
     path: 'auth',

@@ -7,35 +7,34 @@
   </p>
 
   <form
-    [formGroup]="contactForm"
-    (ngSubmit)="submitContactRequest()"
+    (submit)="submitContactRequest()"
   >
 
     <!-- NAME -->
     <input
       type="text"
-      formControlName="name"
+      name="name"
       placeholder="Enter your name"
     />
 
     <!-- EMAIL -->
     <input
       type="email"
-      formControlName="email"
+      name="email"
       placeholder="Enter your email"
     />
 
     <!-- SUBJECT -->
     <input
       type="text"
-      formControlName="subject"
+      name="subject"
       placeholder="Enter subject"
     />
 
     <!-- MESSAGE -->
     <textarea
       rows="7"
-      formControlName="message"
+      name="message"
       placeholder="Enter your concern or message"
     ></textarea>
 
