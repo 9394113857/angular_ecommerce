@@ -1,0 +1,95 @@
+Perfect brooo 😄
+YES — now ONLY creation/setup steps first. No code yet 👍
+STEP 1 — GENERATE PAGE COMPONENT
+Inside Angular project root:
+ng g c pages/contact-us
+This creates:
+src/app/pages/contact-us/
+with:
+contact-us.component.ts
+contact-us.component.html
+contact-us.component.css
+contact-us.component.spec.ts
+________________________________________
+STEP 2 — GENERATE SERVICE
+Command:
+ng g s services/contact
+Creates:
+src/app/services/contact.service.ts
+src/app/services/contact.service.spec.ts
+________________________________________
+STEP 3 — CREATE MODEL FOLDER (MANUAL)
+Inside:
+src/app/
+Create folder manually:
+models
+________________________________________
+STEP 4 — CREATE MODEL FILE (MANUAL)
+Inside:
+src/app/models/
+Create file manually:
+contact-request.model.ts
+________________________________________
+FINAL STRUCTURE AFTER ALL STEPS
+src/app/
+│
+├── pages/
+│   └── contact-us/
+│       ├── contact-us.component.ts
+│       ├── contact-us.component.html
+│       ├── contact-us.component.css
+│       └── contact-us.component.spec.ts
+│
+├── services/
+│   ├── contact.service.ts
+│   └── contact.service.spec.ts
+│
+├── models/
+│   └── contact-request.model.ts
+________________________________________
+OPTIONAL CLEANUP 😄
+You can delete spec files later if not using tests:
+*.spec.ts
+but optional only.
+________________________________________
+AFTER CREATION
+Next steps later will be:
+1. model code
+2. service code
+3. component ts
+4. html
+5. css
+6. routing
+7. navbar
+8. backend connection
+Now first create folders/files only 😄
+
+===============================================
+
+IMPORTANT NEXT STEP 😄
+app.module.ts
+Add:
+import { ReactiveFormsModule } from '@angular/forms';
+AND inside imports:
+ReactiveFormsModule
+________________________________________
+ROUTING IMPORT
+app-routing.module.ts
+Add:
+import { ContactUsComponent }
+from './pages/contact-us/contact-us.component';
+________________________________________
+ROUTE
+Add ABOVE **
+{
+  path: 'contact-us',
+  component: ContactUsComponent
+},
+________________________________________
+HEADER MENU
+Add:
+<li><a routerLink="/contact-us">Contact Us</a></li>
+inside:
+•	default menu 
+•	user menu 😄
+

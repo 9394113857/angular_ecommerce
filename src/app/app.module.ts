@@ -42,6 +42,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SharedService } from './services/shared.service';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ChatWidgetComponent } from './assistant/chat-widget/chat-widget.component';
+import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { ChatWidgetComponent } from './assistant/chat-widget/chat-widget.compone
 
     UnauthorizedComponent,
     PageNotFoundComponent,
-    ChatWidgetComponent
+    ChatWidgetComponent,
+    ContactUsComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,74 @@
+<div class="contact-container">
+
+  <h1>Contact Us</h1>
+
+  <p class="subtitle">
+    Our support team will contact you shortly.
+  </p>
+
+  <form
+    [formGroup]="contactForm"
+    (ngSubmit)="submitContactRequest()"
+  >
+
+    <!-- NAME -->
+    <input
+      type="text"
+      formControlName="name"
+      placeholder="Enter your name"
+    />
+
+    <!-- EMAIL -->
+    <input
+      type="email"
+      formControlName="email"
+      placeholder="Enter your email"
+    />
+
+    <!-- SUBJECT -->
+    <input
+      type="text"
+      formControlName="subject"
+      placeholder="Enter subject"
+    />
+
+    <!-- MESSAGE -->
+    <textarea
+      rows="7"
+      formControlName="message"
+      placeholder="Enter your concern or message"
+    ></textarea>
+
+    <!-- BUTTON -->
+    <button
+      type="submit"
+      [disabled]="isSubmitting"
+    >
+
+      {{
+        isSubmitting
+          ? 'Submitting...'
+          : 'Submit Request'
+      }}
+
+    </button>
+
+  </form>
+
+  <!-- SUCCESS -->
+  <p
+    class="success-message"
+    *ngIf="successMessage"
+  >
+    {{ successMessage }}
+  </p>
+
+  <!-- ERROR -->
+  <p
+    class="error-message"
+    *ngIf="errorMessage"
+  >
+    {{ errorMessage }}
+  </p>
+
+</div>
