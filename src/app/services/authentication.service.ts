@@ -1,3 +1,8 @@
+// =====================================================
+// 🔐 AUTHENTICATION SERVICE
+// 2026 AUTH + PROFILE + VERIFY EMAIL FLOW
+// =====================================================
+
 import { Injectable } from '@angular/core';
 
 import {
@@ -7,7 +12,10 @@ import {
 
 import { Router } from '@angular/router';
 
-import { BehaviorSubject } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable
+} from 'rxjs';
 
 import {
   Login,
@@ -22,21 +30,27 @@ import {
 export class AuthenticationService {
 
   // =====================================================
-  // 🌱 LOCAL BACKEND ACTIVE
+  // 🌱 LOCAL BACKEND
   // =====================================================
 
-  private readonly LOCAL_BASE_URL =
-    'http://127.0.0.1:5000/api/v1/auth';
+  // private readonly LOCAL_BASE_URL =
+  // 'http://127.0.0.1:5001/api/v1/auth';
+
 
   // =====================================================
-  // 🚀 LIVE BACKEND
+  // 🚀 LIVE RENDER BACKEND
   // =====================================================
 
-  // private readonly LIVE_BASE_URL =
-  // 'https://backend-auth-service-ks6f.onrender.com/api/v1/auth';
+  private readonly LIVE_BASE_URL =
+    'https://backend-auth-service-ks6f.onrender.com/api/v1/auth';
+
+
+  // =====================================================
+  // ACTIVE BASE URL
+  // =====================================================
 
   private readonly baseUrl =
-    this.LOCAL_BASE_URL;
+    this.LIVE_BASE_URL;
 
 
   // =====================================================
@@ -50,8 +64,11 @@ export class AuthenticationService {
 
 
   constructor(
+
     private http: HttpClient,
+
     private router: Router
+
   ) {
 
     this.initAuthState();
@@ -66,55 +83,101 @@ export class AuthenticationService {
 
     if (localStorage.getItem('sellerLoggedIn')) {
 
-      this.authState$.next('seller');
+      this.authState$.next(
+        'seller'
+      );
 
     } else if (
       localStorage.getItem('userLoggedIn')
     ) {
 
-      this.authState$.next('user');
+      this.authState$.next(
+        'user'
+      );
 
     } else {
 
-      this.authState$.next('default');
+      this.authState$.next(
+        'default'
+      );
     }
+
   }
 
 
   // =====================================================
-  // BLOCK AUTH PAGES
+  // BLOCK AUTH PAGES IF LOGGED IN
   // =====================================================
 
   notAllowedAuth(): void {
 
     if (
-      localStorage.getItem('sellerLoggedIn') ||
+
+      localStorage.getItem('sellerLoggedIn')
+
+      ||
+
       localStorage.getItem('userLoggedIn')
+
     ) {
 
       this.router.navigate(['/']);
     }
+
   }
 
 
   // =====================================================
-  // REGISTER
+  // REGISTER USER
   // =====================================================
 
-  userSignup(data: SignUp) {
+  userSignup(
+    data: SignUp
+  ): Observable<any> {
 
     return this.http.post(
 
       `${this.baseUrl}/angularUser/register`,
 
       {
-        first_name: data.first_name,
-        last_name: data.last_name,
-        email: data.email,
-        password: data.password,
-        role_type: data.role_type
+
+        first_name:
+          data.first_name,
+
+        last_name:
+          data.last_name,
+
+        email:
+          data.email,
+
+        password:
+          data.password,
+
+        role:
+          data.role_type
       }
+
     );
+
+  }
+
+
+  // =====================================================
+  // LOGIN USER
+  // =====================================================
+
+  loginUser(
+    data: Login
+  ): Observable<any> {
+
+    return this.http.post<any>(
+
+      `${this.baseUrl}/angularUser/login`,
+
+      data
+
+    );
+
   }
 
 
@@ -122,27 +185,84 @@ export class AuthenticationService {
   // VERIFY EMAIL
   // =====================================================
 
-  verifyEmail(token: string) {
+  verifyEmail(
+    token: string
+  ): Observable<any> {
 
     return this.http.get(
 
       `${this.baseUrl}/angularUser/verify-email/${token}`
+
     );
+
   }
 
 
   // =====================================================
-  // LOGIN
+  // GET PROFILE
   // =====================================================
 
-  loginUser(data: Login) {
+  getProfile(): Observable<any> {
 
-    return this.http.post<any>(
+    return this.http.get(
 
-      `${this.baseUrl}/angularUser/login`,
+      `${this.baseUrl}/profile`,
 
-      data
+      {
+        headers:
+          this.getAuthHeaders()
+      }
+
     );
+
+  }
+
+
+  // =====================================================
+  // UPDATE PROFILE
+  // =====================================================
+
+  updateProfile(
+    data: any
+  ): Observable<any> {
+
+    return this.http.put(
+
+      `${this.baseUrl}/profile`,
+
+      data,
+
+      {
+        headers:
+          this.getAuthHeaders()
+      }
+
+    );
+
+  }
+
+
+  // =====================================================
+  // CHANGE PASSWORD
+  // =====================================================
+
+  changePassword(
+    data: any
+  ): Observable<any> {
+
+    return this.http.put(
+
+      `${this.baseUrl}/change-password`,
+
+      data,
+
+      {
+        headers:
+          this.getAuthHeaders()
+      }
+
+    );
+
   }
 
 
@@ -150,7 +270,9 @@ export class AuthenticationService {
   // FORGOT PASSWORD
   // =====================================================
 
-  forgotPassword(email: string) {
+  forgotPassword(
+    email: string
+  ): Observable<any> {
 
     return this.http.post(
 
@@ -159,7 +281,9 @@ export class AuthenticationService {
       {
         email
       }
+
     );
+
   }
 
 
@@ -170,7 +294,7 @@ export class AuthenticationService {
   resetPassword(
     token: string,
     password: string
-  ) {
+  ): Observable<any> {
 
     return this.http.post(
 
@@ -179,62 +303,9 @@ export class AuthenticationService {
       {
         password
       }
+
     );
-  }
 
-
-  // =====================================================
-  // PROFILE
-  // =====================================================
-
-  getProfile() {
-
-    return this.http.get(
-
-      `${this.baseUrl}/profile`,
-
-      {
-        headers: this.getAuthHeaders()
-      }
-    );
-  }
-
-
-  // =====================================================
-  // UPDATE PROFILE
-  // =====================================================
-
-  updateProfile(data: any) {
-
-    return this.http.put(
-
-      `${this.baseUrl}/profile`,
-
-      data,
-
-      {
-        headers: this.getAuthHeaders()
-      }
-    );
-  }
-
-
-  // =====================================================
-  // CHANGE PASSWORD
-  // =====================================================
-
-  changePassword(data: any) {
-
-    return this.http.post(
-
-      `${this.baseUrl}/change-password`,
-
-      data,
-
-      {
-        headers: this.getAuthHeaders()
-      }
-    );
   }
 
 
@@ -247,6 +318,7 @@ export class AuthenticationService {
   ): void {
 
     this.authState$.next(role);
+
   }
 
 
@@ -256,11 +328,47 @@ export class AuthenticationService {
 
   logout(): void {
 
-    localStorage.clear();
+    this.http.post(
 
-    this.authState$.next('default');
+      `${this.baseUrl}/logout`,
 
-    this.router.navigate(['/login']);
+      {},
+
+      {
+        headers:
+          this.getAuthHeaders()
+      }
+
+    ).subscribe({
+
+      next: () => {
+
+        localStorage.clear();
+
+        this.authState$.next(
+          'default'
+        );
+
+        this.router.navigate([
+          '/login'
+        ]);
+      },
+
+      error: () => {
+
+        localStorage.clear();
+
+        this.authState$.next(
+          'default'
+        );
+
+        this.router.navigate([
+          '/login'
+        ]);
+      }
+
+    });
+
   }
 
 
@@ -268,14 +376,16 @@ export class AuthenticationService {
   // AUTH HEADERS
   // =====================================================
 
-  private getAuthHeaders(): HttpHeaders {
-
-    const token =
-      localStorage.getItem('token');
+  private getAuthHeaders():
+  HttpHeaders {
 
     return new HttpHeaders({
-      Authorization: `Bearer ${token}`
+
+      Authorization:
+        `Bearer ${localStorage.getItem('token')}`
+
     });
+
   }
 
 }

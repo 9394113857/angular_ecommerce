@@ -1,13 +1,29 @@
 <div class="nav">
+
   <div class="nav-content">
 
+    <!-- ===================================== -->
     <!-- LOGO -->
-    <div class="logo" routerLink="">
-      <h1>E-COMM</h1>
+    <!-- ===================================== -->
+
+    <div
+      class="logo"
+      routerLink=""
+    >
+
+      <h1>
+        E-COMM
+      </h1>
+
     </div>
 
+
+    <!-- ===================================== -->
     <!-- SEARCH -->
+    <!-- ===================================== -->
+
     <div class="search">
+
       <input
         type="text"
         #searchInput
@@ -15,72 +31,246 @@
         (input)="onSearchInput($event)"
         (blur)="hideSearch()"
       />
-      <button (click)="searchbtn(searchInput.value)">Search</button>
 
-      <ul *ngIf="searchResult.length > 0" class="small-search">
-        <li *ngFor="let item of searchResult">
-          <a (mousedown)="redirectToDetails(item.id)">
+      <button
+        (click)="searchbtn(searchInput.value)"
+      >
+
+        Search
+
+      </button>
+
+
+      <!-- SEARCH DROPDOWN -->
+
+      <ul
+        *ngIf="searchResult.length > 0"
+        class="small-search"
+      >
+
+        <li
+          *ngFor="let item of searchResult"
+        >
+
+          <a
+            (mousedown)="redirectToDetails(item.id)"
+          >
+
             {{ item.name }}
+
           </a>
+
         </li>
+
       </ul>
+
     </div>
 
+
+    <!-- ===================================== -->
     <!-- MENU -->
+    <!-- ===================================== -->
+
     <div [ngSwitch]="menuType">
 
+
+      <!-- ===================================== -->
       <!-- DEFAULT -->
-      <ul class="menu defaultMenu" *ngSwitchCase="'default'">
-        <li><a routerLink="/login">Login</a></li>
-        <li><a routerLink="/auth">Signup</a></li>
+      <!-- ===================================== -->
+
+      <ul
+        class="menu defaultMenu"
+        *ngSwitchCase="'default'"
+      >
+
         <li>
+
+          <a routerLink="/login">
+            Login
+          </a>
+
+        </li>
+
+        <li>
+
+          <a routerLink="/auth">
+            Signup
+          </a>
+
+        </li>
+
+        <li>
+
           <a routerLink="/cart">
-            Cart <span>{{ cartItems }}</span>
+
+            Cart
+
+            <span>
+              {{ cartItems }}
+            </span>
+
           </a>
+
         </li>
+
       </ul>
 
+
+      <!-- ===================================== -->
       <!-- SELLER -->
-      <ul class="menu sellerMenu" *ngSwitchCase="'seller'">
-        <li><a routerLink="/seller-add-product">Add Product</a></li>
-        <li><a routerLink="/seller-home">My Products</a></li>
-        <li><a (click)="sellerLogout()">Logout</a></li>
+      <!-- ===================================== -->
+
+      <ul
+        class="menu sellerMenu"
+        *ngSwitchCase="'seller'"
+      >
+
+        <li>
+
+          <a routerLink="/seller-add-product">
+            Add Product
+          </a>
+
+        </li>
+
+        <li>
+
+          <a routerLink="/seller-home">
+            My Products
+          </a>
+
+        </li>
+
+        <li>
+
+          <a
+            (click)="sellerLogout()"
+          >
+
+            Logout
+
+          </a>
+
+        </li>
+
       </ul>
 
-      <!-- USER (AMAZON STYLE) -->
-      <ul class="menu userMenu" *ngSwitchCase="'user'">
 
-        <!-- ACCOUNT DROPDOWN -->
-        <li class="account-dropdown" (click)="toggleDropdown()">
+      <!-- ===================================== -->
+      <!-- USER -->
+      <!-- ===================================== -->
+
+      <ul
+        class="menu userMenu"
+        *ngSwitchCase="'user'"
+      >
+
+        <!-- ACCOUNT -->
+
+        <li
+          class="account-dropdown"
+          (click)="toggleDropdown()"
+        >
+
           <a>
-            Hello, {{ username }} ▼
+
+            Hello,
+            {{ username }}
+
+            ▼
+
             <br />
-            <small>Account & Lists</small>
+
+            <small>
+              Account & Lists
+            </small>
+
           </a>
 
-          <ul class="dropdown" *ngIf="showDropdown">
-            <li><a routerLink="/orders">Your Orders</a></li>
-            <li><a (click)="userLogout()">Logout</a></li>
+
+          <!-- DROPDOWN -->
+
+          <ul
+            class="dropdown"
+            *ngIf="showDropdown"
+          >
+
+            <li>
+
+              <a routerLink="/profile">
+
+                My Profile
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a routerLink="/orders">
+
+                Your Orders
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a
+                (click)="userLogout()"
+              >
+
+                Logout
+
+              </a>
+
+            </li>
+
           </ul>
+
         </li>
 
-        <!-- RETURNS & ORDERS (ALWAYS VISIBLE) -->
+
+        <!-- RETURNS -->
+
         <li>
+
           <a routerLink="/orders">
-            Returns <br />
-            <strong>& Orders</strong>
+
+            Returns
+
+            <br />
+
+            <strong>
+              & Orders
+            </strong>
+
           </a>
+
         </li>
+
 
         <!-- CART -->
+
         <li>
+
           <a routerLink="/cart">
-            Cart <span>{{ cartItems }}</span>
+
+            Cart
+
+            <span>
+              {{ cartItems }}
+            </span>
+
           </a>
+
         </li>
 
       </ul>
 
     </div>
+
   </div>
+
 </div>

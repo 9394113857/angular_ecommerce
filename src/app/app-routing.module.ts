@@ -1,39 +1,142 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
 
-import { HomeComponent } from './home/home.component';
-import { SellerHomeComponent } from './seller-home/seller-home.component';
-import { AuthenticationComponent } from './authentication/authentication.component';
-import { SellerAddProductComponent } from './seller-add-product/seller-add-product.component';
+import {
+  RouterModule,
+  Routes
+} from '@angular/router';
 
-import { SellerAddStockComponent } from './seller-add-stock/seller-add-stock.component';
-import { ProductDetailsComponent } from './product-details/product-details.component';
-import { LoginComponent } from './login/login.component';
-import { CartComponent } from './cart/cart.component';
-import { CheckoutComponent } from './checkout/checkout.component';
-import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
-import { OrdersComponent } from './orders/orders.component';
-import { OrderDetailsComponent } from './order-details/order-details.component';
+// =====================================================
+// CORE COMPONENTS
+// =====================================================
 
-import { protectRouteGuard } from './protect-route.guard';
+import {
+  HomeComponent
+} from './home/home.component';
 
-// NEW AUTH COMPONENTS
-import { VerifyEmailComponent } from './verify-email/verify-email.component';
-import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './reset-password/reset-password.component';
-import { ProfileComponent } from './profile/profile.component';
+import {
+  HeaderComponent
+} from './header/header.component';
+
+
+// =====================================================
+// AUTH COMPONENTS
+// =====================================================
+
+import {
+  AuthenticationComponent
+} from './authentication/authentication.component';
+
+import {
+  LoginComponent
+} from './login/login.component';
+
+import {
+  VerifyEmailComponent
+} from './verify-email/verify-email.component';
+
+import {
+  ForgotPasswordComponent
+} from './forgot-password/forgot-password.component';
+
+import {
+  ResetPasswordComponent
+} from './reset-password/reset-password.component';
+
+import {
+  ProfileComponent
+} from './profile/profile.component';
+
+
+// =====================================================
+// SELLER COMPONENTS
+// =====================================================
+
+import {
+  SellerHomeComponent
+} from './seller-home/seller-home.component';
+
+import {
+  SellerAddProductComponent
+} from './seller-add-product/seller-add-product.component';
+
+import {
+  SellerAddStockComponent
+} from './seller-add-stock/seller-add-stock.component';
+
+
+// =====================================================
+// PRODUCT COMPONENTS
+// =====================================================
+
+import {
+  ProductDetailsComponent
+} from './product-details/product-details.component';
+
+
+// =====================================================
+// CART + ORDER COMPONENTS
+// =====================================================
+
+import {
+  CartComponent
+} from './cart/cart.component';
+
+import {
+  CheckoutComponent
+} from './checkout/checkout.component';
+
+import {
+  OrdersComponent
+} from './orders/orders.component';
+
+import {
+  OrderDetailsComponent
+} from './order-details/order-details.component';
+
+
+// =====================================================
+// SYSTEM COMPONENTS
+// =====================================================
+
+import {
+  UnauthorizedComponent
+} from './unauthorized/unauthorized.component';
+
+import {
+  PageNotFoundComponent
+} from './page-not-found/page-not-found.component';
+
+
+// =====================================================
+// ROUTE GUARD
+// =====================================================
+
+import {
+  protectRouteGuard
+} from './protect-route.guard';
+
+
+// =====================================================
+// ROUTES
+// =====================================================
 
 const routes: Routes = [
 
-  // ---------------- HOME ----------------
+  // =====================================================
+  // HOME
+  // =====================================================
+
   {
     path: '',
     component: HomeComponent
   },
 
-  // ---------------- AUTH ----------------
+
+  // =====================================================
+  // AUTH
+  // =====================================================
+
   {
     path: 'auth',
     component: AuthenticationComponent
@@ -45,7 +148,7 @@ const routes: Routes = [
   },
 
   {
-    path: 'verify-email', 
+    path: 'verify-email',
     component: VerifyEmailComponent
   },
 
@@ -62,61 +165,99 @@ const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent,
-    canActivate: [protectRouteGuard]
+    canActivate: [
+      protectRouteGuard
+    ]
   },
 
-  // ---------------- SELLER ----------------
+
+  // =====================================================
+  // SELLER
+  // =====================================================
+
   {
     path: 'seller-home',
     component: SellerHomeComponent,
-    canActivate: [protectRouteGuard]
+    canActivate: [
+      protectRouteGuard
+    ]
   },
 
   {
     path: 'seller-add-product',
     component: SellerAddProductComponent,
-    canActivate: [protectRouteGuard]
+    canActivate: [
+      protectRouteGuard
+    ]
   },
 
   {
     path: 'seller-add-stock/:id',
     component: SellerAddStockComponent,
-    canActivate: [protectRouteGuard]
+    canActivate: [
+      protectRouteGuard
+    ]
   },
 
-  // ---------------- PRODUCTS ----------------
+
+  // =====================================================
+  // PRODUCTS
+  // =====================================================
+
   {
     path: 'product/details/:productId',
     component: ProductDetailsComponent
   },
 
-  // ---------------- CART ----------------
+
+  // =====================================================
+  // CART
+  // =====================================================
+
   {
     path: 'cart',
     component: CartComponent
   },
 
-  // ---------------- CHECKOUT ----------------
+
+  // =====================================================
+  // CHECKOUT
+  // =====================================================
+
   {
     path: 'checkout',
     component: CheckoutComponent,
-    canActivate: [protectRouteGuard]
+    canActivate: [
+      protectRouteGuard
+    ]
   },
 
-  // ---------------- ORDERS ----------------
+
+  // =====================================================
+  // ORDERS
+  // =====================================================
+
   {
     path: 'orders',
     component: OrdersComponent,
-    canActivate: [protectRouteGuard]
+    canActivate: [
+      protectRouteGuard
+    ]
   },
 
   {
     path: 'orders/:orderId',
     component: OrderDetailsComponent,
-    canActivate: [protectRouteGuard]
+    canActivate: [
+      protectRouteGuard
+    ]
   },
 
-  // ---------------- SYSTEM ----------------
+
+  // =====================================================
+  // SYSTEM
+  // =====================================================
+
   {
     path: 'unauthorized',
     component: UnauthorizedComponent
@@ -129,8 +270,25 @@ const routes: Routes = [
 
 ];
 
+
+// =====================================================
+// MODULE
+// =====================================================
+
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+
+  imports: [
+
+    RouterModule.forRoot(routes)
+
+  ],
+
+  exports: [
+
+    RouterModule
+
+  ]
+
 })
+
 export class AppRoutingModule {}
