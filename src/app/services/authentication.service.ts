@@ -6,9 +6,17 @@ import {
 } from '@angular/common/http';
 
 import {
-  Observable,
+  Router
+} from '@angular/router';
+
+import {
   BehaviorSubject
 } from 'rxjs';
+
+import {
+  Login,
+  SignUp
+} from 'src/data.type';
 
 
 @Injectable({
@@ -17,198 +25,141 @@ import {
 
 export class AuthenticationService {
 
-  // =========================================================
-  // LOCAL BACKEND (ACTIVE)
-  // =========================================================
+  // =====================================================
+  // 🌱 LOCAL BACKEND ACTIVE
+  // =====================================================
 
-  private baseUrl =
+  private readonly LOCAL_BASE_URL =
     'http://127.0.0.1:5000/api/v1/auth';
 
-  // =========================================================
-  // LIVE BACKEND (COMMENTED)
-  // =========================================================
+  // =====================================================
+  // 🚀 LIVE BACKEND
+  // =====================================================
 
-  // private baseUrl =
-  // 'https://backend-auth-service.onrender.com/api/v1/auth';
+  // private readonly LIVE_BASE_URL =
+  // 'https://backend-auth-service-ks6f.onrender.com/api/v1/auth';
+
+  private readonly baseUrl =
+    this.LOCAL_BASE_URL;
 
 
-  // =========================================================
-  // AUTH STATE 
-  // =========================================================
-
-  private authStateSubject =
-    new BehaviorSubject<'default' | 'seller' | 'user'>(
-      'default'
-    );
+  // =====================================================
+  // AUTH STATE
+  // =====================================================
 
   authState$ =
-    this.authStateSubject.asObservable();
+    new BehaviorSubject<
+      'default' | 'user' | 'seller'
+    >('default');
 
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) {
 
-    // =====================================================
-    // AUTO RESTORE STATE
-    // =====================================================
+    this.initAuthState();
+  }
+
+
+  // =====================================================
+  // INIT AUTH STATE
+  // =====================================================
+
+  private initAuthState(): void {
 
     if (localStorage.getItem('sellerLoggedIn')) {
 
-      this.authStateSubject.next('seller');
+      this.authState$.next('seller');
 
-    } else if (localStorage.getItem('userLoggedIn')) {
+    } else if (
+      localStorage.getItem('userLoggedIn')
+    ) {
 
-      this.authStateSubject.next('user');
+      this.authState$.next('user');
 
     } else {
 
-      this.authStateSubject.next('default');
+      this.authState$.next('default');
     }
   }
 
 
-  // =========================================================
-  // UPDATE AUTH STATE
-  // =========================================================
-
-  setAuthState(
-    role: 'default' | 'seller' | 'user'
-  ): void {
-
-    this.authStateSubject.next(role);
-  }
-
-
-  // =========================================================
+  // =====================================================
   // BLOCK AUTH PAGES
-  // =========================================================
+  // =====================================================
 
   notAllowedAuth(): void {
 
     if (
-      localStorage.getItem('sellerLoggedIn')
-    ) {
-
-      this.routerRedirect('/seller-home');
-
-      return;
-    }
-
-    if (
+      localStorage.getItem('sellerLoggedIn') ||
       localStorage.getItem('userLoggedIn')
     ) {
 
-      this.routerRedirect('/');
-
-      return;
+      this.router.navigate(['/']);
     }
   }
 
 
-  // =========================================================
-  // COMPATIBILITY METHOD
-  // =========================================================
+  // =====================================================
+  // REGISTER
+  // =====================================================
 
-  userSignup(data: any): Observable<any> {
+  userSignup(data: SignUp) {
 
-    return this.registerUser(data);
+    return this.http.post(
+
+      `${this.baseUrl}/angularUser/register`,
+
+      {
+        first_name: data.first_name,
+        last_name: data.last_name,
+        email: data.email,
+        password: data.password,
+        role_type: data.role_type
+      }
+    );
   }
 
 
-  // =========================================================
-  // REGISTER
-  // =========================================================
+  // =====================================================
+  // LOGIN
+  // =====================================================
 
-  registerUser(data: any): Observable<any> {
+  loginUser(data: Login) {
 
-    return this.http.post(
-      `${this.baseUrl}/angularUser/register`,
+    return this.http.post<any>(
+
+      `${this.baseUrl}/angularUser/login`,
+
       data
     );
   }
 
 
-  // =========================================================
+  // =====================================================
   // VERIFY EMAIL
-  // =========================================================
+  // =====================================================
 
-  verifyEmail(token: string): Observable<any> {
+  verifyEmail(token: string) {
 
     return this.http.get(
+
       `${this.baseUrl}/angularUser/verify-email/${token}`
     );
   }
 
 
-  // =========================================================
-  // LOGIN
-  // =========================================================
-
-  loginUser(data: any): Observable<any> {
-
-    return this.http.post(
-      `${this.baseUrl}/angularUser/login`,
-      data
-    );
-  }
-
-
-  // =========================================================
-  // PROFILE
-  // =========================================================
-
-  getProfile(): Observable<any> {
-
-    return this.http.get(
-      `${this.baseUrl}/profile`,
-      {
-        headers: this.getAuthHeaders()
-      }
-    );
-  }
-
-
-  // =========================================================
-  // UPDATE PROFILE
-  // =========================================================
-
-  updateProfile(data: any): Observable<any> {
-
-    return this.http.put(
-      `${this.baseUrl}/profile`,
-      data,
-      {
-        headers: this.getAuthHeaders()
-      }
-    );
-  }
-
-
-  // =========================================================
-  // CHANGE PASSWORD
-  // =========================================================
-
-  changePassword(data: any): Observable<any> {
-
-    return this.http.post(
-      `${this.baseUrl}/change-password`,
-      data,
-      {
-        headers: this.getAuthHeaders()
-      }
-    );
-  }
-
-
-  // =========================================================
+  // =====================================================
   // FORGOT PASSWORD
-  // =========================================================
+  // =====================================================
 
-  forgotPassword(email: string): Observable<any> {
+  forgotPassword(email: string) {
 
     return this.http.post(
+
       `${this.baseUrl}/forgot-password`,
+
       {
         email
       }
@@ -216,17 +167,19 @@ export class AuthenticationService {
   }
 
 
-  // =========================================================
+  // =====================================================
   // RESET PASSWORD
-  // =========================================================
+  // =====================================================
 
   resetPassword(
     token: string,
     password: string
-  ): Observable<any> {
+  ) {
 
     return this.http.post(
+
       `${this.baseUrl}/reset-password/${token}`,
+
       {
         password
       }
@@ -234,108 +187,99 @@ export class AuthenticationService {
   }
 
 
-  // =========================================================
+  // =====================================================
+  // GET PROFILE
+  // =====================================================
+
+  getProfile() {
+
+    return this.http.get(
+
+      `${this.baseUrl}/profile`,
+
+      {
+        headers: this.getAuthHeaders()
+      }
+    );
+  }
+
+
+  // =====================================================
+  // UPDATE PROFILE
+  // =====================================================
+
+  updateProfile(data: any) {
+
+    return this.http.put(
+
+      `${this.baseUrl}/profile`,
+
+      data,
+
+      {
+        headers: this.getAuthHeaders()
+      }
+    );
+  }
+
+
+  // =====================================================
+  // CHANGE PASSWORD
+  // =====================================================
+
+  changePassword(data: any) {
+
+    return this.http.post(
+
+      `${this.baseUrl}/change-password`,
+
+      data,
+
+      {
+        headers: this.getAuthHeaders()
+      }
+    );
+  }
+
+
+  // =====================================================
+  // UPDATE AUTH STATE
+  // =====================================================
+
+  setAuthState(
+    role: 'user' | 'seller'
+  ): void {
+
+    this.authState$.next(role);
+  }
+
+
+  // =====================================================
   // LOGOUT
-  // =========================================================
+  // =====================================================
 
   logout(): void {
 
-    localStorage.removeItem('token');
+    localStorage.clear();
 
-    localStorage.removeItem('sellerLoggedIn');
+    this.authState$.next('default');
 
-    localStorage.removeItem('userLoggedIn');
-
-    localStorage.removeItem('access_token');
-
-    localStorage.removeItem('refresh_token');
-
-    localStorage.removeItem('role');
-
-    localStorage.removeItem('userId');
-
-    this.authStateSubject.next('default');
-
-    window.location.reload();
+    this.router.navigate(['/login']);
   }
 
 
-  // =========================================================
-  // SAVE AUTH DATA
-  // =========================================================
-
-  saveAuthData(response: any): void {
-
-    localStorage.setItem(
-      'access_token',
-      response.access_token
-    );
-
-    localStorage.setItem(
-      'refresh_token',
-      response.refresh_token
-    );
-
-    localStorage.setItem(
-      'role',
-      response.role
-    );
-
-    localStorage.setItem(
-      'userId',
-      response.userId
-    );
-  }
-
-
-  // =========================================================
-  // ACCESS TOKEN
-  // =========================================================
-
-  getAccessToken(): string | null {
-
-    return localStorage.getItem(
-      'access_token'
-    );
-  }
-
-
-  // =========================================================
-  // LOGIN CHECK
-  // =========================================================
-
-  isLoggedIn(): boolean {
-
-    return !!(
-      localStorage.getItem('token') ||
-      localStorage.getItem('access_token')
-    );
-  }
-
-
-  // =========================================================
+  // =====================================================
   // AUTH HEADERS
-  // =========================================================
+  // =====================================================
 
   private getAuthHeaders(): HttpHeaders {
 
     const token =
-      localStorage.getItem('token') ||
-      localStorage.getItem('access_token');
+      localStorage.getItem('token');
 
     return new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
-  }
-
-
-  // =========================================================
-  // SIMPLE REDIRECT
-  // =========================================================
-
-  private routerRedirect(url: string): void {
-
-    window.location.href = url;
   }
 
 }
