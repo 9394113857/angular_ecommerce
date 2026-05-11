@@ -1,10 +1,28 @@
+// =========================
+// 🚀 HOME COMPONENT UPDATED
+// =========================
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+
+import {
+  faChevronLeft,
+  faChevronRight
+} from '@fortawesome/free-solid-svg-icons';
+
 import { Title } from '@angular/platform-browser';
+
 import { ProductService } from '../services/product.service';
-import { RecommendationService } from '../services/recommendation.service';
-import { EventTrackingService } from '../services/event-tracking.service';
+
+import {
+  RecommendationService
+} from '../services/recommendation.service';
+
 import { Product } from 'src/data.type';
+
+import {
+  SimpleStatusService,
+  ServiceStatus
+} from '../services/simple-status.service';
 
 @Component({
   selector: 'app-home',
@@ -13,15 +31,31 @@ import { Product } from 'src/data.type';
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
+  // =====================================================
+  // UI STATE
+  // =====================================================
+
   isLoading = false;
+
   loadingText = 'Loading products...';
 
   productData: Product[] = [];
+
   recommendedProducts: Product[] = [];
+
   showRecommendations = false;
 
-  // SLIDER
   slidePosition = 0;
+
+  // =====================================================
+  // ✅ SERVICE STATUS
+  // =====================================================
+
+  services: ServiceStatus[] = [];
+
+  // =====================================================
+  // SLIDER
+  // =====================================================
 
   popularProduct: string[] = [
     'https://my-shoping-frontend.vercel.app/static/media/slider-1.2.87b6e70aa5f62e364f8d.jpg',
@@ -30,6 +64,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ];
 
   nextFontIcon = faChevronRight;
+
   prevFonticon = faChevronLeft;
 
   private autoplayInterval: any;
@@ -37,89 +72,154 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private productService: ProductService,
     private recoService: RecommendationService,
-    private eventTracking: EventTrackingService,
-    private titleService: Title
+    private titleService: Title,
+    private statusService: SimpleStatusService
   ) {}
 
+  // =====================================================
+  // INIT
+  // =====================================================
+
   ngOnInit(): void {
+
     this.titleService.setTitle('E-Comm | Home');
+
+    // ✅ LIVE STATUS
+
+    this.statusService.services$.subscribe(data => {
+      this.services = data;
+    });
+
     this.startAutoplay();
+
     this.loadProducts();
-
-  this.eventTracking.trackEvent({
-  event_type: 'home_page_view'
-});
-
-
-
-}
+  }
 
   ngOnDestroy(): void {
+
     clearInterval(this.autoplayInterval);
+
+  }
+
+  // =====================================================
+  // SLIDER LOGIC
+  // =====================================================
+
+  startAutoplay(): void {
+
+    this.autoplayInterval = setInterval(() => {
+
+      this.nextSlide();
+
+    }, 3000);
+
   }
 
   previousSlide(): void {
+
     this.slidePosition =
       this.slidePosition === 0
         ? (this.popularProduct.length - 1) * -100
         : this.slidePosition + 100;
+
   }
 
   nextSlide(): void {
+
     this.slidePosition =
       this.slidePosition === (this.popularProduct.length - 1) * -100
         ? 0
         : this.slidePosition - 100;
+
   }
 
-  startAutoplay(): void {
-    this.autoplayInterval = setInterval(() => {
-      this.nextSlide();
-    }, 3000);
-  }
+  // =====================================================
+  // LOAD PRODUCTS
+  // =====================================================
 
   loadProducts(): void {
+
     this.isLoading = true;
 
-    this.productService.getProductList().subscribe(data => {
-      this.productData = data;
-      this.isLoading = false;
+    this.productService.getProductList().subscribe({
 
-      this.loadRecommendations();
+      next: (data) => {
+
+        this.productData = data;
+
+        this.isLoading = false;
+
+        this.loadRecommendations();
+
+      },
+
+      error: () => {
+
+        this.isLoading = false;
+
+      }
+
     });
+
   }
 
+  // =====================================================
+  // LOAD RECOMMENDATIONS
+  // =====================================================
+
   loadRecommendations(): void {
-    const user = localStorage.getItem('userLoggedIn');
-    if (!user) return;
 
-    const userId = JSON.parse(user).id;
+    // ✅ TEMP USER ID FOR TESTING
 
-    this.recoService.getRecommendations(userId).subscribe(recos => {
-      this.eventTracking.trackEvent({
-  event_type: 'recommendations_loaded'
-});
+    this.recoService.getRecommendations(1).subscribe({
 
-      this.recommendedProducts = this.productData.filter(p =>
-        recos.some((r: any) => r.product_id === p.id)
-      );
+      next: (recos: any[]) => {
 
-      this.showRecommendations = this.recommendedProducts.length > 0;
+        if (!recos || recos.length === 0) {
 
-      if (this.showRecommendations) {
-        // 🔥 ML EVENT — RECOMMENDATIONS SHOWN
-        this.eventTracking.trackEvent({
-          event_type: 'recommendations_shown',
-          object_type: 'product',
-          metadata: {
-            recommended_count: this.recommendedProducts.length
-          }
-        });
+          this.recommendedProducts = [];
+
+          this.showRecommendations = false;
+
+          return;
+
+        }
+
+        // ✅ SORT BY RANK
+
+        recos.sort((a, b) => a.rank - b.rank);
+
+        // ✅ FAST LOOKUP MAP
+
+        const productMap = new Map(
+          this.productData.map(p => [Number(p.id), p])
+        );
+
+        // ✅ MAP PRODUCTS
+
+        this.recommendedProducts = recos
+          .map(r => productMap.get(Number(r.product_id)))
+          .filter(p => !!p) as Product[];
+
+        // ✅ LIMIT TOP PRODUCTS
+
+        this.recommendedProducts =
+          this.recommendedProducts.slice(0, 5);
+
+        this.showRecommendations =
+          this.recommendedProducts.length > 0;
+
+      },
+
+      error: () => {
+
+        this.recommendedProducts = [];
+
+        this.showRecommendations = false;
+
       }
+
     });
 
-    
-
-
-  }// laodRecommendations
+  }
 }

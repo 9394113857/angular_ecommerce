@@ -1,82 +1,244 @@
+/* ===================================================== */
+/* 🚀 MULTI SERVICE STATUS */
+/* ===================================================== */
+
+.service-status-wrapper {
+
+  position: fixed;
+
+  bottom: 15px;
+  left: 15px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+
+  z-index: 9999;
+}
+
+.service-card {
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  background: rgba(17, 17, 17, 0.92);
+
+  color: white;
+
+  padding: 10px 14px;
+
+  border-radius: 30px;
+
+  backdrop-filter: blur(5px);
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+
+  min-width: 220px;
+
+  font-size: 13px;
+}
+
+.service-name {
+
+  flex: 1;
+
+  font-weight: 500;
+}
+
+.service-state {
+
+  font-size: 12px;
+
+  opacity: 0.9;
+}
+
+.dot {
+
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+}
+
+/* 🟡 WARMING */
+
+.yellow-blink {
+
+  background: #ffcc00;
+
+  animation: blink 1s infinite;
+}
+
+/* 🟢 UP */
+
+.green {
+
+  background: #00e676;
+
+  box-shadow: 0 0 10px #00e676;
+}
+
+/* 🔴 DOWN */
+
+.red {
+
+  background: #ff1744;
+
+  box-shadow: 0 0 10px #ff1744;
+}
+
+/* BLINK */
+
+@keyframes blink {
+
+  50% {
+    opacity: 0.25;
+  }
+
+}
+
+/* ===================================================== */
+/* 🚀 SLIDER */
+/* ===================================================== */
+
 .home_main_container_slider {
+
   width: 100%;
-  margin: auto;
-  margin-bottom: 10px;
+
   overflow: hidden;
+
   position: relative;
-  border-radius: 5px;
+
+  border-radius: 12px;
+
+  margin-bottom: 20px;
 }
 
 .home_slider_container {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
 
+  display: flex;
+
+  transition: transform 0.5s ease-in-out;
 }
 
 .home_slider_container img {
+
   width: 100%;
+
   height: auto;
+
+  object-fit: cover;
 }
 
+/* ===================================================== */
+/* 🚀 CAROUSEL CONTROLS */
+/* ===================================================== */
+
 .carousel_controls {
-  width: 100%;
+
   position: absolute;
+
   top: 50%;
+  left: 0;
+
+  width: 100%;
+
   transform: translateY(-50%);
+
   display: flex;
-  align-items: center;
+
   justify-content: space-between;
 }
 
 .carousel_controls button {
-  background-color: transparent;
+
   border: none;
+
+  background: rgba(0, 0, 0, 0.5);
+
+  color: white;
+
+  padding: 14px 10px;
+
   cursor: pointer;
-  outline: none;
-  font-size: 20px;
-  color: #000;
-  background-color: cadetblue;
-  font-family: Arial, sans-serif;
-  padding: 40px 10px;
-  transition: background-color 0.3s ease-in-out;
 
-}
+  font-size: 18px;
 
-.carousel_controls button:first-child {
-  border-radius: 4px 0px 0px 4px;
-}
-
-.carousel_controls button:last-child {
-  border-radius: 0px 4px 4px 0px;
+  transition: background 0.2s ease;
 }
 
 .carousel_controls button:hover {
-  color: #333;
-  background-color: steelblue;
+
+  background: rgba(0, 0, 0, 0.75);
 }
 
-.carousel_controls .prev_btn {
-  transform: rotate(180deg);
-}
+/* ===================================================== */
+/* 🚀 PRODUCTS */
+/* ===================================================== */
 
-.carousel_controls .next_btn {
-  transform: rotate(-180deg);
-}
-
-
-/* product card */
 .show-trends-product {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
 
+  display: flex;
+
+  flex-wrap: wrap;
+
+  justify-content: center;
+
+  gap: 14px;
+
+  padding: 10px;
+}
 
 .trendyHead {
-  font-size: 26px;
-  margin-bottom: 20px;
-  margin-left: 90px;
-  font-family: sans-serif;
+
+  text-align: center;
+
+  font-size: 28px;
+
+  margin: 25px 0 15px;
+
+  color: #222;
+}
+
+/* ===================================================== */
+/* 📱 MOBILE */
+/* ===================================================== */
+
+@media (max-width: 768px) {
+
+  .trendyHead {
+
+    font-size: 22px;
+  }
+
+  .carousel_controls button {
+
+    padding: 10px 6px;
+
+    font-size: 15px;
+  }
+
+  .service-status-wrapper {
+
+    left: 10px;
+
+    right: 10px;
+
+    bottom: 10px;
+  }
+
+  .service-card {
+
+    min-width: auto;
+
+    width: 100%;
+
+    font-size: 12px;
+
+    padding: 8px 12px;
+  }
+
 }

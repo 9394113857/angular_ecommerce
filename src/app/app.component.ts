@@ -1,139 +1,93 @@
-import {
-  Component,
-  OnInit
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
-import {
-  HttpClient
-} from '@angular/common/http';
-
-import {
-  SimpleStatusService
-} from './services/simple-status.service';
-
+import { SimpleStatusService } from './services/simple-status.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-
 export class AppComponent implements OnInit {
-
-  currentStatus:
-    'checking' |
-    'almost' |
-    'finalizing' |
-    'ready' = 'checking';
-
 
   constructor(
     private http: HttpClient,
     private status: SimpleStatusService
   ) {}
 
-
   ngOnInit(): void {
-
-    this.status.status$.subscribe(status => {
-
-      this.currentStatus = status;
-    });
-
     this.warmUpBackends();
   }
 
-
-  // =====================================================
-  // BACKEND WARMUP
-  // =====================================================
-
+  /**
+   * =====================================================
+   * 🚀 MULTI SERVICE WARMUP SYSTEM
+   * =====================================================
+   */
   warmUpBackends(): void {
 
-    this.status.setStatus('checking');
+    // =====================================================
+    // ✅ SERVICE URLS
+    // =====================================================
 
-    const urls = [
-
-      // AUTH SERVICE
-      'http://127.0.0.1:5000/',
-
-      // PRODUCT SERVICE
-      'https://backend-product-service-ncl2.onrender.com',
-
-      // CART SERVICE
-      'https://backend-cart-order-service-q6qh.onrender.com',
-
-      // ML EVENTS SERVICE
-      'https://backend-ml-events-service-ba9v.onrender.com',
-
-      // ML RECOMMENDATION SERVICE
-      'https://backend-ml-recommendation-service-huu6.onrender.com'
+    const services = [
+      {
+        name: 'Auth Service',
+        url: 'https://backend-auth-service-ks6f.onrender.com'
+      },
+      {
+        name: 'Product Service',
+        url: 'https://backend-product-service-ncl2.onrender.com'
+      },
+      {
+        name: 'Cart Service',
+        url: 'https://backend-cart-order-service-q6qh.onrender.com'
+      },
+      {
+        name: 'ML Events',
+        url: 'https://backend-ml-events-service-ba9v.onrender.com'
+      },
+      {
+        name: 'ML Recommendation',
+        url: 'https://backend-ml-recommendation-service-huu6.onrender.com'
+      }
     ];
 
-    let completed = 0;
+    // =====================================================
+    // ✅ CHECK SERVICES
+    // =====================================================
 
-    urls.forEach((url, index) => {
+    services.forEach((service, index) => {
 
       setTimeout(() => {
 
-        this.http.get(url).subscribe({
+        this.http.get(service.url).subscribe({
 
+          // 🟢 SUCCESS
           next: () => {
 
-            completed++;
-
-            this.updateStatus(
-              completed,
-              urls.length
+            this.status.updateServiceStatus(
+              service.name,
+              'up'
             );
+
           },
 
+          // 🔴 FAILURE
           error: () => {
 
-            completed++;
-
-            this.updateStatus(
-              completed,
-              urls.length
+            this.status.updateServiceStatus(
+              service.name,
+              'down'
             );
+
           }
 
         });
 
-      }, index * 400);
+      }, index * 500);
 
     });
+
   }
-
-
-  // =====================================================
-  // STATUS UPDATE LOGIC
-  // =====================================================
-
-  updateStatus(
-    completed: number,
-    total: number
-  ): void {
-
-    // 🟡 HALF READY
-
-    if (completed >= total / 2) {
-
-      this.status.setStatus('almost');
-    }
-
-    // 🟢 ALL READY
-
-    if (completed === total) {
-
-      this.status.setStatus('finalizing');
-
-      setTimeout(() => {
-
-        this.status.setStatus('ready');
-
-      }, 1200);
-    }
-  }
-
 }
