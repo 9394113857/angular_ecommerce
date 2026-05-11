@@ -1,23 +1,44 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+
 import { Router } from '@angular/router';
+
 import { NgForm } from '@angular/forms';
-import { AuthenticationService } from '../services/authentication.service';
-import { EventTrackingService } from '../services/event-tracking.service';
-import { SignUp } from 'src/data.type';
+
+import {
+  AuthenticationService
+} from '../services/authentication.service';
+
+import {
+  EventTrackingService
+} from '../services/event-tracking.service';
+
+import {
+  SignUp
+} from 'src/data.type';
+
 
 @Component({
   selector: 'app-authentication',
   templateUrl: './authentication.component.html',
   styleUrls: ['./authentication.component.css']
 })
-export class AuthenticationComponent implements OnInit {
 
-  @ViewChild('registerForm') registerForm?: NgForm;
-  @ViewChild('loginForm') loginFormRef?: NgForm;
+export class AuthenticationComponent
+implements OnInit {
+
+  @ViewChild('registerForm')
+  registerForm?: NgForm;
 
   showLogin = false;
+
   loginFailed = '';
+
   isLoading = false;
+
 
   constructor(
     private authService: AuthenticationService,
@@ -25,81 +46,168 @@ export class AuthenticationComponent implements OnInit {
     private eventTracking: EventTrackingService
   ) {}
 
+
   ngOnInit(): void {
+
     this.authService.notAllowedAuth();
   }
 
-  // =========================================
+
+  // =====================================================
   // REGISTER
-  // =========================================
-  registerFormhandle(form: NgForm) {
+  // =====================================================
+
+  registerFormhandle(form: NgForm): void {
 
     const payload: SignUp = {
+
       first_name: form.value.first_name,
+
       last_name: form.value.last_name,
+
       email: form.value.email,
+
       password: form.value.password,
+
       role_type: form.value.role_type
     };
 
     this.isLoading = true;
 
-    this.authService.userSignup(payload).subscribe({
-      next: () => {
+    this.authService.userSignup(payload)
+      .subscribe({
 
-        this.eventTracking.trackEvent({
-          event_type: 'signup_success',
-          metadata: { role: payload.role_type }
-        });
+        next: () => {
 
-        alert('Registration successful. Please verify your email.');
+          this.eventTracking.trackEvent({
 
-        this.router.navigate(['/login']);
-      },
-      error: () => alert('Registration failed'),
-      complete: () => {
-        this.isLoading = false;
-        this.registerForm?.reset();
-      }
-    });
+            event_type: 'signup_success',
+
+            metadata: {
+              role: payload.role_type
+            }
+          });
+
+          alert(
+            'Registration successful. Please verify your email before login.'
+          );
+
+          this.router.navigate(['/login']);
+        },
+
+        error: (err: any) => {
+
+          if (err.status === 409) {
+
+            alert('Email already exists');
+
+          } else {
+
+            alert('Registration failed');
+          }
+        },
+
+        complete: () => {
+
+          this.isLoading = false;
+
+          this.registerForm?.reset();
+        }
+
+      });
   }
 
-  // =========================================
+
+  // =====================================================
   // LOGIN
-  // =========================================
-  loginFormhandle(form: NgForm) {
+  // =====================================================
+
+  loginFormhandle(form: NgForm): void {
 
     this.isLoading = true;
 
-    this.authService.loginUser(form.value).subscribe({
-      next: (res: any) => {
+    this.authService.loginUser(form.value)
+      .subscribe({
 
-        localStorage.setItem('token', res.access_token);
+        next: (res: any) => {
 
-        if (res.role === 'seller') {
-          localStorage.setItem('sellerLoggedIn', res.userId);
-          this.router.navigate(['seller-home']);
-        } else {
           localStorage.setItem(
-            'userLoggedIn',
-            JSON.stringify({ id: res.userId })
+            'token',
+            res.access_token
           );
-          this.router.navigate(['/']);
+
+          if (res.role === 'seller') {
+
+            localStorage.setItem(
+              'sellerLoggedIn',
+              res.userId
+            );
+
+            this.authService.setAuthState(
+              'seller'
+            );
+
+            this.router.navigate([
+              '/seller-home'
+            ]);
+
+          } else {
+
+            localStorage.setItem(
+              'userLoggedIn',
+
+              JSON.stringify({
+                id: res.userId
+              })
+            );
+
+            this.authService.setAuthState(
+              'user'
+            );
+
+            this.router.navigate(['/']);
+          }
+
+          this.isLoading = false;
+        },
+
+        error: (err: any) => {
+
+          if (err.status === 403) {
+
+            this.loginFailed =
+              'Please verify your email before login';
+
+          } else {
+
+            this.loginFailed =
+              'Invalid email or password';
+          }
+
+          this.isLoading = false;
         }
-      },
-      error: () => {
-        this.loginFailed = 'Invalid credentials';
-        setTimeout(() => (this.loginFailed = ''), 2000);
-      },
-      complete: () => (this.isLoading = false)
-    });
+
+      });
   }
 
-  openLogin() {
+
+  // =====================================================
+  // TOGGLE LOGIN
+  // =====================================================
+
+  openLogin(): void {
+
     this.showLogin = true;
   }
 
-  openSignUp() {
+
+  // =====================================================
+  // TOGGLE SIGNUP
+  // =====================================================
+
+  openSignUp(): void {
+
     this.showLogin = false;
   }
+
 }

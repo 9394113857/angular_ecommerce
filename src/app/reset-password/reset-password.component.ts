@@ -52,7 +52,8 @@ export class ResetPasswordComponent implements OnInit {
 
         },
 
-        error: (err) => {
+        // error: (err) => {        // Original error handler
+        error: (err: any) => {      // Updated error handler to show backend error message if available
 
           // Show backend error if available
           if (err.error && err.error.error) {

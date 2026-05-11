@@ -1,0 +1,32 @@
+.auth-message {
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  text-align: center;
+
+  min-height: 70vh;
+
+  padding: 20px;
+}
+
+.auth-message h2 {
+
+  font-size: 28px;
+
+  color: #111827;
+
+  margin-bottom: 12px;
+}
+
+.auth-message p {
+
+  font-size: 16px;
+
+  color: #6b7280;
+}

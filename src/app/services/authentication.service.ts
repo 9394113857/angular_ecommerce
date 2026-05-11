@@ -5,13 +5,9 @@ import {
   HttpHeaders
 } from '@angular/common/http';
 
-import {
-  Router
-} from '@angular/router';
+import { Router } from '@angular/router';
 
-import {
-  BehaviorSubject
-} from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import {
   Login,
@@ -123,6 +119,19 @@ export class AuthenticationService {
 
 
   // =====================================================
+  // VERIFY EMAIL
+  // =====================================================
+
+  verifyEmail(token: string) {
+
+    return this.http.get(
+
+      `${this.baseUrl}/angularUser/verify-email/${token}`
+    );
+  }
+
+
+  // =====================================================
   // LOGIN
   // =====================================================
 
@@ -133,19 +142,6 @@ export class AuthenticationService {
       `${this.baseUrl}/angularUser/login`,
 
       data
-    );
-  }
-
-
-  // =====================================================
-  // VERIFY EMAIL
-  // =====================================================
-
-  verifyEmail(token: string) {
-
-    return this.http.get(
-
-      `${this.baseUrl}/angularUser/verify-email/${token}`
     );
   }
 
@@ -188,7 +184,7 @@ export class AuthenticationService {
 
 
   // =====================================================
-  // GET PROFILE
+  // PROFILE
   // =====================================================
 
   getProfile() {
@@ -243,7 +239,7 @@ export class AuthenticationService {
 
 
   // =====================================================
-  // UPDATE AUTH STATE
+  // SET AUTH STATE
   // =====================================================
 
   setAuthState(

@@ -45,7 +45,7 @@ const routes: Routes = [
   },
 
   {
-    path: 'verify-email',
+    path: 'verify-email', 
     component: VerifyEmailComponent
   },
 

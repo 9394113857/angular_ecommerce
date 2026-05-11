@@ -1,5 +1,11 @@
-<!-- ================= SIGNUP ================= -->
-<div class="registerForm" *ngIf="!showLogin">
+<!-- ===================================================== -->
+<!-- SIGNUP -->
+<!-- ===================================================== -->
+
+<div
+  class="registerForm"
+  *ngIf="!showLogin"
+>
 
   <div class="text">
     <h1>Sign Up</h1>
@@ -7,9 +13,15 @@
 
   <div class="signupform">
 
-    <form #registerForm="ngForm" (ngSubmit)="registerFormhandle(registerForm)">
+    <form
+      #registerForm="ngForm"
+      (ngSubmit)="registerFormhandle(registerForm)"
+    >
+
+      <!-- FIRST NAME -->
 
       <label>First Name:</label>
+
       <input
         type="text"
         name="first_name"
@@ -18,7 +30,11 @@
         placeholder="Enter first name"
       />
 
+
+      <!-- LAST NAME -->
+
       <label>Last Name:</label>
+
       <input
         type="text"
         name="last_name"
@@ -27,7 +43,11 @@
         placeholder="Enter last name"
       />
 
+
+      <!-- EMAIL -->
+
       <label>Email:</label>
+
       <input
         type="email"
         name="email"
@@ -36,29 +56,69 @@
         placeholder="Enter email"
       />
 
+
+      <!-- PASSWORD -->
+
       <label>Password:</label>
+
       <input
         type="password"
         name="password"
         ngModel
         required
         minlength="5"
-        placeholder="Min length 5"
+        placeholder="Minimum 5 characters"
       />
 
+
       <!-- ROLE -->
+
       <label>Account Type:</label>
-      <select name="role_type" ngModel required>
-        <option value="user">Customer</option>
-        <option value="seller">Seller</option>
+
+      <select
+        name="role_type"
+        ngModel
+        required
+      >
+
+        <option value="user">
+          Customer
+        </option>
+
+        <option value="seller">
+          Seller
+        </option>
+
       </select>
 
-      <button type="submit" [disabled]="registerForm.invalid">
-        {{ isLoading ? 'Loading...' : 'Sign Up' }}
+
+      <!-- SUBMIT -->
+
+      <button
+        type="submit"
+        [disabled]="registerForm.invalid"
+      >
+
+        {{
+          isLoading
+            ? 'Creating Account...'
+            : 'Sign Up'
+        }}
+
       </button>
 
-      <a class="auth-toggle-link" (click)="openLogin()">
-        Already have an account? <span>Login</span>
+
+      <!-- TOGGLE -->
+
+      <a
+        class="auth-toggle-link"
+        (click)="openLogin()"
+      >
+
+        Already have an account?
+
+        <span>Login</span>
+
       </a>
 
     </form>
@@ -67,8 +127,15 @@
 
 </div>
 
-<!-- ================= LOGIN ================= -->
-<div class="registerForm" *ngIf="showLogin">
+
+<!-- ===================================================== -->
+<!-- LOGIN -->
+<!-- ===================================================== -->
+
+<div
+  class="registerForm"
+  *ngIf="showLogin"
+>
 
   <div class="text">
     <h1>Login</h1>
@@ -76,9 +143,15 @@
 
   <div class="signupform">
 
-    <form #loginForm="ngForm" (ngSubmit)="loginFormhandle(loginForm)">
+    <form
+      #loginForm="ngForm"
+      (ngSubmit)="loginFormhandle(loginForm)"
+    >
+
+      <!-- EMAIL -->
 
       <label>Email:</label>
+
       <input
         type="email"
         name="email"
@@ -87,23 +160,56 @@
         placeholder="Enter email"
       />
 
+
+      <!-- PASSWORD -->
+
       <label>Password:</label>
+
       <input
         type="password"
         name="password"
         ngModel
         required
-        placeholder="Password"
+        placeholder="Enter password"
       />
 
-      <p class="login-failed">{{ loginFailed }}</p>
 
-      <button type="submit" [disabled]="loginForm.invalid">
-        {{ isLoading ? 'Fetching...' : 'Login' }}
+      <!-- ERROR -->
+
+      <p class="login-failed">
+
+        {{ loginFailed }}
+
+      </p>
+
+
+      <!-- SUBMIT -->
+
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid"
+      >
+
+        {{
+          isLoading
+            ? 'Logging in...'
+            : 'Login'
+        }}
+
       </button>
 
-      <a class="auth-toggle-link" (click)="openSignUp()">
-        New user? <span>Sign Up</span>
+
+      <!-- TOGGLE -->
+
+      <a
+        class="auth-toggle-link"
+        (click)="openSignUp()"
+      >
+
+        New user?
+
+        <span>Sign Up</span>
+
       </a>
 
     </form>
