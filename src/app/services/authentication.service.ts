@@ -1,195 +1,341 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
-import { Login, SignUp } from 'src/data.type';
+
+import {
+  HttpClient,
+  HttpHeaders
+} from '@angular/common/http';
+
+import {
+  Observable,
+  BehaviorSubject
+} from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthenticationService {
 
-  // =====================================================
-  // 🌱 LOCAL BACKEND (USE FOR LOCAL DEVELOPMENT)
-  // =====================================================
-  // private readonly LOCAL_AUTH_BASE =
-  //   'http://127.0.0.1:5000/api/v1/auth';
+  // =========================================================
+  // LOCAL BACKEND (ACTIVE)
+  // =========================================================
 
-  // private readonly LOCAL_USER_AUTH =
-  //   'http://127.0.0.1:5000/api/v1/auth/angularUser';
+  private baseUrl =
+    'http://127.0.0.1:5000/api/v1/auth';
 
+  // =========================================================
+  // LIVE BACKEND (COMMENTED)
+  // =========================================================
 
-  // =====================================================
-  // 🚀 RAILWAY BACKEND (PRODUCTION)
-  // =====================================================
-  private readonly RAILWAY_AUTH_BASE =
-    'https://mellow-illumination-production.up.railway.app/api/v1/auth';
-
-  private readonly RAILWAY_USER_AUTH =
-    'https://mellow-illumination-production.up.railway.app/api/v1/auth/angularUser';
+  // private baseUrl =
+  // 'https://backend-auth-service.onrender.com/api/v1/auth';
 
 
-  // =====================================================
-  // ACTIVE BASE URL (CURRENTLY PRODUCTION)
-  // =====================================================
-  private readonly AUTH_BASE = this.RAILWAY_AUTH_BASE;
-  private readonly USER_AUTH = this.RAILWAY_USER_AUTH;
+  // =========================================================
+  // AUTH STATE
+  // =========================================================
 
+  private authStateSubject =
+    new BehaviorSubject<'default' | 'seller' | 'user'>(
+      'default'
+    );
 
-  authState$ = new BehaviorSubject<'default' | 'user' | 'seller'>('default');
+  authState$ =
+    this.authStateSubject.asObservable();
+
 
   constructor(
-    private http: HttpClient,
-    private router: Router
+    private http: HttpClient
   ) {
-    this.initAuthState();
-  }
 
-  // =====================================================
-  // INIT AUTH STATE
-  // =====================================================
-  private initAuthState() {
+    // =====================================================
+    // AUTO RESTORE STATE
+    // =====================================================
 
     if (localStorage.getItem('sellerLoggedIn')) {
-      this.authState$.next('seller');
-    }
 
-    else if (localStorage.getItem('userLoggedIn')) {
-      this.authState$.next('user');
-    }
+      this.authStateSubject.next('seller');
 
-    else {
-      this.authState$.next('default');
-    }
+    } else if (localStorage.getItem('userLoggedIn')) {
 
+      this.authStateSubject.next('user');
+
+    } else {
+
+      this.authStateSubject.next('default');
+    }
   }
 
 
-  // =====================================================
-  // BLOCK AUTH PAGE IF ALREADY LOGGED IN
-  // =====================================================
-  notAllowedAuth() {
+  // =========================================================
+  // UPDATE AUTH STATE
+  // =========================================================
+
+  setAuthState(
+    role: 'default' | 'seller' | 'user'
+  ): void {
+
+    this.authStateSubject.next(role);
+  }
+
+
+  // =========================================================
+  // BLOCK AUTH PAGES
+  // =========================================================
+
+  notAllowedAuth(): void {
 
     if (
-      localStorage.getItem('sellerLoggedIn') ||
-      localStorage.getItem('userLoggedIn')
+      localStorage.getItem('sellerLoggedIn')
     ) {
-      this.router.navigate(['/']);
+
+      this.routerRedirect('/seller-home');
+
+      return;
     }
 
+    if (
+      localStorage.getItem('userLoggedIn')
+    ) {
+
+      this.routerRedirect('/');
+
+      return;
+    }
   }
 
 
-  // =====================================================
-  // SIGNUP
-  // =====================================================
-  userSignup(data: SignUp) {
+  // =========================================================
+  // COMPATIBILITY METHOD
+  // =========================================================
 
-    return this.http.post(`${this.USER_AUTH}/register`, {
+  userSignup(data: any): Observable<any> {
 
-      first_name: data.first_name,
-      last_name: data.last_name,
-      email: data.email,
-      password: data.password
-
-    });
-
+    return this.registerUser(data);
   }
 
 
-  // =====================================================
-  // LOGIN
-  // =====================================================
-  loginUser(data: Login) {
+  // =========================================================
+  // REGISTER
+  // =========================================================
 
-    return this.http.post<any>(`${this.USER_AUTH}/login`, data);
+  registerUser(data: any): Observable<any> {
 
+    return this.http.post(
+      `${this.baseUrl}/angularUser/register`,
+      data
+    );
   }
 
 
-  // =====================================================
+  // =========================================================
   // VERIFY EMAIL
-  // =====================================================
-  verifyEmail(token: string) {
+  // =========================================================
 
-    return this.http.get(`${this.USER_AUTH}/verify-email/${token}`);
+  verifyEmail(token: string): Observable<any> {
 
+    return this.http.get(
+      `${this.baseUrl}/angularUser/verify-email/${token}`
+    );
   }
 
 
-  // =====================================================
-  // FORGOT PASSWORD
-  // =====================================================
-  forgotPassword(email: string) {
+  // =========================================================
+  // LOGIN
+  // =========================================================
 
-    return this.http.post(`${this.AUTH_BASE}/forgot-password`, { email });
+  loginUser(data: any): Observable<any> {
 
+    return this.http.post(
+      `${this.baseUrl}/angularUser/login`,
+      data
+    );
   }
 
 
-  // =====================================================
-  // RESET PASSWORD
-  // =====================================================
-  resetPassword(token: string, password: string) {
+  // =========================================================
+  // PROFILE
+  // =========================================================
 
-    return this.http.post(`${this.AUTH_BASE}/reset-password/${token}`, {
+  getProfile(): Observable<any> {
 
-      password
-
-    });
-
+    return this.http.get(
+      `${this.baseUrl}/profile`,
+      {
+        headers: this.getAuthHeaders()
+      }
+    );
   }
 
 
-  // =====================================================
-  // GET PROFILE
-  // =====================================================
-  getProfile() {
-
-    return this.http.get(`${this.AUTH_BASE}/profile`);
-
-  }
-
-
-  // =====================================================
+  // =========================================================
   // UPDATE PROFILE
-  // =====================================================
-  updateProfile(data: any) {
+  // =========================================================
 
-    return this.http.put(`${this.AUTH_BASE}/profile`, data);
+  updateProfile(data: any): Observable<any> {
 
+    return this.http.put(
+      `${this.baseUrl}/profile`,
+      data,
+      {
+        headers: this.getAuthHeaders()
+      }
+    );
   }
 
 
-  // =====================================================
+  // =========================================================
   // CHANGE PASSWORD
-  // =====================================================
-  changePassword(data: any) {
+  // =========================================================
 
-    return this.http.post(`${this.AUTH_BASE}/change-password`, data);
+  changePassword(data: any): Observable<any> {
 
+    return this.http.post(
+      `${this.baseUrl}/change-password`,
+      data,
+      {
+        headers: this.getAuthHeaders()
+      }
+    );
   }
 
 
-  // =====================================================
-  // SET AUTH STATE
-  // =====================================================
-  setAuthState(role: 'user' | 'seller') {
+  // =========================================================
+  // FORGOT PASSWORD
+  // =========================================================
 
-    this.authState$.next(role);
+  forgotPassword(email: string): Observable<any> {
 
+    return this.http.post(
+      `${this.baseUrl}/forgot-password`,
+      {
+        email
+      }
+    );
   }
 
 
-  // =====================================================
+  // =========================================================
+  // RESET PASSWORD
+  // =========================================================
+
+  resetPassword(
+    token: string,
+    password: string
+  ): Observable<any> {
+
+    return this.http.post(
+      `${this.baseUrl}/reset-password/${token}`,
+      {
+        password
+      }
+    );
+  }
+
+
+  // =========================================================
   // LOGOUT
-  // =====================================================
-  logout() {
+  // =========================================================
 
-    localStorage.clear();
-    this.authState$.next('default');
-    this.router.navigate(['/login']);
+  logout(): void {
 
+    localStorage.removeItem('token');
+
+    localStorage.removeItem('sellerLoggedIn');
+
+    localStorage.removeItem('userLoggedIn');
+
+    localStorage.removeItem('access_token');
+
+    localStorage.removeItem('refresh_token');
+
+    localStorage.removeItem('role');
+
+    localStorage.removeItem('userId');
+
+    this.authStateSubject.next('default');
+
+    window.location.reload();
+  }
+
+
+  // =========================================================
+  // SAVE AUTH DATA
+  // =========================================================
+
+  saveAuthData(response: any): void {
+
+    localStorage.setItem(
+      'access_token',
+      response.access_token
+    );
+
+    localStorage.setItem(
+      'refresh_token',
+      response.refresh_token
+    );
+
+    localStorage.setItem(
+      'role',
+      response.role
+    );
+
+    localStorage.setItem(
+      'userId',
+      response.userId
+    );
+  }
+
+
+  // =========================================================
+  // ACCESS TOKEN
+  // =========================================================
+
+  getAccessToken(): string | null {
+
+    return localStorage.getItem(
+      'access_token'
+    );
+  }
+
+
+  // =========================================================
+  // LOGIN CHECK
+  // =========================================================
+
+  isLoggedIn(): boolean {
+
+    return !!(
+      localStorage.getItem('token') ||
+      localStorage.getItem('access_token')
+    );
+  }
+
+
+  // =========================================================
+  // AUTH HEADERS
+  // =========================================================
+
+  private getAuthHeaders(): HttpHeaders {
+
+    const token =
+      localStorage.getItem('token') ||
+      localStorage.getItem('access_token');
+
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+  }
+
+
+  // =========================================================
+  // SIMPLE REDIRECT
+  // =========================================================
+
+  private routerRedirect(url: string): void {
+
+    window.location.href = url;
   }
 
 }
