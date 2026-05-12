@@ -155,15 +155,23 @@ const routes: Routes = [
     component: VerifyEmailComponent
   },
 
+  // Guarded routes for authenticated users (both user and seller)
   {
     path: 'seller-profile',
-    component: SellerProfileComponent
+    component: SellerProfileComponent,
+    canActivate: [
+      protectRouteGuard
+      ]
+    },
+
+{
+  path: 'seller-change-password',
+  component: ChangePasswordComponent,
+  canActivate: [
+    protectRouteGuard
+  ]
   },
 
-  {
-    path: 'seller-change-password',
-    component: ChangePasswordComponent
-  },
 
   {
     path: 'forgot-password',

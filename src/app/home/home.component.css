@@ -1,104 +1,122 @@
 /* ===================================================== */
-/* 🚀 MULTI SERVICE STATUS */
+/* 🚀 SERVICE STATUS */
 /* ===================================================== */
 
 .service-status-wrapper {
 
-  position: fixed;
-
-  bottom: 15px;
-  left: 15px;
-
   display: flex;
-  flex-direction: column;
 
-  gap: 10px;
+  flex-wrap: wrap;
 
-  z-index: 9999;
+  gap: 12px;
+
+  justify-content: center;
+
+  margin: 20px 0;
+
 }
 
 .service-card {
 
   display: flex;
+
   align-items: center;
 
-  gap: 10px;
+  gap: 8px;
 
-  background: rgba(17, 17, 17, 0.92);
+  padding: 10px 16px;
 
-  color: white;
+  border-radius: 10px;
 
-  padding: 10px 14px;
+  background: #f5f5f5;
 
-  border-radius: 30px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 
-  backdrop-filter: blur(5px);
+  font-size: 14px;
 
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-
-  min-width: 220px;
-
-  font-size: 13px;
-}
-
-.service-name {
-
-  flex: 1;
-
-  font-weight: 500;
-}
-
-.service-state {
-
-  font-size: 12px;
-
-  opacity: 0.9;
 }
 
 .dot {
 
   width: 10px;
+
   height: 10px;
 
   border-radius: 50%;
+
 }
-
-/* 🟡 WARMING */
-
-.yellow-blink {
-
-  background: #ffcc00;
-
-  animation: blink 1s infinite;
-}
-
-/* 🟢 UP */
 
 .green {
 
-  background: #00e676;
+  background: lime;
 
-  box-shadow: 0 0 10px #00e676;
 }
-
-/* 🔴 DOWN */
 
 .red {
 
-  background: #ff1744;
+  background: red;
 
-  box-shadow: 0 0 10px #ff1744;
 }
 
-/* BLINK */
+.red-blink {
+
+  background: red;
+
+  animation: blink 1s infinite;
+
+}
+
+.yellow-blink {
+
+  background: yellow;
+
+  animation: blink 1s infinite;
+
+}
 
 @keyframes blink {
 
   50% {
-    opacity: 0.25;
+    opacity: 0.2;
   }
 
 }
+
+
+/* ===================================================== */
+/* 🚀 STATUS */
+/* ===================================================== */
+
+.simple-status {
+
+  position: fixed;
+
+  bottom: 15px;
+
+  left: 15px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  background: rgba(17, 17, 17, 0.9);
+
+  color: white;
+
+  padding: 8px 12px;
+
+  border-radius: 30px;
+
+  font-size: 12px;
+
+  z-index: 999;
+
+  backdrop-filter: blur(4px);
+
+}
+
 
 /* ===================================================== */
 /* 🚀 SLIDER */
@@ -115,6 +133,7 @@
   border-radius: 12px;
 
   margin-bottom: 20px;
+
 }
 
 .home_slider_container {
@@ -122,6 +141,7 @@
   display: flex;
 
   transition: transform 0.5s ease-in-out;
+
 }
 
 .home_slider_container img {
@@ -131,17 +151,15 @@
   height: auto;
 
   object-fit: cover;
-}
 
-/* ===================================================== */
-/* 🚀 CAROUSEL CONTROLS */
-/* ===================================================== */
+}
 
 .carousel_controls {
 
   position: absolute;
 
   top: 50%;
+
   left: 0;
 
   width: 100%;
@@ -151,6 +169,7 @@
   display: flex;
 
   justify-content: space-between;
+
 }
 
 .carousel_controls button {
@@ -168,12 +187,15 @@
   font-size: 18px;
 
   transition: background 0.2s ease;
+
 }
 
 .carousel_controls button:hover {
 
   background: rgba(0, 0, 0, 0.75);
+
 }
+
 
 /* ===================================================== */
 /* 🚀 PRODUCTS */
@@ -190,6 +212,7 @@
   gap: 14px;
 
   padding: 10px;
+
 }
 
 .trendyHead {
@@ -201,10 +224,29 @@
   margin: 25px 0 15px;
 
   color: #222;
+
 }
 
+
 /* ===================================================== */
-/* 📱 MOBILE */
+/* 🚀 EMPTY */
+/* ===================================================== */
+
+.empty-message {
+
+  text-align: center;
+
+  margin-top: 40px;
+
+  font-size: 18px;
+
+  color: gray;
+
+}
+
+
+/* ===================================================== */
+/* 🚀 MOBILE */
 /* ===================================================== */
 
 @media (max-width: 768px) {
@@ -212,6 +254,7 @@
   .trendyHead {
 
     font-size: 22px;
+
   }
 
   .carousel_controls button {
@@ -219,26 +262,7 @@
     padding: 10px 6px;
 
     font-size: 15px;
-  }
 
-  .service-status-wrapper {
-
-    left: 10px;
-
-    right: 10px;
-
-    bottom: 10px;
-  }
-
-  .service-card {
-
-    min-width: auto;
-
-    width: 100%;
-
-    font-size: 12px;
-
-    padding: 8px 12px;
   }
 
 }

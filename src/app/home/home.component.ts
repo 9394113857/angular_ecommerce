@@ -2,7 +2,11 @@
 // 🚀 HOME COMPONENT UPDATED
 // =========================
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
 
 import {
   faChevronLeft,
@@ -24,12 +28,15 @@ import {
   ServiceStatus
 } from '../services/simple-status.service';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit, OnDestroy {
+
+export class HomeComponent
+implements OnInit, OnDestroy {
 
   // =====================================================
   // UI STATE
@@ -48,7 +55,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   slidePosition = 0;
 
   // =====================================================
-  // ✅ SERVICE STATUS
+  // SERVICE STATUS
   // =====================================================
 
   services: ServiceStatus[] = [];
@@ -58,9 +65,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   // =====================================================
 
   popularProduct: string[] = [
+
     'https://my-shoping-frontend.vercel.app/static/media/slider-1.2.87b6e70aa5f62e364f8d.jpg',
+
     'https://my-shoping-frontend.vercel.app/static/media/slider-1.1.e60d4fc52cc2a1d111a7.jpg',
+
     'https://my-shoping-frontend.vercel.app/static/media/slider-2.1.9aa725195d5160024a1c.jpg'
+
   ];
 
   nextFontIcon = faChevronRight;
@@ -69,12 +80,19 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private autoplayInterval: any;
 
+
   constructor(
+
     private productService: ProductService,
+
     private recoService: RecommendationService,
+
     private titleService: Title,
+
     private statusService: SimpleStatusService
+
   ) {}
+
 
   // =====================================================
   // INIT
@@ -82,24 +100,36 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.titleService.setTitle('E-Comm | Home');
+    this.titleService.setTitle(
+      'E-Comm | Home'
+    );
 
-    // ✅ LIVE STATUS
+    // =====================================================
+    // LIVE STATUS
+    // =====================================================
 
-    this.statusService.services$.subscribe(data => {
-      this.services = data;
-    });
+    this.statusService.services$
+      .subscribe(data => {
+
+        this.services = data;
+
+      });
 
     this.startAutoplay();
 
     this.loadProducts();
+
   }
+
 
   ngOnDestroy(): void {
 
-    clearInterval(this.autoplayInterval);
+    clearInterval(
+      this.autoplayInterval
+    );
 
   }
+
 
   // =====================================================
   // SLIDER LOGIC
@@ -107,31 +137,42 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   startAutoplay(): void {
 
-    this.autoplayInterval = setInterval(() => {
+    this.autoplayInterval =
+      setInterval(() => {
 
-      this.nextSlide();
+        this.nextSlide();
 
-    }, 3000);
+      }, 3000);
 
   }
+
 
   previousSlide(): void {
 
     this.slidePosition =
+
       this.slidePosition === 0
+
         ? (this.popularProduct.length - 1) * -100
+
         : this.slidePosition + 100;
 
   }
 
+
   nextSlide(): void {
 
     this.slidePosition =
-      this.slidePosition === (this.popularProduct.length - 1) * -100
+
+      this.slidePosition ===
+      (this.popularProduct.length - 1) * -100
+
         ? 0
+
         : this.slidePosition - 100;
 
   }
+
 
   // =====================================================
   // LOAD PRODUCTS
@@ -141,27 +182,42 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
 
-    this.productService.getProductList().subscribe({
+    this.productService
+      .getProductList()
+      .subscribe({
 
-      next: (data) => {
+        next: (data) => {
 
-        this.productData = data;
+          console.log(
+            'PRODUCTS:',
+            data
+          );
 
-        this.isLoading = false;
+          this.productData = data || [];
 
-        this.loadRecommendations();
+          this.isLoading = false;
 
-      },
+          this.loadRecommendations();
 
-      error: () => {
+        },
 
-        this.isLoading = false;
+        error: (err) => {
 
-      }
+          console.log(
+            'PRODUCT ERROR:',
+            err
+          );
 
-    });
+          this.productData = [];
+
+          this.isLoading = false;
+
+        }
+
+      });
 
   }
+
 
   // =====================================================
   // LOAD RECOMMENDATIONS
@@ -169,57 +225,96 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   loadRecommendations(): void {
 
-    // ✅ TEMP USER ID FOR TESTING
+    // =====================================================
+    // TEMP USER ID
+    // =====================================================
 
-    this.recoService.getRecommendations(1).subscribe({
+    this.recoService
+      .getRecommendations(1)
+      .subscribe({
 
-      next: (recos: any[]) => {
+        next: (recos: any[]) => {
 
-        if (!recos || recos.length === 0) {
+          console.log(
+            'RECOMMENDATIONS:',
+            recos
+          );
+
+          if (
+            !recos ||
+            recos.length === 0
+          ) {
+
+            this.recommendedProducts = [];
+
+            this.showRecommendations = false;
+
+            return;
+          }
+
+          // =====================================================
+          // SORT BY RANK
+          // =====================================================
+
+          recos.sort(
+            (a, b) => a.rank - b.rank
+          );
+
+          // =====================================================
+          // PRODUCT MAP
+          // =====================================================
+
+          const productMap = new Map(
+
+            this.productData.map(
+              p => [Number(p.id), p]
+            )
+
+          );
+
+          // =====================================================
+          // MAP PRODUCTS
+          // =====================================================
+
+          this.recommendedProducts = recos
+
+            .map(
+              r => productMap.get(
+                Number(r.product_id)
+              )
+            )
+
+            .filter(
+              p => !!p
+            ) as Product[];
+
+          // =====================================================
+          // LIMIT
+          // =====================================================
+
+          this.recommendedProducts =
+            this.recommendedProducts.slice(0, 5);
+
+          this.showRecommendations =
+            this.recommendedProducts.length > 0;
+
+        },
+
+        error: (err) => {
+
+          console.log(
+            'RECOMMENDATION ERROR:',
+            err
+          );
 
           this.recommendedProducts = [];
 
           this.showRecommendations = false;
 
-          return;
-
         }
 
-        // ✅ SORT BY RANK
-
-        recos.sort((a, b) => a.rank - b.rank);
-
-        // ✅ FAST LOOKUP MAP
-
-        const productMap = new Map(
-          this.productData.map(p => [Number(p.id), p])
-        );
-
-        // ✅ MAP PRODUCTS
-
-        this.recommendedProducts = recos
-          .map(r => productMap.get(Number(r.product_id)))
-          .filter(p => !!p) as Product[];
-
-        // ✅ LIMIT TOP PRODUCTS
-
-        this.recommendedProducts =
-          this.recommendedProducts.slice(0, 5);
-
-        this.showRecommendations =
-          this.recommendedProducts.length > 0;
-
-      },
-
-      error: () => {
-
-        this.recommendedProducts = [];
-
-        this.showRecommendations = false;
-
-      }
-
-    });
+      });
 
   }
+
 }

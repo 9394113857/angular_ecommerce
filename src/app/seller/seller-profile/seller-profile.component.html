@@ -1,1 +1,115 @@
-<p>seller-profile works!</p>
+<div class="seller-profile-container">
+
+  <div class="profile-card">
+
+    <h1>
+      Seller Profile
+    </h1>
+
+    <form
+      #profileForm="ngForm"
+      (ngSubmit)="saveProfile(profileForm)"
+    >
+
+      <!-- FIRST NAME -->
+
+      <label>
+        First Name
+      </label>
+
+      <input
+        type="text"
+        name="first_name"
+        [(ngModel)]="sellerData.first_name"
+        required
+      />
+
+      <!-- LAST NAME -->
+
+      <label>
+        Last Name
+      </label>
+
+      <input
+        type="text"
+        name="last_name"
+        [(ngModel)]="sellerData.last_name"
+        required
+      />
+
+      <!-- EMAIL -->
+
+      <label>
+        Email
+      </label>
+
+      <input
+        type="email"
+        name="email"
+        [(ngModel)]="sellerData.email"
+        disabled
+      />
+
+      <!-- ROLE -->
+
+      <label>
+        Role
+      </label>
+
+      <input
+        type="text"
+        [value]="sellerData.role"
+        disabled
+      />
+
+      <!-- VERIFIED -->
+
+      <div class="verified-status">
+
+        <strong>
+          Verification Status:
+        </strong>
+
+        <span
+          [class.green]="sellerData.verified"
+          [class.red]="!sellerData.verified"
+        >
+
+          {{
+            sellerData.verified
+              ? 'Verified'
+              : 'Not Verified'
+          }}
+
+        </span>
+
+      </div>
+
+      <!-- BUTTON -->
+
+      <button
+        type="submit"
+        [disabled]="isLoading"
+      >
+
+        {{
+          isLoading
+            ? 'Saving...'
+            : 'Save Changes'
+        }}
+
+      </button>
+
+      <!-- MESSAGE -->
+
+      <p class="message">
+
+        {{ message }}
+
+      </p>
+
+    </form>
+
+  </div>
+
+</div>

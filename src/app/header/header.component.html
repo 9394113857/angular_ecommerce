@@ -125,29 +125,93 @@
         *ngSwitchCase="'seller'"
       >
 
+        <!-- ACCOUNT -->
+
+        <li
+          class="account-dropdown"
+          (click)="toggleDropdown()"
+        >
+
+          <a>
+
+            Hello,
+            {{ username }}
+
+            ▼
+
+            <br />
+
+            <small>
+              Seller Account
+            </small>
+
+          </a>
+
+
+          <!-- DROPDOWN -->
+
+          <ul
+            class="dropdown"
+            *ngIf="showDropdown"
+          >
+
+            <li>
+
+              <a routerLink="/seller-profile">
+
+                Seller Profile
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a routerLink="/seller-change-password">
+
+                Change Password
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a
+                (click)="sellerLogout()"
+              >
+
+                Logout
+
+              </a>
+
+            </li>
+
+          </ul>
+
+        </li>
+
+
+        <!-- PRODUCTS -->
+
         <li>
 
           <a routerLink="/seller-add-product">
+
             Add Product
+
           </a>
 
         </li>
+
+
+        <!-- DASHBOARD -->
 
         <li>
 
           <a routerLink="/seller-home">
+
             My Products
-          </a>
-
-        </li>
-
-        <li>
-
-          <a
-            (click)="sellerLogout()"
-          >
-
-            Logout
 
           </a>
 

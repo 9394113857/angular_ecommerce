@@ -10,6 +10,7 @@
   >
 
     <!-- STATUS DOT -->
+
     <div
       class="dot"
       [ngClass]="{
@@ -20,11 +21,13 @@
     ></div>
 
     <!-- SERVICE NAME -->
+
     <span class="service-name">
       {{ service.name }}
     </span>
 
     <!-- STATUS -->
+
     <span class="service-state">
 
       <ng-container *ngIf="service.status === 'warming'">
@@ -42,5 +45,170 @@
     </span>
 
   </div>
+
+</div>
+
+
+<!-- HERO SLIDER -->
+
+<div class="home_main_container_slider">
+
+  <div
+    class="home_slider_container"
+    [style.width.%]="popularProduct.length * 100"
+    [ngStyle]="{
+      'transform':
+      'translateX(' + slidePosition + '%)'
+    }"
+  >
+
+    <img
+      *ngFor="let item of popularProduct"
+      [src]="item"
+      alt="Image slider"
+    />
+
+  </div>
+
+  <div class="carousel_controls">
+
+    <button
+      class="prev_btn"
+      (click)="previousSlide()"
+    >
+
+      <fa-icon
+        [icon]="prevFonticon"
+      ></fa-icon>
+
+    </button>
+
+    <button
+      class="next_btn"
+      (click)="nextSlide()"
+    >
+
+      <fa-icon
+        [icon]="nextFontIcon"
+      ></fa-icon>
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- LOADER -->
+
+<app-loading
+  [isLoading]="isLoading"
+  [loadingText]="loadingText">
+</app-loading>
+
+
+<!-- RECOMMENDATIONS -->
+
+<div
+  *ngIf="
+    showRecommendations &&
+    !isLoading
+  "
+>
+
+  <h1 class="trendyHead">
+    Recommended For You
+  </h1>
+
+  <div class="show-trends-product">
+
+    <ng-container
+      *ngFor="
+        let product
+        of recommendedProducts
+      "
+    >
+
+      <app-product-card
+        [productData]="product"
+      ></app-product-card>
+
+    </ng-container>
+
+  </div>
+
+</div>
+
+
+<!-- PRODUCTS -->
+
+<h1
+  class="trendyHead"
+  *ngIf="!isLoading"
+>
+
+  Trendy Products
+
+</h1>
+
+<div
+  class="show-trends-product"
+  *ngIf="!isLoading"
+>
+
+  <ng-container
+    *ngFor="
+      let product
+      of productData
+    "
+  >
+
+    <app-product-card
+      [productData]="product"
+    ></app-product-card>
+
+  </ng-container>
+
+</div>
+
+
+<!-- EMPTY -->
+
+<div
+  class="empty-message"
+  *ngIf="
+    !isLoading &&
+    productData.length === 0
+  "
+>
+
+  No products available.
+
+</div>
+
+
+<!-- STATUS -->
+
+<div class="simple-status">
+
+  <div
+    class="dot"
+    [ngClass]="{
+      'red-blink': services.length === 0,
+      'green': services.length > 0
+    }"
+  ></div>
+
+  <span *ngIf="services.length > 0">
+
+    All Systems Ready
+
+  </span>
+
+  <span *ngIf="services.length === 0">
+
+    Starting...
+
+  </span>
 
 </div>
