@@ -22,7 +22,8 @@ export class ResetPasswordComponent implements OnInit {
   ngOnInit(): void {
 
     // Read token from URL
-    this.token = this.route.snapshot.queryParamMap.get('token') || '';
+    // this.token = this.route.snapshot.queryParamMap.get('token') || '';  // Original way to read token from query params
+    this.token = this.route.snapshot.paramMap.get('token') || '';          // Updated way to read token from route params
 
     if (!this.token) {
       this.message = "Invalid reset link";
