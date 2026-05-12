@@ -34,7 +34,7 @@ export class AuthenticationService {
   // =====================================================
 
   private readonly LOCAL_BASE_URL =
-  'http://127.0.0.1:5001/api/v1/auth';
+  'http://127.0.0.1:5000/api/v1/auth';
 
 
   // =====================================================
@@ -250,7 +250,7 @@ export class AuthenticationService {
     data: any
   ): Observable<any> {
 
-    return this.http.put(
+    return this.http.post(
 
       `${this.baseUrl}/change-password`,
 
