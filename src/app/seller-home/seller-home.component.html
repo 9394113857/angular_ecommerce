@@ -3,44 +3,133 @@
   loadingText="Loading products...">
 </app-loading>
 
-<div class="seller-home" *ngIf="!isLoading">
+<div
+  class="seller-home"
+  *ngIf="!isLoading"
+>
+
+  <!-- ===================================================== -->
+  <!-- TOP ACTIONS -->
+  <!-- ===================================================== -->
+
+  <div class="seller-actions">
+
+    <button
+      (click)="goToSellerProfile()"
+    >
+      My Profile
+    </button>
+
+    <button
+      (click)="goToChangePassword()"
+    >
+      Change Password
+    </button>
+
+    <button
+      (click)="goToAddProduct()"
+    >
+      Add Product
+    </button>
+
+  </div>
+
+  <!-- ===================================================== -->
+  <!-- PRODUCT TABLE -->
+  <!-- ===================================================== -->
 
   <h2>My Products</h2>
 
   <table *ngIf="productList.length > 0">
+
     <thead>
+
       <tr>
+
         <th>ID</th>
+
         <th>Name</th>
+
         <th>Price</th>
+
         <th>Variants (Color → Stock)</th>
+
       </tr>
+
     </thead>
 
     <tbody>
+
       <tr *ngFor="let product of productList">
-        <td>#{{ product.id }}</td>
-        <td>{{ product.name }}</td>
-        <td>₹ {{ product.price }}</td>
+
         <td>
-          <div *ngIf="product.variants?.length; else noVariants">
-            <div *ngFor="let v of product.variants" class="variant-row">
-              <span>{{ v.color }}</span>
-              <span [class.out]="v.stock === 0">
-                {{ v.stock > 0 ? v.stock : 'Out of stock' }}
-              </span>
-            </div>
-          </div>
-          <ng-template #noVariants>
-            <span>No variants</span>
-          </ng-template>
+          #{{ product.id }}
         </td>
+
+        <td>
+          {{ product.name }}
+        </td>
+
+        <td>
+          ₹ {{ product.price }}
+        </td>
+
+        <td>
+
+          <div
+            *ngIf="product.variants?.length;
+            else noVariants"
+          >
+
+            <div
+              *ngFor="let v of product.variants"
+              class="variant-row"
+            >
+
+              <span>
+                {{ v.color }}
+              </span>
+
+              <span
+                [class.out]="v.stock === 0"
+              >
+
+                {{
+                  v.stock > 0
+                  ? v.stock
+                  : 'Out of stock'
+                }}
+
+              </span>
+
+            </div>
+
+          </div>
+
+          <ng-template #noVariants>
+
+            <span>
+              No variants
+            </span>
+
+          </ng-template>
+
+        </td>
+
       </tr>
+
     </tbody>
+
   </table>
 
+  <!-- ===================================================== -->
+  <!-- EMPTY PRODUCTS -->
+  <!-- ===================================================== -->
+
   <p *ngIf="productList.length === 0">
+
     No products found.
+
   </p>
 
 </div>

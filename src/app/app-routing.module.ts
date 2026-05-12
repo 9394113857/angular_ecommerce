@@ -64,6 +64,9 @@ import {
   SellerAddStockComponent
 } from './seller-add-stock/seller-add-stock.component';
 
+import { SellerProfileComponent } from './seller/seller-profile/seller-profile.component';
+import { ChangePasswordComponent } from './seller/change-password/change-password.component';
+
 
 // =====================================================
 // PRODUCT COMPONENTS
@@ -150,6 +153,16 @@ const routes: Routes = [
   {
     path: 'verify-email/:token',
     component: VerifyEmailComponent
+  },
+
+  {
+    path: 'seller-profile',
+    component: SellerProfileComponent
+  },
+
+  {
+    path: 'seller-change-password',
+    component: ChangePasswordComponent
   },
 
   {

@@ -46,6 +46,8 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ProfileComponent } from './profile/profile.component';
+import { SellerProfileComponent } from './seller/seller-profile/seller-profile.component';
+import { ChangePasswordComponent } from './seller/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -79,7 +81,9 @@ import { ProfileComponent } from './profile/profile.component';
     VerifyEmailComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
-    ProfileComponent
+    ProfileComponent,
+    SellerProfileComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,
