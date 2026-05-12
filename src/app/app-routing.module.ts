@@ -19,6 +19,8 @@ import {
 } from './header/header.component';
 
 
+
+
 // =====================================================
 // AUTH COMPONENTS
 // =====================================================
@@ -31,9 +33,7 @@ import {
   LoginComponent
 } from './login/login.component';
 
-import {
-  VerifyEmailComponent
-} from './verify-email/verify-email.component';
+import { VerifyEmailComponent } from './verify/verify-email/verify-email.component';
 
 import {
   ForgotPasswordComponent
@@ -148,7 +148,7 @@ const routes: Routes = [
   },
 
   {
-    path: 'verify-email',
+    path: 'verify-email/:token',
     component: VerifyEmailComponent
   },
 

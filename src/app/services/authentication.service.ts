@@ -182,20 +182,20 @@ export class AuthenticationService {
 
 
   // =====================================================
-  // VERIFY EMAIL
-  // =====================================================
+// VERIFY EMAIL
+// =====================================================
 
-  verifyEmail(
-    token: string
-  ): Observable<any> {
+verifyEmail(
+  token: string
+): Observable<any> {
 
-    return this.http.get(
+  return this.http.get(
 
-      `${this.baseUrl}/angularUser/verify-email/${token}`
+    `${this.baseUrl}/angularUser/verify-email/${token}`
 
-    );
+  );
 
-  }
+}
 
 
   // =====================================================

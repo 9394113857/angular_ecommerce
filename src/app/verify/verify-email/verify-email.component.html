@@ -1,0 +1,36 @@
+<div class="verify-container">
+
+  <div class="verify-card">
+
+    <h1>User Verified Already</h1>
+
+    <!-- LOADING -->
+
+    <p
+      *ngIf="isLoading"
+      class="loading-text"
+    >
+      Verifying your email...
+    </p>
+
+    <!-- SUCCESS / ERROR MESSAGE -->
+
+    <p
+      *ngIf="!isLoading"
+      class="message-text"
+    >
+      {{ message }}
+    </p>
+
+    <!-- LOGIN BUTTON -->
+
+    <button
+      *ngIf="!isLoading"
+      routerLink="/login"
+    >
+      Go To Login
+    </button>
+
+  </div>
+
+</div>
