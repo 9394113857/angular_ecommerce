@@ -33,16 +33,16 @@ export class AuthenticationService {
   // 🌱 LOCAL BACKEND
   // =====================================================
 
-  private readonly LOCAL_BASE_URL =
-  'http://127.0.0.1:5000/api/v1/auth';
+  // private readonly LOCAL_BASE_URL =
+  // 'http://127.0.0.1:5000/api/v1/auth';
 
 
   // =====================================================
   // 🚀 LIVE RENDER BACKEND
   // =====================================================
 
-  // private readonly LIVE_BASE_URL =
-  //   'https://backend-auth-service-ks6f.onrender.com/api/v1/auth';
+  private readonly LIVE_BASE_URL =
+    'https://backend-auth-service-dgfi.onrender.com/api/v1/auth';
 
 
   // =====================================================
@@ -50,7 +50,7 @@ export class AuthenticationService {
   // =====================================================
 
   private readonly baseUrl =
-    this.LOCAL_BASE_URL;
+    this.LIVE_BASE_URL;
 
 
   // =====================================================
