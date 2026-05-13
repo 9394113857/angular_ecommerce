@@ -14,9 +14,14 @@
     <div
       class="dot"
       [ngClass]="{
-        'yellow-blink': service.status === 'warming',
-        'green-blink': service.status === 'up',
-        'yellow-blink': service.status === 'down'
+
+        'yellow-blink':
+          service.status === 'warming' ||
+          service.status === 'down',
+
+        'green-blink':
+          service.status === 'up'
+
       }"
     ></div>
 
