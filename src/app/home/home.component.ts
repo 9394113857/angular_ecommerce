@@ -1,5 +1,5 @@
 // =========================
-// 🚀 HOME COMPONENT UPDATED
+// Cell 1: Home Component
 // =========================
 
 import {
@@ -13,20 +13,21 @@ import {
   faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
 
-import { Title } from '@angular/platform-browser';
+import {
+  Title
+} from '@angular/platform-browser';
 
-import { ProductService } from '../services/product.service';
+import {
+  ProductService
+} from '../services/product.service';
 
 import {
   RecommendationService
 } from '../services/recommendation.service';
 
-import { Product } from 'src/data.type';
-
 import {
-  SimpleStatusService,
-  ServiceStatus
-} from '../services/simple-status.service';
+  Product
+} from 'src/data.type';
 
 
 @Component({
@@ -38,9 +39,9 @@ import {
 export class HomeComponent
 implements OnInit, OnDestroy {
 
-  // =====================================================
+  // =========================
   // UI STATE
-  // =====================================================
+  // =========================
 
   isLoading = false;
 
@@ -54,15 +55,9 @@ implements OnInit, OnDestroy {
 
   slidePosition = 0;
 
-  // =====================================================
-  // SERVICE STATUS
-  // =====================================================
-
-  services: ServiceStatus[] = [];
-
-  // =====================================================
-  // SLIDER
-  // =====================================================
+  // =========================
+  // SLIDER IMAGES
+  // =========================
 
   popularProduct: string[] = [
 
@@ -80,23 +75,19 @@ implements OnInit, OnDestroy {
 
   private autoplayInterval: any;
 
-
   constructor(
 
     private productService: ProductService,
 
     private recoService: RecommendationService,
 
-    private titleService: Title,
-
-    private statusService: SimpleStatusService
+    private titleService: Title
 
   ) {}
 
-
-  // =====================================================
+  // =========================
   // INIT
-  // =====================================================
+  // =========================
 
   ngOnInit(): void {
 
@@ -104,23 +95,11 @@ implements OnInit, OnDestroy {
       'E-Comm | Home'
     );
 
-    // =====================================================
-    // LIVE STATUS
-    // =====================================================
-
-    this.statusService.services$
-      .subscribe(data => {
-
-        this.services = data;
-
-      });
-
     this.startAutoplay();
 
     this.loadProducts();
 
   }
-
 
   ngOnDestroy(): void {
 
@@ -130,10 +109,9 @@ implements OnInit, OnDestroy {
 
   }
 
-
-  // =====================================================
+  // =========================
   // SLIDER LOGIC
-  // =====================================================
+  // =========================
 
   startAutoplay(): void {
 
@@ -146,7 +124,6 @@ implements OnInit, OnDestroy {
 
   }
 
-
   previousSlide(): void {
 
     this.slidePosition =
@@ -158,7 +135,6 @@ implements OnInit, OnDestroy {
         : this.slidePosition + 100;
 
   }
-
 
   nextSlide(): void {
 
@@ -173,10 +149,9 @@ implements OnInit, OnDestroy {
 
   }
 
-
-  // =====================================================
+  // =========================
   // LOAD PRODUCTS
-  // =====================================================
+  // =========================
 
   loadProducts(): void {
 
@@ -189,26 +164,21 @@ implements OnInit, OnDestroy {
         next: (data) => {
 
           console.log(
-            'PRODUCTS:',
+            '🔥 PRODUCTS:',
             data
           );
 
-          this.productData = data || [];
+          this.productData = data;
 
           this.isLoading = false;
+
+          // LOAD RECOMMENDATIONS
 
           this.loadRecommendations();
 
         },
 
-        error: (err) => {
-
-          console.log(
-            'PRODUCT ERROR:',
-            err
-          );
-
-          this.productData = [];
+        error: () => {
 
           this.isLoading = false;
 
@@ -218,25 +188,24 @@ implements OnInit, OnDestroy {
 
   }
 
-
-  // =====================================================
+  // =========================
   // LOAD RECOMMENDATIONS
-  // =====================================================
+  // =========================
 
   loadRecommendations(): void {
 
-    // =====================================================
-    // TEMP USER ID
-    // =====================================================
+    // STATIC USER ID
+
+    const userId = 1;
 
     this.recoService
-      .getRecommendations(1)
+      .getRecommendations(userId)
       .subscribe({
 
         next: (recos: any[]) => {
 
           console.log(
-            'RECOMMENDATIONS:',
+            '🔥 RECOS:',
             recos
           );
 
@@ -250,19 +219,16 @@ implements OnInit, OnDestroy {
             this.showRecommendations = false;
 
             return;
+
           }
 
-          // =====================================================
           // SORT BY RANK
-          // =====================================================
 
           recos.sort(
             (a, b) => a.rank - b.rank
           );
 
-          // =====================================================
           // PRODUCT MAP
-          // =====================================================
 
           const productMap = new Map(
 
@@ -272,40 +238,42 @@ implements OnInit, OnDestroy {
 
           );
 
-          // =====================================================
-          // MAP PRODUCTS
-          // =====================================================
+          // FINAL PRODUCTS
 
           this.recommendedProducts = recos
 
-            .map(
-              r => productMap.get(
+            .map(r =>
+
+              productMap.get(
                 Number(r.product_id)
               )
+
             )
 
             .filter(
-              p => !!p
-            ) as Product[];
+              (p): p is Product => !!p
+            );
 
-          // =====================================================
-          // LIMIT
-          // =====================================================
+          // TOP 5
 
           this.recommendedProducts =
-            this.recommendedProducts.slice(0, 5);
+
+            this.recommendedProducts
+              .slice(0, 5);
+
+          console.log(
+            '🔥 FINAL RECOMMENDED:',
+            this.recommendedProducts
+          );
 
           this.showRecommendations =
-            this.recommendedProducts.length > 0;
+
+            this.recommendedProducts
+              .length > 0;
 
         },
 
-        error: (err) => {
-
-          console.log(
-            'RECOMMENDATION ERROR:',
-            err
-          );
+        error: () => {
 
           this.recommendedProducts = [];
 

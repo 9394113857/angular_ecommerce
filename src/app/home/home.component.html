@@ -1,67 +1,3 @@
-<!-- ===================================================== -->
-<!-- 🚀 MULTI SERVICE STATUS -->
-<!-- ===================================================== -->
-
-<div class="service-status-wrapper">
-
-  <div
-    class="service-card"
-    *ngFor="let service of services"
-  >
-
-    <!-- STATUS DOT -->
-
-    <div
-      class="dot"
-      [ngClass]="{
-
-        'yellow-blink':
-          service.status === 'warming' ||
-          service.status === 'down',
-
-        'green-blink':
-          service.status === 'up'
-
-      }"
-    ></div>
-
-    <!-- SERVICE NAME -->
-
-    <span class="service-name">
-      {{ service.name }}
-    </span>
-
-    <!-- STATUS -->
-
-    <span
-      class="service-state"
-      [ngClass]="{
-        'state-green': service.status === 'up',
-        'state-yellow':
-        service.status === 'warming' ||
-        service.status === 'down'
-      }"
-    >
-
-      <ng-container *ngIf="service.status === 'warming'">
-        WARMING
-      </ng-container>
-
-      <ng-container *ngIf="service.status === 'up'">
-        LIVE
-      </ng-container>
-
-      <ng-container *ngIf="service.status === 'down'">
-        COMING SOON
-      </ng-container>
-
-    </span>
-
-  </div>
-
-</div>
-
-
 <!-- HERO SLIDER -->
 
 <div class="home_main_container_slider">
@@ -130,7 +66,9 @@
 >
 
   <h1 class="trendyHead">
+
     Recommended For You
+
   </h1>
 
   <div class="show-trends-product">
@@ -185,42 +123,15 @@
 </div>
 
 
-<!-- EMPTY -->
-
-<div
-  class="empty-message"
-  *ngIf="
-    !isLoading &&
-    productData.length === 0
-  "
->
-
-  No products available.
-
-</div>
-
-
 <!-- STATUS -->
 
 <div class="simple-status">
 
-  <div
-    class="dot"
-    [ngClass]="{
-      'yellow-blink': services.length === 0,
-      'green-blink': services.length > 0
-    }"
-  ></div>
+  <div class="dot green-blink"></div>
 
-  <span *ngIf="services.length > 0">
+  <span>
 
     All Systems Ready
-
-  </span>
-
-  <span *ngIf="services.length === 0">
-
-    Initializing Services...
 
   </span>
 
