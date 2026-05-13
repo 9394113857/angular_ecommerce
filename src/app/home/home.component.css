@@ -34,6 +34,14 @@
 
   font-size: 14px;
 
+  transition: transform 0.2s ease;
+
+}
+
+.service-card:hover {
+
+  transform: translateY(-2px);
+
 }
 
 .dot {
@@ -58,6 +66,16 @@
 
 }
 
+.green-blink {
+
+  background: #00d26a;
+
+  animation: blink 1.2s infinite;
+
+  box-shadow: 0 0 8px #00d26a;
+
+}
+
 .red-blink {
 
   background: red;
@@ -68,16 +86,36 @@
 
 .yellow-blink {
 
-  background: yellow;
+  background: #ffcc00;
 
   animation: blink 1s infinite;
+
+  box-shadow: 0 0 8px #ffcc00;
+
+}
+
+.state-green {
+
+  color: #00a651;
+
+  font-weight: 600;
+
+}
+
+.state-yellow {
+
+  color: #d89b00;
+
+  font-weight: 600;
 
 }
 
 @keyframes blink {
 
   50% {
-    opacity: 0.2;
+
+    opacity: 0.35;
+
   }
 
 }
@@ -101,11 +139,11 @@
 
   gap: 8px;
 
-  background: rgba(17, 17, 17, 0.9);
+  background: rgba(17, 17, 17, 0.92);
 
   color: white;
 
-  padding: 8px 12px;
+  padding: 8px 14px;
 
   border-radius: 30px;
 
@@ -114,6 +152,8 @@
   z-index: 999;
 
   backdrop-filter: blur(4px);
+
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 
 }
 

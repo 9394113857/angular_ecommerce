@@ -15,8 +15,8 @@
       class="dot"
       [ngClass]="{
         'yellow-blink': service.status === 'warming',
-        'green': service.status === 'up',
-        'red': service.status === 'down'
+        'green-blink': service.status === 'up',
+        'yellow-blink': service.status === 'down'
       }"
     ></div>
 
@@ -28,18 +28,26 @@
 
     <!-- STATUS -->
 
-    <span class="service-state">
+    <span
+      class="service-state"
+      [ngClass]="{
+        'state-green': service.status === 'up',
+        'state-yellow':
+        service.status === 'warming' ||
+        service.status === 'down'
+      }"
+    >
 
       <ng-container *ngIf="service.status === 'warming'">
-        Warming
+        WARMING
       </ng-container>
 
       <ng-container *ngIf="service.status === 'up'">
-        UP
+        LIVE
       </ng-container>
 
       <ng-container *ngIf="service.status === 'down'">
-        DOWN
+        COMING SOON
       </ng-container>
 
     </span>
@@ -194,8 +202,8 @@
   <div
     class="dot"
     [ngClass]="{
-      'red-blink': services.length === 0,
-      'green': services.length > 0
+      'yellow-blink': services.length === 0,
+      'green-blink': services.length > 0
     }"
   ></div>
 
@@ -207,7 +215,7 @@
 
   <span *ngIf="services.length === 0">
 
-    Starting...
+    Initializing Services...
 
   </span>
 
