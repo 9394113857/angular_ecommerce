@@ -127,11 +127,34 @@
 
 <div class="simple-status">
 
-  <div class="dot green-blink"></div>
+  <div
+    class="dot"
+    [ngClass]="{
 
-  <span>
+      'red-blink':
+        appStatus === 'checking',
+
+      'yellow-blink':
+        appStatus === 'almost',
+
+      'green-blink':
+        appStatus === 'finalizing',
+
+      'green':
+        appStatus === 'ready'
+
+    }"
+  ></div>
+
+  <span *ngIf="appStatus === 'ready'">
 
     All Systems Ready
+
+  </span>
+
+  <span *ngIf="appStatus !== 'ready'">
+
+    Starting...
 
   </span>
 

@@ -1,77 +1,31 @@
-// ======================================================
-// 🚀 MULTI SERVICE STATUS SYSTEM (NEW)
-// ======================================================
-
 import { Injectable } from '@angular/core';
+
 import { BehaviorSubject } from 'rxjs';
 
-// ✅ STATUS TYPES
-export type ServiceState = 'warming' | 'up' | 'down';
-
-// ✅ SERVICE MODEL
-export interface ServiceStatus {
-  name: string;
-  status: ServiceState;
-}
+export type AppStatus =
+  'checking' |
+  'almost' |
+  'finalizing' |
+  'ready';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class SimpleStatusService {
 
-  // ======================================================
-  // ✅ DEFAULT SERVICES
-  // ======================================================
+  private status =
+    new BehaviorSubject<AppStatus>(
+      'checking'
+    );
 
-  private services = new BehaviorSubject<ServiceStatus[]>([
-    {
-      name: 'Auth Service',
-      status: 'warming'
-    },
-    {
-      name: 'Product Service',
-      status: 'warming'
-    },
-    {
-      name: 'Cart Service',
-      status: 'warming'
-    },
-    {
-      name: 'ML Events',
-      status: 'warming'
-    },
-    {
-      name: 'ML Recommendation',
-      status: 'warming'
-    }
-  ]);
+  status$ =
+    this.status.asObservable();
 
-  services$ = this.services.asObservable();
+  setStatus(s: AppStatus) {
 
-  // ======================================================
-  // ✅ UPDATE SERVICE STATUS
-  // ======================================================
+    this.status.next(s);
 
-  updateServiceStatus(
-    name: string,
-    status: ServiceState
-  ): void {
-
-    const updated = this.services.value.map(service => {
-
-      if (service.name === name) {
-
-        return {
-          ...service,
-          status
-        };
-
-      }
-
-      return service;
-
-    });
-
-    this.services.next(updated);
   }
+
 }

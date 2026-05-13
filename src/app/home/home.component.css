@@ -44,11 +44,33 @@
 
 }
 
+.red-blink {
+
+  background: red;
+
+  animation: blink 1s infinite;
+
+}
+
+.yellow-blink {
+
+  background: #ffcc00;
+
+  animation: blink 1s infinite;
+
+}
+
 .green-blink {
 
   background: lime;
 
   animation: blink 1s infinite;
+
+}
+
+.green {
+
+  background: lime;
 
 }
 

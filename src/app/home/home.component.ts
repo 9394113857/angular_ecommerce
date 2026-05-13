@@ -29,6 +29,11 @@ import {
   Product
 } from 'src/data.type';
 
+import {
+  SimpleStatusService,
+  AppStatus
+} from '../services/simple-status.service';
+
 
 @Component({
   selector: 'app-home',
@@ -54,6 +59,8 @@ implements OnInit, OnDestroy {
   showRecommendations = false;
 
   slidePosition = 0;
+
+  appStatus: AppStatus = 'checking';
 
   // =========================
   // SLIDER IMAGES
@@ -81,7 +88,9 @@ implements OnInit, OnDestroy {
 
     private recoService: RecommendationService,
 
-    private titleService: Title
+    private titleService: Title,
+
+    private statusService: SimpleStatusService
 
   ) {}
 
@@ -94,6 +103,34 @@ implements OnInit, OnDestroy {
     this.titleService.setTitle(
       'E-Comm | Home'
     );
+
+    this.statusService.status$
+      .subscribe(status => {
+
+        this.appStatus = status;
+
+      });
+
+    setTimeout(() => {
+
+      this.statusService
+        .setStatus('almost');
+
+    }, 1500);
+
+    setTimeout(() => {
+
+      this.statusService
+        .setStatus('finalizing');
+
+    }, 3000);
+
+    setTimeout(() => {
+
+      this.statusService
+        .setStatus('ready');
+
+    }, 4500);
 
     this.startAutoplay();
 
@@ -163,16 +200,9 @@ implements OnInit, OnDestroy {
 
         next: (data) => {
 
-          console.log(
-            '🔥 PRODUCTS:',
-            data
-          );
-
           this.productData = data;
 
           this.isLoading = false;
-
-          // LOAD RECOMMENDATIONS
 
           this.loadRecommendations();
 
@@ -194,8 +224,6 @@ implements OnInit, OnDestroy {
 
   loadRecommendations(): void {
 
-    // STATIC USER ID
-
     const userId = 1;
 
     this.recoService
@@ -203,11 +231,6 @@ implements OnInit, OnDestroy {
       .subscribe({
 
         next: (recos: any[]) => {
-
-          console.log(
-            '🔥 RECOS:',
-            recos
-          );
 
           if (
             !recos ||
@@ -222,13 +245,9 @@ implements OnInit, OnDestroy {
 
           }
 
-          // SORT BY RANK
-
           recos.sort(
             (a, b) => a.rank - b.rank
           );
-
-          // PRODUCT MAP
 
           const productMap = new Map(
 
@@ -237,8 +256,6 @@ implements OnInit, OnDestroy {
             )
 
           );
-
-          // FINAL PRODUCTS
 
           this.recommendedProducts = recos
 
@@ -254,17 +271,10 @@ implements OnInit, OnDestroy {
               (p): p is Product => !!p
             );
 
-          // TOP 5
-
           this.recommendedProducts =
 
             this.recommendedProducts
               .slice(0, 5);
-
-          console.log(
-            '🔥 FINAL RECOMMENDED:',
-            this.recommendedProducts
-          );
 
           this.showRecommendations =
 
