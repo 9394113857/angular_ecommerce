@@ -14,6 +14,10 @@ export type AppStatus =
 
 export class SimpleStatusService {
 
+  // =====================================================
+  // SIMPLE STATUS FLOW
+  // =====================================================
+
   private status =
     new BehaviorSubject<AppStatus>(
       'checking'
@@ -25,6 +29,25 @@ export class SimpleStatusService {
   setStatus(s: AppStatus) {
 
     this.status.next(s);
+
+  }
+
+  // =====================================================
+  // BACKWARD COMPATIBILITY
+  // EXISTING APP.COMPONENT.TS USES THIS
+  // =====================================================
+
+  updateServiceStatus(
+    serviceName: string,
+    status: string
+  ) {
+
+    console.log(
+      'Service:',
+      serviceName,
+      'Status:',
+      status
+    );
 
   }
 
