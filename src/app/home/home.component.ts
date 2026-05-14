@@ -224,7 +224,17 @@ implements OnInit, OnDestroy {
 
   loadRecommendations(): void {
 
-    const userId = 1;
+    // const userId = 1;
+    const userData = localStorage.getItem('userLoggedIn');
+
+if (!userData) {
+
+  this.showRecommendations = false;
+  return;
+
+}
+
+const userId = JSON.parse(userData).id;
 
     this.recoService
       .getRecommendations(userId)
