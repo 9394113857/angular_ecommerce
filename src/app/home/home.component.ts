@@ -231,6 +231,7 @@ implements OnInit, OnDestroy {
       .subscribe({
 
         next: (recos: any[]) => {
+          console.log('RECO API:', recos); // debug log for recommendation API response
 
           if (
             !recos ||
