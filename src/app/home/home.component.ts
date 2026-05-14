@@ -230,7 +230,9 @@ implements OnInit, OnDestroy {
       .getRecommendations(userId)
       .subscribe({
 
-        next: (recos: any[]) => {
+        next: (response: any) => {
+
+          const recos = response.recommendations || [];
           // console.log('RECO API:', recos); // debug log for recommendation API response
 
           if (
@@ -247,8 +249,8 @@ implements OnInit, OnDestroy {
           }
 
           recos.sort(
-            (a, b) => a.rank - b.rank
-          );
+  (a: any, b: any) => a.rank - b.rank
+);
 
           const productMap = new Map(
 
@@ -260,7 +262,7 @@ implements OnInit, OnDestroy {
 
           this.recommendedProducts = recos
 
-            .map(r =>
+            .map((r: any) =>
 
               productMap.get(
                 Number(r.product_id)
@@ -269,7 +271,7 @@ implements OnInit, OnDestroy {
             )
 
             .filter(
-              (p): p is Product => !!p
+              (p: Product | undefined): p is Product => !!p
             );
 
           this.recommendedProducts =
