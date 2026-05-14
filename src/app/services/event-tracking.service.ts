@@ -16,7 +16,7 @@ export class EventTrackingService {
   // 🚀 PRODUCTION ML EVENTS SERVICE (RENDER) ✅ ACTIVE
   // =====================================================
   private readonly RENDER_BASE_URL =
-  'https://backend-ml-events-service-ba9v.onrender.com/api/events';
+  'https://backend-ml-events-service-ba9v.onrender.com/api/v1/events';
 
   // ✅ ACTIVE BASE URL
   private readonly baseUrl = this.RENDER_BASE_URL;
