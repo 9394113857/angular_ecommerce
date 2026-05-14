@@ -50,6 +50,14 @@ export class LoginComponent implements OnInit {
 
   }
 
+  showPassword = false;
+
+togglePassword(): void {
+
+  this.showPassword = !this.showPassword;
+
+}
+
 
   // ============================
   // REDIRECT TO SIGNUP
