@@ -22,15 +22,15 @@ export class AuthenticationService {
 // ================================
 // 🚀 RENDER BACKEND (COMMENTED SAFE)
 // ================================
-// private readonly RENDER_BASE_URL =
-//   'https://backend-auth-service-ks6f.onrender.com/api/v1/auth/angularUser';
+private readonly RENDER_BASE_URL =
+  'https://backend-auth-service-ks6f.onrender.com/api/v1/auth/angularUser';
 
 // ================================
 /// ================================
 // ☸️ GKE INGRESS BACKEND (ACTIVE)
 // ================================
-private readonly GKE_BASE_URL =
-  'http://8.228.229.55/api/v1/auth/angularUser';
+// private readonly GKE_BASE_URL =
+//   'http://8.228.229.55/api/v1/auth/angularUser';
 
 // ================================
 // 🚀 ACTIVE BASE URL
