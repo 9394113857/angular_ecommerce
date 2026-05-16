@@ -33,9 +33,9 @@ private readonly RENDER_BASE_URL =
 //   'http://8.228.229.55/api/v1/auth/angularUser';
 
 // ================================
-// 🚀 ACTIVE BASE URL
+// 🚀 ACTIVE BASE URL      
 // ================================
-private readonly baseUrl = this.GKE_BASE_URL;
+private readonly baseUrl = this.RENDER_BASE_URL;
 
     // Auth state
     authState$ = new BehaviorSubject<'default' | 'user' | 'seller'>('default');
