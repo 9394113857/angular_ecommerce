@@ -22,19 +22,20 @@ export class AuthenticationService {
 // ================================
 // 🚀 RENDER BACKEND (COMMENTED SAFE)
 // ================================
-private readonly RENDER_BASE_URL =
-  'https://backend-auth-service-ks6f.onrender.com/api/v1/auth/angularUser';
+// private readonly RENDER_BASE_URL =
+//   'https://backend-auth-service-ks6f.onrender.com/api/v1/auth/angularUser';
 
 // ================================
-// ☸️ GKE BACKEND (ACTIVE)
+/// ================================
+// ☸️ GKE INGRESS BACKEND (ACTIVE)
 // ================================
-// private readonly GKE_BASE_URL =
-//   'http://34.93.98.247/api/v1/auth/angularUser';
+private readonly GKE_BASE_URL =
+  'http://8.228.229.55/api/v1/auth/angularUser';
 
 // ================================
 // 🚀 ACTIVE BASE URL
 // ================================
-private readonly baseUrl = this.RENDER_BASE_URL;
+private readonly baseUrl = this.GKE_BASE_URL;
 
     // Auth state
     authState$ = new BehaviorSubject<'default' | 'user' | 'seller'>('default');
