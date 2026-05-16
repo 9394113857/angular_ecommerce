@@ -29,7 +29,7 @@ export class AuthenticationService {
 // ☸️ GKE BACKEND (ACTIVE) 
 // ================================
 private readonly GKE_BASE_URL =
-  'http://34.93.98.247/api/v1/auth/angularUser';
+  'http://8.228.229.55/api/v1/auth/angularUser';
 
 // ================================
 // 🚀 ACTIVE BASE URL
