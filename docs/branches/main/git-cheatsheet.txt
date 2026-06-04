@@ -1,0 +1,29 @@
+# Switch to main branch
+git checkout main
+
+# Download latest changes from GitHub
+git fetch origin
+
+# Force local main to match remote main (deletes local commits/changes)
+git reset --hard origin/main
+
+# Remove untracked files and folders
+# Example files that would be removed:
+# notes.txt
+# temp.txt
+# debug.log
+git clean -fd
+
+# Verify everything is synced
+git status
+
+========================
+
+# If you want to see which files would be deleted before deleting them, run:
+git clean -fdn
+
+# That will show files such as:
+Would remove notes.txt
+Would remove temp.txt
+Would remove reports/export.txt
+
