@@ -25,12 +25,11 @@ export class OrdersComponent implements OnInit {
   ) {}
 
   // =========================
-  // INIT    
+  // INIT
   // =========================
   ngOnInit(): void {
     this.loadOrders();
 
-    // 🔥 EVENT: ORDERS PAGE VIEW
     this.eventTracking.trackEvent({
       event_type: 'orders_page_view'
     });
@@ -62,7 +61,6 @@ export class OrdersComponent implements OnInit {
       state: { order }
     });
 
-    // 🔥 EVENT: ORDER VIEW (FIXED ✅)
     this.eventTracking.trackEvent({
       event_type: 'order_view',
       object_id: order.order_id,
@@ -75,9 +73,11 @@ export class OrdersComponent implements OnInit {
   // =========================
   // CANCEL ORDER
   // =========================
-  cancelOrder(order: any): void {
+  cancelOrder(order: Order): void {
 
-    if (!confirm('Are you sure you want to cancel this order?')) return;
+    if (!confirm('Are you sure you want to cancel this order?')) {
+      return;
+    }
 
     this.orderService.cancelOrder(order.order_id).subscribe({
 
@@ -85,7 +85,6 @@ export class OrdersComponent implements OnInit {
 
         console.log('🔥 Cancel success, sending ML events');
 
-        // 🔥 EVENT: ORDER CANCELLED
         this.eventTracking.trackEvent({
           event_type: 'order_cancelled',
           object_id: order.order_id,
@@ -103,4 +102,36 @@ export class OrdersComponent implements OnInit {
       }
     });
   }
+
+  // =========================
+  // EXPORT CSV
+  // =========================
+  exportCsv(): void {
+
+    this.orderService.exportOrdersCsv().subscribe({
+
+      next: (blob: Blob) => {
+
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'orders.csv';
+
+        link.click();
+
+        window.URL.revokeObjectURL(url);
+
+        console.log('✅ CSV Downloaded');
+      },
+
+      error: (err) => {
+
+        console.error('CSV Export Failed', err);
+
+        alert('CSV export failed');
+      }
+    });
+  }
+
 }

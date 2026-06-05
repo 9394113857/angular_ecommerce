@@ -30,12 +30,12 @@ export class CartServiceService {
   //   'http://127.0.0.1:5003/api';
 
   // =====================================
-  // 🚀 RAILWAY BACKEND (ACTIVE)
+  // 🚀 RENDER BACKEND (ACTIVE) 
   // =====================================
-  private readonly RAILWAY_BASE_URL =
+  private readonly RENDER_BASE_URL =
     'https://backend-cart-order-service-q6qh.onrender.com/api';
 
-  private readonly baseUrl = this.RAILWAY_BASE_URL;
+  private readonly baseUrl = this.RENDER_BASE_URL;
 
   constructor(private http: HttpClient) {}
 

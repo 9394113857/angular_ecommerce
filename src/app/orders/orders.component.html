@@ -1,14 +1,29 @@
+<!-- Page Title -->
 <h2>My Orders</h2>
 
-<p *ngIf="isLoading">Loading orders...</p>
+<!-- Export Orders as CSV -->
+<button (click)="exportCsv()">
+  📄 Export CSV
+</button>
 
+<br />
+<br />
+
+<!-- Loading State -->
+<p *ngIf="isLoading">
+  Loading orders...
+</p>
+
+<!-- Empty State -->
 <div *ngIf="!isLoading && orders.length === 0">
   <p>No orders found.</p>
 </div>
 
+<!-- Orders Table -->
 <table *ngIf="!isLoading && orders.length > 0">
   <thead>
     <tr>
+      <!-- Table Headers -->
       <th>ID</th>
       <th>Total</th>
       <th>Status</th>
@@ -18,19 +33,42 @@
   </thead>
 
   <tbody>
+    <!-- Loop through all orders -->
     <tr *ngFor="let order of orders">
-      <td>#{{ order.order_id }}</td>
-      <td>₹ {{ order.total_price }}</td>
+
+      <!-- Order ID -->
       <td>
-        <span class="badge" [ngClass]="order.status">
+        #{{ order.order_id }}
+      </td>
+
+      <!-- Total Price -->
+      <td>
+        ₹ {{ order.total_price }}
+      </td>
+
+      <!-- Order Status -->
+      <td>
+        <span
+          class="badge"
+          [ngClass]="order.status"
+        >
           {{ order.status }}
         </span>
       </td>
-      <td>{{ order.created_at | date:'medium' }}</td>
+
+      <!-- Order Creation Date -->
       <td>
-        <!-- IMPORTANT: just navigate, no state -->
-        <button (click)="viewOrder(order)">View</button>
+        {{ order.created_at | date:'medium' }}
       </td>
+
+      <!-- View Order Details -->
+      <td>
+        <!-- Navigate to Order Details Page -->
+        <button (click)="viewOrder(order)">
+          View
+        </button>
+      </td>
+
     </tr>
   </tbody>
 </table>
