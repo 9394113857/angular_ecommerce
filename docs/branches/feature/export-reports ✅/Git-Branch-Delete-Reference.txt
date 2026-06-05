@@ -1,0 +1,120 @@
+# ==========================================================
+# FILE: Git-Branch-Delete-Reference.txt
+# PURPOSE:
+# Verify Branches → Delete Local Branch → Delete Remote Branch
+# → Verify Again
+# ==========================================================
+
+
+# ==========================================================
+# STEP 1 - CHECK CURRENT BRANCH
+# ==========================================================
+git branch
+
+# Expected Example:
+#
+#   feature/contact-us-✅
+# * feature/export-reports
+#   main
+
+
+# ==========================================================
+# STEP 2 - CHECK ALL REMOTE BRANCHES
+# ==========================================================
+git branch -r
+
+# Expected Example:
+#
+# origin/feature/export-reports
+# origin/main
+
+
+# ==========================================================
+# STEP 3 - CHECK LOCAL + REMOTE TOGETHER
+# ==========================================================
+git branch -a
+
+
+# ==========================================================
+# STEP 4 - SWITCH TO MAIN
+#
+# IMPORTANT:
+# Cannot delete a branch while currently inside it.
+# ==========================================================
+git checkout main
+
+
+# ==========================================================
+# STEP 5 - VERIFY CURRENT BRANCH
+# ==========================================================
+git branch
+
+# Expected:
+#
+# * main
+#   feature/export-reports
+
+
+# ==========================================================
+# STEP 6 - DELETE LOCAL FEATURE BRANCH
+# ==========================================================
+git branch -d feature/export-reports
+
+# If Git complains branch not merged:
+#
+# git branch -D feature/export-reports
+
+
+# ==========================================================
+# STEP 7 - VERIFY LOCAL BRANCH DELETED
+# ==========================================================
+git branch
+
+# Expected:
+#
+# * main
+#
+# feature/export-reports should be gone
+
+
+# ==========================================================
+# STEP 8 - DELETE REMOTE FEATURE BRANCH
+# ==========================================================
+git push origin --delete feature/export-reports
+
+
+# ==========================================================
+# STEP 9 - VERIFY REMOTE BRANCH DELETED
+# ==========================================================
+git branch -r
+
+# Expected:
+#
+# origin/main
+#
+# origin/feature/export-reports should be gone
+
+
+# ==========================================================
+# STEP 10 - FINAL VERIFY (LOCAL + REMOTE)
+# ==========================================================
+git branch -a
+
+
+# ==========================================================
+# OPTIONAL
+# PULL LATEST MAIN AFTER MERGE
+# ==========================================================
+git pull origin main
+
+
+# ==========================================================
+# OPTIONAL
+# VIEW COMPLETE BRANCH STATUS
+# ==========================================================
+git status
+
+
+# ==========================================================
+# END OF FLOW
+# ==========================================================
