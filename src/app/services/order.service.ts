@@ -15,20 +15,21 @@ export class OrderService {
   //   'http://127.0.0.1:5003/api/orders';
 
   // =====================================
-  // 🚀 RAILWAY BACKEND (ACTIVE)
+  // 🚀 RENDER BACKEND (ACTIVE) 
   // =====================================
-  private readonly RAILWAY_BASE_URL =
+  private readonly RENDER_BASE_URL =
     'https://backend-cart-order-service-q6qh.onrender.com/api/orders';
 
-  private readonly baseUrl = this.RAILWAY_BASE_URL;
+  private readonly baseUrl = this.RENDER_BASE_URL;
 
   constructor(private http: HttpClient) {}
 
   // ==========================
-  // 🔐 AUTH HEADERS (FIXED)
+  // 🔐 AUTH HEADERS
   // ==========================
   private headers(): HttpHeaders {
-    const token = localStorage.getItem('access_token'); // ✅ FIX
+    const token = localStorage.getItem('access_token');
+
     return new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
@@ -40,17 +41,21 @@ export class OrderService {
   getMyOrders(): Observable<Order[]> {
     return this.http.get<Order[]>(
       this.baseUrl,
-      { headers: this.headers() }
+      {
+        headers: this.headers()
+      }
     );
   }
 
   // ==========================
-  // 🔍 GET SINGLE ORDER DETAILS
+  // 🔍 GET ORDER DETAILS
   // ==========================
   getOrderDetails(orderId: number): Observable<any> {
     return this.http.get<any>(
       `${this.baseUrl}/${orderId}`,
-      { headers: this.headers() }
+      {
+        headers: this.headers()
+      }
     );
   }
 
@@ -61,7 +66,23 @@ export class OrderService {
     return this.http.patch(
       `${this.baseUrl}/${orderId}/cancel`,
       {},
-      { headers: this.headers() }
+      {
+        headers: this.headers()
+      }
     );
   }
+
+  // ==========================
+  // 📄 EXPORT ORDERS CSV
+  // ==========================
+  exportOrdersCsv(): Observable<Blob> {
+    return this.http.get(
+      `${this.baseUrl}/export/csv`,
+      {
+        headers: this.headers(),
+        responseType: 'blob'
+      }
+    );
+  }
+
 }
