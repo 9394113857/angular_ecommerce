@@ -6,8 +6,8 @@ name: 🚀 Angular CD – Vercel Deployment
 
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
 
   workflow_dispatch:
 
