@@ -6,8 +6,8 @@ name: 🚀 Angular CD – Vercel Deployment
 
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
 
   workflow_dispatch:
 
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      LIVE_URL: https://angular-ecommerce-wheat.vercel.app/
+      LIVE_URL: https://angular-ecommerce-livid.vercel.app/
 
     steps:
 
