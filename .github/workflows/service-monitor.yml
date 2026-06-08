@@ -4,79 +4,11 @@ name: Service Monitor
 on:
   workflow_dispatch:
 
-  schedule:
-    - cron: "30 0-17 * * *"
-    - cron: "30 18 * * *"
-
 jobs:
-  monitor-services:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Start Monitoring
-        run: |
-          echo "========================================"
-          echo "E-COMMERCE PLATFORM MONITOR"
-          echo "========================================"
-          echo "UTC Time: $(date -u)"
-          echo "========================================"
-
-      - name: Check Services
-        run: |
-          check_service() {
-
-            NAME=$1
-            URL=$2
-
-            echo ""
-            echo "----------------------------------------"
-            echo "$NAME"
-            echo "----------------------------------------"
-
-            START=$(date +%s%3N)
-
-            HTTP_CODE=$(curl \
-              --silent \
-              --output /dev/null \
-              --max-time 10 \
-              --write-out "%{http_code}" \
-              "$URL")
-
-            END=$(date +%s%3N)
-
-            TIME_MS=$((END - START))
-
-            if [ "$HTTP_CODE" = "200" ]; then
-
-              if [ "$TIME_MS" -lt 1000 ]; then
-                echo "HEALTHY"
-                echo "Response Time: ${TIME_MS} ms"
-
-              elif [ "$TIME_MS" -lt 3000 ]; then
-                echo "SLOW"
-                echo "Response Time: ${TIME_MS} ms"
-
-              else
-                echo "VERY SLOW"
-                echo "Response Time: ${TIME_MS} ms"
-              fi
-
-            else
-              echo "FAILED"
-              echo "HTTP Status: $HTTP_CODE"
-            fi
-          }
-
-          check_service "Auth Service" "https://backend-auth-service-ks6f.onrender.com"
-          check_service "Product Service" "https://backend-product-service-ncl2.onrender.com"
-          check_service "Cart & Order Service" "https://backend-cart-order-service-q6qh.onrender.com"
-          check_service "ML Events Service" "https://backend-ml-events-service-ba9v.onrender.com"
-          check_service "ML Recommendation Service" "https://backend-ml-recommendation-service-huu6.onrender.com"
-
-      - name: Monitoring Complete
-        run: |
-          echo ""
-          echo "========================================"
-          echo "MONITORING COMPLETE"
-          echo "========================================"
+      - name: Test
+        run: echo "Workflow is valid"
 ```
