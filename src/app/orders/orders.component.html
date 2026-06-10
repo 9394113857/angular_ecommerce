@@ -1,7 +1,7 @@
 <!-- Page Title -->
 <h2>My Orders</h2>
 
-<!-- Export Orders as CSV -->
+<!-- Export CSV -->
 <button (click)="exportCsv()">
   📄 Export CSV
 </button>
@@ -9,7 +9,7 @@
 <br />
 <br />
 
-<!-- Loading State -->
+<!-- Loading -->
 <p *ngIf="isLoading">
   Loading orders...
 </p>
@@ -21,9 +21,9 @@
 
 <!-- Orders Table -->
 <table *ngIf="!isLoading && orders.length > 0">
+
   <thead>
     <tr>
-      <!-- Table Headers -->
       <th>ID</th>
       <th>Total</th>
       <th>Status</th>
@@ -33,42 +33,80 @@
   </thead>
 
   <tbody>
-    <!-- Loop through all orders -->
+
     <tr *ngFor="let order of orders">
 
-      <!-- Order ID -->
       <td>
         #{{ order.order_id }}
       </td>
 
-      <!-- Total Price -->
       <td>
         ₹ {{ order.total_price }}
       </td>
 
-      <!-- Order Status -->
       <td>
         <span
           class="badge"
-          [ngClass]="order.status"
-        >
+          [ngClass]="order.status">
+
           {{ order.status }}
+
         </span>
       </td>
 
-      <!-- Order Creation Date -->
       <td>
         {{ order.created_at | date:'medium' }}
       </td>
 
-      <!-- View Order Details -->
       <td>
-        <!-- Navigate to Order Details Page -->
+
         <button (click)="viewOrder(order)">
           View
         </button>
+
       </td>
 
     </tr>
+
   </tbody>
+
 </table>
+
+<!-- Pagination -->
+
+<br />
+<br />
+
+<div
+  class="pagination"
+  *ngIf="!isLoading && orders.length > 0">
+
+  <button
+    (click)="firstPage()"
+    [disabled]="currentPage === 1">
+    First
+  </button>
+
+  <button
+    (click)="prevPage()"
+    [disabled]="!hasPrev">
+    Previous
+  </button>
+
+  <span class="page-info">
+    Page {{ currentPage }} of {{ totalPages }}
+  </span>
+
+  <button
+    (click)="nextPage()"
+    [disabled]="!hasNext">
+    Next
+  </button>
+
+  <button
+    (click)="lastPage()"
+    [disabled]="currentPage === totalPages">
+    Last
+  </button>
+
+</div>
