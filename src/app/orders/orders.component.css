@@ -7,14 +7,15 @@ h2 {
 table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
+  background: #ffffff;
 }
 
 thead {
   background: #f4f6f8;
 }
 
-th, td {
+th,
+td {
   padding: 12px 14px;
   text-align: left;
   border-bottom: 1px solid #e0e0e0;
@@ -50,17 +51,42 @@ tbody tr:hover {
 button {
   padding: 6px 14px;
   background-color: #1976d2;
-  color: #fff;
+  color: #ffffff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 button:hover {
   background-color: #1565c0;
 }
 
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #90a4ae;
+}
+
 p {
   margin-top: 10px;
   font-size: 15px;
+}
+
+/* =========================
+   PAGINATION
+   ========================= */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.page-info {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
 }

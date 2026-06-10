@@ -15,7 +15,7 @@ export class OrderService {
   //   'http://127.0.0.1:5003/api/orders';
 
   // =====================================
-  // 🚀 RENDER BACKEND (ACTIVE) 
+  // 🚀 RENDER BACKEND (ACTIVE)
   // =====================================
   private readonly RENDER_BASE_URL =
     'https://backend-cart-order-service-q6qh.onrender.com/api/orders';
@@ -37,10 +37,15 @@ export class OrderService {
 
   // ==========================
   // 📦 GET ALL MY ORDERS
+  // PAGINATION READY ✅
   // ==========================
-  getMyOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(
-      this.baseUrl,
+  getMyOrders(
+    page: number = 1,
+    size: number = 10
+  ): Observable<any> {
+
+    return this.http.get<any>(
+      `${this.baseUrl}?page=${page}&size=${size}`,
       {
         headers: this.headers()
       }
