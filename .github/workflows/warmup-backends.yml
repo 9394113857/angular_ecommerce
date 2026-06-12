@@ -1,27 +1,38 @@
-name: Warm Up All Backends
+name: Warm Up All Backends (Scheduled + Manual)
 
 on:
+  # 🔥 Manual trigger (Run workflow button in GitHub)
   workflow_dispatch:
+
+  # ⏰ Auto schedule (every 10 minutes)
+  schedule:
+    - cron: "*/10 * * * *"
 
 jobs:
   warmup:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Warm Auth Service
-        run: curl -s https://backend-auth-service-ks6f.onrender.com || true
+        run: |
+          curl --fail -s https://backend-auth-service-ks6f.onrender.com || true
 
       - name: Warm Product Service
-        run: curl -s https://backend-product-service-ncl2.onrender.com || true
+        run: |
+          curl --fail -s https://backend-product-service-ncl2.onrender.com || true
 
-      - name: Warm Cart Order Service
-        run: curl -s https://backend-cart-order-service-q6qh.onrender.com || true
+      - name: Warm Cart/Order Service
+        run: |
+          curl --fail -s https://backend-cart-order-service-q6qh.onrender.com || true
 
       - name: Warm ML Events Service
-        run: curl -s https://backend-ml-events-service-ba9v.onrender.com || true
+        run: |
+          curl --fail -s https://backend-ml-events-service-ba9v.onrender.com || true
 
       - name: Warm ML Recommendation Service
-        run: curl -s https://backend-ml-recommendation-service-huu6.onrender.com || true
+        run: |
+          curl --fail -s https://backend-ml-recommendation-service-huu6.onrender.com || true
 
-      - name: Done
-        run: echo "🔥 All backends warmed successfully"
+      - name: Final Status
+        run: echo "🔥 All backend services warmed successfully"
