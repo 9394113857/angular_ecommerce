@@ -1,12 +1,8 @@
-name: Warm Up All Backends (Scheduled + Manual)
+name: Warm Up All Backends (Manual Only + Clear Logs)
 
 on:
-  # 🔥 Manual trigger (Run workflow button in GitHub)
+  # 🔥 Manual trigger only
   workflow_dispatch:
-
-  # ⏰ Auto schedule (every 10 minutes)
-  schedule:
-    - cron: "*/5 * * * *"
 
 jobs:
   warmup:
@@ -16,23 +12,41 @@ jobs:
 
       - name: Warm Auth Service
         run: |
-          curl --fail -s https://backend-auth-service-ks6f.onrender.com || true
+          echo "🚀 Warming Auth Service..."
+          curl --fail -s https://backend-auth-service-ks6f.onrender.com \
+            && echo "✅ Auth Service warmed successfully" \
+            || echo "⚠️ Auth Service failed or already awake"
 
       - name: Warm Product Service
         run: |
-          curl --fail -s https://backend-product-service-ncl2.onrender.com || true
+          echo "🚀 Warming Product Service..."
+          curl --fail -s https://backend-product-service-ncl2.onrender.com \
+            && echo "✅ Product Service warmed successfully" \
+            || echo "⚠️ Product Service failed or already awake"
 
       - name: Warm Cart/Order Service
         run: |
-          curl --fail -s https://backend-cart-order-service-q6qh.onrender.com || true
+          echo "🚀 Warming Cart/Order Service..."
+          curl --fail -s https://backend-cart-order-service-q6qh.onrender.com \
+            && echo "✅ Cart/Order Service warmed successfully" \
+            || echo "⚠️ Cart/Order Service failed or already awake"
 
       - name: Warm ML Events Service
         run: |
-          curl --fail -s https://backend-ml-events-service-ba9v.onrender.com || true
+          echo "🚀 Warming ML Events Service..."
+          curl --fail -s https://backend-ml-events-service-ba9v.onrender.com \
+            && echo "✅ ML Events Service warmed successfully" \
+            || echo "⚠️ ML Events Service failed or already awake"
 
       - name: Warm ML Recommendation Service
         run: |
-          curl --fail -s https://backend-ml-recommendation-service-huu6.onrender.com || true
+          echo "🚀 Warming ML Recommendation Service..."
+          curl --fail -s https://backend-ml-recommendation-service-huu6.onrender.com \
+            && echo "✅ ML Recommendation Service warmed successfully" \
+            || echo "⚠️ ML Recommendation Service failed or already awake"
 
       - name: Final Status
-        run: echo "🔥 All backend services warmed successfully"
+        run: |
+          echo "======================================="
+          echo "🔥 All backend services warmed (or checked) successfully"
+          echo "======================================="
