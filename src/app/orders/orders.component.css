@@ -4,6 +4,10 @@ h2 {
   font-weight: 600;
 }
 
+/* =========================
+   TABLE
+   ========================= */
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -30,6 +34,10 @@ tbody tr:hover {
   background-color: #f9f9f9;
 }
 
+/* =========================
+   BADGES (STATUS)
+   ========================= */
+
 .badge {
   padding: 4px 10px;
   border-radius: 12px;
@@ -38,15 +46,34 @@ tbody tr:hover {
   font-weight: 500;
 }
 
-.badge.placed {
-  background-color: #e6f4ea;
+.badge.pending {
+  background: #fff8e1;
+  color: #f57f17;
+}
+
+.badge.processing {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.badge.shipped {
+  background: #ede7f6;
+  color: #5e35b1;
+}
+
+.badge.delivered {
+  background: #e8f5e9;
   color: #2e7d32;
 }
 
 .badge.cancelled {
-  background-color: #fdecea;
+  background: #ffebee;
   color: #c62828;
 }
+
+/* =========================
+   BUTTONS
+   ========================= */
 
 button {
   padding: 6px 14px;
@@ -68,9 +95,38 @@ button:disabled {
   background-color: #90a4ae;
 }
 
+/* =========================
+   TEXT
+   ========================= */
+
 p {
   margin-top: 10px;
   font-size: 15px;
+}
+
+/* =========================
+   FILTERS
+   ========================= */
+
+.filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filters input {
+  padding: 8px 12px;
+  min-width: 220px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.filters select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 /* =========================

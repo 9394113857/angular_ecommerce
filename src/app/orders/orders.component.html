@@ -1,6 +1,50 @@
 <!-- Page Title -->
 <h2>My Orders</h2>
 
+<!-- Filters -->
+<div class="filters">
+
+  <input
+    type="text"
+    placeholder="Search Order ID"
+    [(ngModel)]="searchOrderId">
+
+  <button (click)="searchOrder()">
+    Search
+  </button>
+
+  <select
+    [(ngModel)]="selectedStatus"
+    (change)="onStatusChange()">
+
+    <option value="">
+      All Statuses
+    </option>
+
+    <option value="pending">
+      Pending
+    </option>
+
+    <option value="processing">
+      Processing
+    </option>
+
+    <option value="shipped">
+      Shipped
+    </option>
+
+    <option value="delivered">
+      Delivered
+    </option>
+
+    <option value="cancelled">
+      Cancelled
+    </option>
+
+  </select>
+
+</div>
+
 <!-- Export CSV -->
 <button (click)="exportCsv()">
   📄 Export CSV
@@ -45,12 +89,8 @@
       </td>
 
       <td>
-        <span
-          class="badge"
-          [ngClass]="order.status">
-
+        <span class="badge" [ngClass]="order.status">
           {{ order.status }}
-
         </span>
       </td>
 
@@ -59,11 +99,9 @@
       </td>
 
       <td>
-
         <button (click)="viewOrder(order)">
           View
         </button>
-
       </td>
 
     </tr>
@@ -72,11 +110,10 @@
 
 </table>
 
+<br />
+<br />
+
 <!-- Pagination -->
-
-<br />
-<br />
-
 <div
   class="pagination"
   *ngIf="!isLoading && orders.length > 0">

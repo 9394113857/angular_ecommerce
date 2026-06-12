@@ -37,15 +37,28 @@ export class OrderService {
 
   // ==========================
   // 📦 GET ALL MY ORDERS
-  // PAGINATION READY ✅
+  // PAGINATION + FILTER READY ✅
   // ==========================
   getMyOrders(
     page: number = 1,
-    size: number = 10
+    size: number = 10,
+    status: string = '',
+    orderId: string = ''
   ): Observable<any> {
 
+    let url =
+      `${this.baseUrl}?page=${page}&size=${size}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (orderId) {
+      url += `&order_id=${orderId}`;
+    }
+
     return this.http.get<any>(
-      `${this.baseUrl}?page=${page}&size=${size}`,
+      url,
       {
         headers: this.headers()
       }

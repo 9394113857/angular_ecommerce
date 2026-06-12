@@ -1,5 +1,6 @@
 // =========================
-// Orders Component (PAGINATION CONNECTED ✅)
+// Orders Component
+// PAGINATION + FILTERS
 // =========================
 
 import { Component, OnInit } from '@angular/core';
@@ -29,6 +30,13 @@ export class OrdersComponent implements OnInit {
 
   isLoading = true;
 
+  // =========================
+  // FILTERS
+  // =========================
+
+  selectedStatus = '';
+  searchOrderId = '';
+
   constructor(
     private orderService: OrderService,
     private router: Router,
@@ -40,6 +48,7 @@ export class OrdersComponent implements OnInit {
   // =========================
 
   ngOnInit(): void {
+
     this.loadOrders();
 
     this.eventTracking.trackEvent({
@@ -52,11 +61,14 @@ export class OrdersComponent implements OnInit {
   // =========================
 
   loadOrders(): void {
+
     this.isLoading = true;
 
     this.orderService.getMyOrders(
       this.currentPage,
-      10
+      10,
+      this.selectedStatus,
+      this.searchOrderId
     ).subscribe({
 
       next: (response: any) => {
@@ -83,6 +95,28 @@ export class OrdersComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  // =========================
+  // STATUS FILTER
+  // =========================
+
+  onStatusChange(): void {
+
+    this.currentPage = 1;
+
+    this.loadOrders();
+  }
+
+  // =========================
+  // SEARCH ORDER
+  // =========================
+
+  searchOrder(): void {
+
+    this.currentPage = 1;
+
+    this.loadOrders();
   }
 
   // =========================
@@ -115,36 +149,35 @@ export class OrdersComponent implements OnInit {
     this.loadOrders();
   }
 
-// =========================
-// FIRST PAGE
-// =========================
+  // =========================
+  // FIRST PAGE
+  // =========================
 
-firstPage(): void {
+  firstPage(): void {
 
-  if (this.currentPage === 1) {
-    return;
+    if (this.currentPage === 1) {
+      return;
+    }
+
+    this.currentPage = 1;
+
+    this.loadOrders();
   }
 
-  this.currentPage = 1;
+  // =========================
+  // LAST PAGE
+  // =========================
 
-  this.loadOrders();
-}
+  lastPage(): void {
 
+    if (this.currentPage === this.totalPages) {
+      return;
+    }
 
-// =========================
-// LAST PAGE
-// =========================
+    this.currentPage = this.totalPages;
 
-lastPage(): void {
-
-  if (this.currentPage === this.totalPages) {
-    return;
+    this.loadOrders();
   }
-
-  this.currentPage = this.totalPages;
-
-  this.loadOrders();
-}
 
   // =========================
   // VIEW ORDER
