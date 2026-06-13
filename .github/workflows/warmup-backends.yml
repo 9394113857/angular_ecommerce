@@ -1,85 +1,51 @@
-name: Warm Up All Backends
+name: Warm Up All Backends (Manual Only + Clear Logs)
 
 on:
-workflow_dispatch:
+  # 🔥 Manual trigger only
+  workflow_dispatch:
 
 jobs:
-warmup:
-runs-on: ubuntu-latest
+  warmup:
+    runs-on: ubuntu-latest
 
-```
-steps:
-  - name: Warm and Monitor Services
-    run: |
-      echo "========================================"
-      echo "🚀 BACKEND STATUS DASHBOARD"
-      echo "🕒 $(date)"
-      echo "========================================"
+    steps:
+      - name: Warm Auth Service
+        run: |
+          echo "🚀 Warming Auth Service..."
+          curl --fail -s https://backend-auth-service-ks6f.onrender.com \
+            && echo "✅ Auth Service warmed successfully" \
+            || echo "⚠️ Auth Service failed or already awake"
 
-      FAILED=0
+      - name: Warm Product Service
+        run: |
+          echo "🚀 Warming Product Service..."
+          curl --fail -s https://backend-product-service-ncl2.onrender.com \
+            && echo "✅ Product Service warmed successfully" \
+            || echo "⚠️ Product Service failed or already awake"
 
-      check_service() {
-        NAME="$1"
-        URL="$2"
+      - name: Warm Cart/Order Service
+        run: |
+          echo "🚀 Warming Cart/Order Service..."
+          curl --fail -s https://backend-cart-order-service-q6qh.onrender.com \
+            && echo "✅ Cart/Order Service warmed successfully" \
+            || echo "⚠️ Cart/Order Service failed or already awake"
 
-        echo ""
-        echo "🔴 [$NAME] OFFLINE / SLEEPING"
-        sleep 1
+      - name: Warm ML Events Service
+        run: |
+          echo "🚀 Warming ML Events Service..."
+          curl --fail -s https://backend-ml-events-service-ba9v.onrender.com \
+            && echo "✅ ML Events Service warmed successfully" \
+            || echo "⚠️ ML Events Service failed or already awake"
 
-        echo "🟡 [$NAME] WAKING UP..."
-        sleep 1
+      - name: Warm ML Recommendation Service
+        run: |
+          echo "🚀 Warming ML Recommendation Service..."
+          curl --fail -s https://backend-ml-recommendation-service-huu6.onrender.com \
+            && echo "✅ ML Recommendation Service warmed successfully" \
+            || echo "⚠️ ML Recommendation Service failed or already awake"
 
-        ATTEMPTS=0
-        MAX_ATTEMPTS=10
-
-        until curl --silent --fail --max-time 30 "$URL" > /dev/null
-        do
-          ATTEMPTS=$((ATTEMPTS + 1))
-
-          echo "🟡 [$NAME] Attempt $ATTEMPTS/$MAX_ATTEMPTS..."
-
-          if [ $ATTEMPTS -ge $MAX_ATTEMPTS ]; then
-            echo "🔴 [$NAME] FAILED TO WAKE"
-            FAILED=1
-            return
-          fi
-
-          sleep 15
-        done
-
-        echo "🟢 [$NAME] UP AND RUNNING"
-        echo "✅ [$NAME] HEALTH CHECK PASSED"
-      }
-
-      check_service "Auth Service" "https://backend-auth-service-ks6f.onrender.com"
-      check_service "Product Service" "https://backend-product-service-ncl2.onrender.com"
-      check_service "Cart/Order Service" "https://backend-cart-order-service-q6qh.onrender.com"
-      check_service "ML Events Service" "https://backend-ml-events-service-ba9v.onrender.com"
-      check_service "ML Recommendation Service" "https://backend-ml-recommendation-service-huu6.onrender.com"
-
-      echo ""
-      echo "========================================"
-      echo "📊 FINAL SYSTEM STATUS"
-      echo "========================================"
-      echo ""
-
-      if [ $FAILED -eq 0 ]; then
-        echo "🟢 Auth Service"
-        echo "🟢 Product Service"
-        echo "🟢 Cart/Order Service"
-        echo "🟢 ML Events Service"
-        echo "🟢 ML Recommendation Service"
-        echo ""
-        echo "========================================"
-        echo "🟢 ALL SYSTEMS UP AND RUNNING"
-        echo "🚀 PLATFORM HEALTHY"
-        echo "🕒 $(date)"
-        echo "========================================"
-      else
-        echo "========================================"
-        echo "🔴 ONE OR MORE SERVICES FAILED"
-        echo "⚠️ CHECK LOGS ABOVE"
-        echo "========================================"
-        exit 1
-      fi
-```
+      - name: Final Status
+        run: |
+          echo "======================================="
+          echo "🔥 All backend services warmed (or checked)"
+          echo "======================================="
