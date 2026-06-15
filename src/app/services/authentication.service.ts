@@ -22,13 +22,13 @@ export class AuthenticationService {
     'https://backend-auth-service-ks6f.onrender.com/api/v1/auth/angularUser';
 
   // ================================
-  // ☸️ GKE BACKEND
+  // ☸️ GKE BACKEND 
   // ================================
   private readonly GKE_BASE_URL =
     'http://8.228.229.55/api/v1/auth/angularUser';
 
   // ================================
-  // ACTIVE BASE URL (ONLY ONE ACTIVE)
+  // ACTIVE BASE URL (ONLY ONE ACTIVE) 
   // ================================
 
   private readonly baseUrl = this.LOCAL_BASE_URL;
