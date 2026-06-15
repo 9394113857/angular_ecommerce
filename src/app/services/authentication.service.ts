@@ -10,7 +10,7 @@ import { Login, SignUp } from 'src/data.type';
 export class AuthenticationService {
 
   // ================================
-  // 🌱 LOCAL BACKEND
+  // 🌱 LOCAL BACKEND 
   // ================================
   private readonly LOCAL_BASE_URL =
     'http://127.0.0.1:5001/api/v1/auth/angularUser';
@@ -81,44 +81,73 @@ export class AuthenticationService {
   }
 
   logout() {
-    const accessToken = localStorage.getItem('token');
-    const refreshToken = localStorage.getItem('refresh_token');
 
-    this.http.post(
-      `${this.baseUrl.replace('/angularUser', '')}/logout`,
-      {
-        refresh_token: refreshToken
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
+  console.log('LOGOUT CALLED');
+
+  const accessToken =
+    localStorage.getItem('token');
+
+  const refreshToken =
+    localStorage.getItem('refresh_token');
+
+  this.http.post(
+    `${this.baseUrl.replace('/angularUser', '')}/logout`,
+    {
+      refresh_token: refreshToken
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
       }
-    ).subscribe({
-      next: () => {
-        localStorage.clear();
-        this.authState$.next('default');
-        this.router.navigate(['/login']);
-      },
-      error: () => {
-        localStorage.clear();
-        this.authState$.next('default');
-        this.router.navigate(['/login']);
-      }
-    });
-  }
+    }
+  ).subscribe({
+    next: () => {
+
+      console.log('LOGOUT SUCCESS');
+
+      localStorage.clear();
+
+      this.authState$.next('default');
+
+      this.router.navigate(['/login']);
+    },
+
+    error: (err) => {
+
+      console.log(
+        'LOGOUT ERROR',
+        err
+      );
+
+      localStorage.clear();
+
+      this.authState$.next('default');
+
+      this.router.navigate(['/login']);
+    }
+  });
+}
 
   refreshToken() {
-    const refreshToken = localStorage.getItem('refresh_token');
 
-    return this.http.post<any>(
-      `${this.baseUrl.replace('/angularUser', '')}/refresh`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${refreshToken}`
-        }
-      }
+  console.log(
+    'REFRESH TOKEN CALLED'
+  );
+
+  const refreshToken =
+    localStorage.getItem(
+      'refresh_token'
     );
+
+  return this.http.post<any>(
+    `${this.baseUrl.replace('/angularUser', '')}/refresh`,
+    {},
+    {
+      headers: {
+        Authorization:
+          `Bearer ${refreshToken}`
+      }
+    }
+  );
   }
 }

@@ -8,7 +8,6 @@ import {
 } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
-
 import {
   catchError,
   switchMap
@@ -38,7 +37,11 @@ implements HttpInterceptor {
 
     let authReq = req;
 
-    if (token) {
+    // Don't overwrite refresh token request  
+    if (
+      token &&
+      !req.url.includes('/refresh')
+    ) {
 
       authReq = req.clone({
         setHeaders: {
@@ -56,6 +59,12 @@ implements HttpInterceptor {
         (error:
           HttpErrorResponse) => {
 
+          console.log(
+            'INTERCEPTOR ERROR:',
+            error.status,
+            req.url
+          );
+
           const refreshToken =
             localStorage.getItem(
               'refresh_token'
@@ -64,10 +73,12 @@ implements HttpInterceptor {
           if (
             error.status === 401 &&
             refreshToken &&
-            !req.url.includes(
-              '/refresh'
-            )
+            !req.url.includes('/refresh')
           ) {
+
+            console.log(
+              'ATTEMPTING REFRESH'
+            );
 
             return this
               .authService
@@ -75,11 +86,19 @@ implements HttpInterceptor {
               .pipe(
 
                 switchMap(
-                  (response) => {
+                  (response: any) => {
+
+                    console.log(
+                      'REFRESH TOKEN SUCCESS'
+                    );
 
                     localStorage.setItem(
                       'token',
                       response.access_token
+                    );
+
+                    console.log(
+                      'NEW TOKEN SAVED'
                     );
 
                     const retryReq =
@@ -90,6 +109,10 @@ implements HttpInterceptor {
                         }
                       });
 
+                    console.log(
+                      'RETRYING ORIGINAL REQUEST'
+                    );
+
                     return next.handle(
                       retryReq
                     );
@@ -97,13 +120,21 @@ implements HttpInterceptor {
                 ),
 
                 catchError(
-                  () => {
+                  (refreshError) => {
+
+                    console.log(
+                      'REFRESH TOKEN FAILED'
+                    );
+
+                    console.log(
+                      refreshError
+                    );
 
                     this.authService
                       .logout();
 
                     return throwError(
-                      () => error
+                      () => refreshError
                     );
                   }
                 )
