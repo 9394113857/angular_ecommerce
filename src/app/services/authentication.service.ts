@@ -31,8 +31,8 @@ export class AuthenticationService {
   // ACTIVE BASE URL (ONLY ONE ACTIVE) 
   // ================================
 
-  private readonly baseUrl = this.LOCAL_BASE_URL;
-  // private readonly baseUrl = this.RENDER_BASE_URL;
+  // private readonly baseUrl = this.LOCAL_BASE_URL;
+  private readonly baseUrl = this.RENDER_BASE_URL;
   // private readonly baseUrl = this.GKE_BASE_URL;
 
   authState$ =
