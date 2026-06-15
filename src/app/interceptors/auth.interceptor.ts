@@ -37,7 +37,7 @@ implements HttpInterceptor {
 
     let authReq = req;
 
-    // Don't overwrite refresh token request  
+    // Don't overwrite refresh token request   
     if (
       token &&
       !req.url.includes('/refresh')
