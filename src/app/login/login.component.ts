@@ -39,7 +39,15 @@ export class LoginComponent implements OnInit {
 
     this.authService.loginUser(form.value).subscribe({
       next: (res) => {
-        localStorage.setItem('token', res.access_token);
+        localStorage.setItem(
+          'token',
+          res.access_token
+        );
+
+        localStorage.setItem(
+          'refresh_token',
+          res.refresh_token
+    );
 
         this.eventTracking.trackEvent({
           event_type: 'login_success',
