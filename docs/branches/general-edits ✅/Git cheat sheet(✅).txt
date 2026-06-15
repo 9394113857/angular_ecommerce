@@ -1,0 +1,109 @@
+Bro, here is the Git cheat sheet you use all the time 🚀
+Cell 1 - Check What Changed
+git status
+Shows:
+Modified files
+New files
+Deleted files
+Staged files
+
+Cell 2 - See Exact Changes
+git diff
+Shows code changes not yet staged.
+
+Cell 3 - See Staged Changes
+git diff --cached
+Shows what will go into next commit.
+
+Cell 4 - Add Everything
+git add .
+
+Cell 5 - Commit
+git commit -m "Add JWT refresh token flow and Angular auto refresh"
+
+Cell 6 - Empty Commit
+git commit --allow-empty -m "Trigger CI/CD pipeline"
+
+Cell 7 - Latest Commit
+git log -1
+Shows:
+SHA
+Author
+Date
+Message
+
+Cell 8 - Latest Commit Short
+git log --oneline -1
+Example:
+94da123 Add JWT refresh token flow
+
+Cell 9 - Copy Latest SHA Only
+git rev-parse HEAD
+Example:
+94da123ab567cd89ef...
+
+Cell 10 - Files In Latest Commit
+git show --name-only HEAD
+Shows:
+app/config.py
+app/api/auth_routes.py
+src/app/interceptors/auth.interceptor.ts
+...
+
+Cell 11 - Files In Specific SHA
+git show --name-only <SHA>
+Example:
+git show --name-only 94da123
+
+Cell 12 - Push
+git push origin feature-branch
+
+Cell 13 - Check If Local Branch Is Ahead
+git status
+Example:
+Your branch is ahead of origin by 1 commit
+Means:
+NOT pushed yet
+
+Cell 14 - Verify Commit Reached Remote
+After push:
+git log --oneline -5
+Then compare with:
+git ls-remote origin
+Usually easier to check on GitHub.
+
+Cell 15 - Show Latest Commit + Files Together
+git show --stat HEAD
+Example:
+Add JWT refresh token flow
+
+app/config.py                     | 12 +++++
+app/api/auth_routes.py            | 40 +++++++++++
+auth.interceptor.ts               | 55 +++++++++++++++
+
+Most Common Commands You Use
+git status
+
+git add .
+
+git commit -m "message"
+
+git log --oneline -1
+
+git rev-parse HEAD
+
+git show --name-only HEAD
+
+git push origin feature-branch
+That sequence tells you:
+What changed?
+↓
+What was committed?
+↓
+What SHA was created?
+↓
+Which files are in that SHA?
+↓
+Was it pushed?
+which is exactly what you usually check before and after pushing. 🚀
+
