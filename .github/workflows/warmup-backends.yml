@@ -1,7 +1,6 @@
-name: Warm Up All Backends (Manual Only + Clear Logs)
+name: Warm Up All Backends
 
 on:
-  # 🔥 Manual trigger only
   workflow_dispatch:
 
 jobs:
@@ -9,43 +8,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Warm Auth Service
+      - name: Wake All Services
         run: |
-          echo "🚀 Warming Auth Service..."
-          curl --fail -s https://backend-auth-service-ks6f.onrender.com \
-            && echo "✅ Auth Service warmed successfully" \
-            || echo "⚠️ Auth Service failed or already awake"
+          echo "🔴 SYSTEM STATUS: COLD / STARTING UP"
+          echo "⏳ Initializing backend wake-up sequence..."
+          echo ""
 
-      - name: Warm Product Service
-        run: |
-          echo "🚀 Warming Product Service..."
-          curl --fail -s https://backend-product-service-ncl2.onrender.com \
-            && echo "✅ Product Service warmed successfully" \
-            || echo "⚠️ Product Service failed or already awake"
+          curl --fail -s https://backend-auth-service-ks6f.onrender.com >/dev/null & PID1=$!
+          curl --fail -s https://backend-product-service-ncl2.onrender.com >/dev/null & PID2=$!
+          curl --fail -s https://backend-cart-order-service-q6qh.onrender.com >/dev/null & PID3=$!
+          curl --fail -s https://backend-ml-events-service-ba9v.onrender.com >/dev/null & PID4=$!
+          curl --fail -s https://backend-ml-recommendation-service-huu6.onrender.com >/dev/null & PID5=$!
 
-      - name: Warm Cart/Order Service
-        run: |
-          echo "🚀 Warming Cart/Order Service..."
-          curl --fail -s https://backend-cart-order-service-q6qh.onrender.com \
-            && echo "✅ Cart/Order Service warmed successfully" \
-            || echo "⚠️ Cart/Order Service failed or already awake"
+          echo "🟡 SERVICES ARE WAKING UP..."
+          echo "🟡 Waiting for all backend services to respond..."
+          echo ""
 
-      - name: Warm ML Events Service
-        run: |
-          echo "🚀 Warming ML Events Service..."
-          curl --fail -s https://backend-ml-events-service-ba9v.onrender.com \
-            && echo "✅ ML Events Service warmed successfully" \
-            || echo "⚠️ ML Events Service failed or already awake"
+          wait $PID1
+          wait $PID2
+          wait $PID3
+          wait $PID4
+          wait $PID5
 
-      - name: Warm ML Recommendation Service
-        run: |
-          echo "🚀 Warming ML Recommendation Service..."
-          curl --fail -s https://backend-ml-recommendation-service-huu6.onrender.com \
-            && echo "✅ ML Recommendation Service warmed successfully" \
-            || echo "⚠️ ML Recommendation Service failed or already awake"
-
-      - name: Final Status
-        run: |
-          echo "======================================="
-          echo "🔥 All backend services warmed (or checked)"
-          echo "======================================="
+          echo ""
+          echo "🟢 SYSTEM STATUS: ONLINE"
+          echo "🟢 ALL BACKEND SERVICES ARE UP AND RUNNING"
+          echo "🚀 READY TO ACCEPT TRAFFIC"
